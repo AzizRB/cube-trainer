@@ -2,7 +2,7 @@
 <html lang="uz">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Speedcubing trener — CFOP</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#141416">
@@ -29,7 +29,7 @@
 *{box-sizing:border-box}
 html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 a{color:var(--accent)}
-header{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+header{position:sticky;top:0;z-index:10;padding-top:env(safe-area-inset-top);background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
 .wrap{max-width:1080px;margin:0 auto;padding:0 18px}
 .top{display:flex;align-items:center;gap:14px;padding:12px 0 0}
 .logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px;letter-spacing:-.01em;white-space:nowrap}
@@ -134,6 +134,55 @@ input.txt{flex:1;min-width:0;font:600 14px var(--mono);padding:8px 10px;border-r
 .hist{font:13px var(--mono);color:var(--muted);word-spacing:3px;min-height:20px;max-height:80px;overflow:auto}
 .solved{color:var(--ok);font-weight:700}
 @media (max-width:560px){.logo .sub{display:none} .hbtn .lbl{display:none}}
+/* sub tabs */
+.subtabs{display:none;gap:4px;margin:0 0 16px;background:var(--code);padding:4px;border-radius:12px}
+.subtabs a{padding:7px 14px;border-radius:9px;text-decoration:none;color:var(--muted);font-weight:600;font-size:14px}
+.subtabs a.on{background:var(--panel);color:var(--ink);box-shadow:var(--shadow)}
+/* bottom nav (mobile) */
+.bnav{display:none}
+@media (max-width:760px){
+  nav#nav{display:none}
+  .subtabs{display:inline-flex}
+  .desk-only{display:none}
+  .top{padding-bottom:10px}
+  .bnav{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:30;background:color-mix(in srgb,var(--panel) 94%,transparent);backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom))}
+  .bnav a{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--muted);font-size:11px;font-weight:600;padding:4px 0;border-radius:10px;min-width:0}
+  .bnav a svg{width:24px;height:24px}
+  .bnav a.on{color:var(--accent)}
+  main{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
+  h1{font-size:22px} h2{font-size:18px}
+  .panel{padding:14px}
+  .answers{grid-template-columns:1fr 1fr}
+  .answers button{min-height:50px}
+  button{min-height:40px} button.icon{min-height:34px} .mgrid button{min-height:36px}
+  .timer{padding:60px 10px}
+  .sim{height:80vh}
+  .metro span{font-size:20px;padding:5px 8px}
+}
+/* finger lesson */
+.fcard .pic{height:150px;display:flex;align-items:center;justify-content:center}
+.who{font-size:12.5px;font-weight:700;color:var(--accent)}
+/* solver */
+.ftabs{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.ftabs button{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px;font-size:12px;position:relative}
+.ftabs button.on{border-color:var(--accent);background:var(--accent-soft)}
+.ftabs .sw{width:22px;height:22px;border-radius:6px;border:1px solid rgba(0,0,0,.25)}
+.ftabs .ok{position:absolute;top:2px;right:4px;color:var(--ok);font-size:11px}
+.fgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;width:min(100%,260px);margin:0 auto;background:#111;padding:6px;border-radius:14px}
+.fgrid button{aspect-ratio:1;border-radius:9px;border:none;padding:0;min-height:0;font-size:20px;color:rgba(0,0,0,.45);font-weight:700}
+.fgrid button.cen{cursor:default;box-shadow:inset 0 0 0 3px rgba(0,0,0,.25)}
+.palette{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.palette button{width:46px;height:46px;border-radius:12px;padding:0;border:2px solid rgba(0,0,0,.25)}
+.palette button.on{outline:3px solid var(--accent);outline-offset:2px}
+.counts{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;font-size:12px}
+.counts span{padding:2px 8px;border-radius:99px;background:var(--code)}
+.counts span.bad{background:var(--bad-soft);color:var(--bad)}
+.steps .step{display:flex;gap:10px;align-items:flex-start;padding:9px 8px;border-top:1px solid var(--line);cursor:pointer;border-radius:8px}
+.steps .step.cur{background:var(--accent-soft)}
+.steps .num{flex:none;width:24px;height:24px;border-radius:50%;background:var(--code);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+.steps .step.cur .num{background:var(--accent);color:#fff}
+.err{background:var(--bad-soft);color:var(--bad);border-radius:10px;padding:10px 12px;font-size:14px}
+.netmini g{cursor:pointer}
 </style>
 </head>
 <body>
@@ -159,13 +208,232 @@ input.txt{flex:1;min-width:0;font:600 14px var(--mono);padding:8px 10px;border-r
   <section class="view" id="v-darslar"></section>
   <section class="view" id="v-mashq"></section>
   <section class="view" id="v-qollar"></section>
+  <section class="view" id="v-yechuvchi"></section>
   <section class="view" id="v-taymer"></section>
   <footer id="footer"></footer>
 </main>
 
+<nav class="bnav" id="bnav"></nav>
 <aside class="sim" id="sim"></aside>
 <div class="modal" id="modal"><div class="box" id="modalBox"></div></div>
 
+<script type="text/plain" id="solverSrc">
+// ===== Rubik solver core: Kociemba two-phase + CFOP (Krest, F2L) =====
+// Works in a Web Worker or Node. Derives all cubie move tables from a sticker model.
+var SOLVER = (function(){
+  // ---- sticker model (same convention as the page) ----
+  var SCH = {U:'Y',D:'W',F:'G',B:'B',R:'O',L:'R'};
+  var NRM = {U:[0,1,0],D:[0,-1,0],R:[1,0,0],L:[-1,0,0],F:[0,0,1],B:[0,0,-1]};
+  function faceOf(n){return n[1]===1?'U':n[1]===-1?'D':n[2]===1?'F':n[2]===-1?'B':n[0]===1?'R':'L';}
+  function solvedSt(){var st=[],N=[[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,1],[0,0,-1]];
+    for(var x=-1;x<=1;x++)for(var y=-1;y<=1;y++)for(var z=-1;z<=1;z++)for(var k=0;k<6;k++){var n=N[k],p=[x,y,z],a=n[0]?0:n[1]?1:2; if(p[a]===n[a]) st.push({p:p,n:n.slice(),c:SCH[faceOf(n)]});} return st;}
+  function rot(v,a,s){var x=v[0],y=v[1],z=v[2]; if(a===0)return s>0?[x,-z,y]:[x,z,-y]; if(a===1)return s>0?[z,y,-x]:[-z,y,x]; return s>0?[-y,x,z]:[y,-x,z];}
+  var FM={U:[1,1,-1],D:[1,-1,1],R:[0,1,-1],L:[0,-1,1],F:[2,1,-1],B:[2,-1,1]};
+  function stMove(st,f,amt){var d=FM[f];for(var k=0;k<amt;k++)for(var i=0;i<st.length;i++){var t=st[i];if(t.p[d[0]]===d[1]){t.p=rot(t.p,d[0],d[2]);t.n=rot(t.n,d[0],d[2]);}}return st;}
+  function stGet(st,p,n){for(var i=0;i<st.length;i++){var t=st[i];if(t.p[0]===p[0]&&t.p[1]===p[1]&&t.p[2]===p[2]&&t.n[0]===n[0]&&t.n[1]===n[1]&&t.n[2]===n[2])return t;}return null;}
+
+  // ---- cubie definitions ----
+  var CORN=[[[1,1,1],'URF'],[[-1,1,1],'UFL'],[[-1,1,-1],'ULB'],[[1,1,-1],'UBR'],[[1,-1,1],'DFR'],[[-1,-1,1],'DLF'],[[-1,-1,-1],'DBL'],[[1,-1,-1],'DRB']];
+  var EDGE=[[[1,1,0],'UR'],[[0,1,1],'UF'],[[-1,1,0],'UL'],[[0,1,-1],'UB'],[[1,-1,0],'DR'],[[0,-1,1],'DF'],[[-1,-1,0],'DL'],[[0,-1,-1],'DB'],[[1,0,1],'FR'],[[-1,0,1],'FL'],[[-1,0,-1],'BL'],[[1,0,-1],'BR']];
+  // facelet colours of a sticker state -> cubie; returns {cp,co,ep,eo} or {error}
+  function stickersToCubie(get){ // get(face, pos) -> colour
+    var cen={}; ['U','D','R','L','F','B'].forEach(function(f){cen[f]=get(f,NRM[f]);});
+    var cp=[],co=[],ep=[],eo=[], err=null;
+    var homeC=CORN.map(function(c){return c[1].split('').map(function(f){return cen[f];});});
+    var homeE=EDGE.map(function(e){return e[1].split('').map(function(f){return cen[f];});});
+    for(var i=0;i<8;i++){var fs=CORN[i][1].split(''),p=CORN[i][0];
+      var cols=fs.map(function(f){return get(f,p);});
+      var ori=-1; for(var k=0;k<3;k++) if(cols[k]===cen.U||cols[k]===cen.D) ori=k;
+      var piece=-1; for(var j=0;j<8;j++){var h=homeC[j]; if(ori>=0 && cols[ori]===h[0] && cols[(ori+1)%3]===h[1] && cols[(ori+2)%3]===h[2]) piece=j;}
+      if(piece<0) return {error:'corner',pos:CORN[i][1],cols:cols};
+      cp.push(piece); co.push(ori);
+    }
+    for(var i2=0;i2<12;i2++){var fs2=EDGE[i2][1].split(''),p2=EDGE[i2][0];
+      var c2=fs2.map(function(f){return get(f,p2);}); var piece2=-1, o2=0;
+      for(var j2=0;j2<12;j2++){var h2=homeE[j2]; if(c2[0]===h2[0]&&c2[1]===h2[1]){piece2=j2;o2=0;} else if(c2[0]===h2[1]&&c2[1]===h2[0]){piece2=j2;o2=1;}}
+      if(piece2<0) return {error:'edge',pos:EDGE[i2][1],cols:c2};
+      ep.push(piece2); eo.push(o2);
+    }
+    return {cp:cp,co:co,ep:ep,eo:eo};
+  }
+  function stToCubie(st){return stickersToCubie(function(f,p){var t=stGet(st,p,NRM[f]);return t?t.c:null;});}
+  function verify(c){ // returns null if solvable, else error code
+    var seenC=[],seenE=[]; for(var i=0;i<8;i++){ if(seenC[c.cp[i]]) return 'dupCorner'; seenC[c.cp[i]]=1; }
+    for(var j=0;j<12;j++){ if(seenE[c.ep[j]]) return 'dupEdge'; seenE[c.ep[j]]=1; }
+    var tw=0,fl=0; c.co.forEach(function(v){tw+=v;}); c.eo.forEach(function(v){fl+=v;});
+    if(tw%3) return 'twist'; if(fl%2) return 'flip';
+    if(parity(c.cp)!==parity(c.ep)) return 'parity';
+    return null;
+  }
+  function parity(p){var s=0;for(var i=0;i<p.length;i++)for(var j=i+1;j<p.length;j++)if(p[i]>p[j])s++;return s&1;}
+  function mul(a,b){var r={cp:[],co:[],ep:[],eo:[]};
+    for(var i=0;i<8;i++){r.cp[i]=a.cp[b.cp[i]];r.co[i]=(a.co[b.cp[i]]+b.co[i])%3;}
+    for(var j=0;j<12;j++){r.ep[j]=a.ep[b.ep[j]];r.eo[j]=(a.eo[b.ep[j]]+b.eo[j])%2;} return r;}
+  function idCube(){return {cp:[0,1,2,3,4,5,6,7],co:[0,0,0,0,0,0,0,0],ep:[0,1,2,3,4,5,6,7,8,9,10,11],eo:[0,0,0,0,0,0,0,0,0,0,0,0]};}
+
+  var FACES=['U','R','F','D','L','B']; // move m = face*3 + (power-1)
+  var MOVE_NAMES=[]; FACES.forEach(function(f){MOVE_NAMES.push(f,f+'2',f+"'");});
+  var MC=[]; // 18 move cubies
+  (function(){ for(var f=0;f<6;f++){ var base=stToCubie(stMove(solvedSt(),FACES[f],1)); var c=base;
+      for(var k=0;k<3;k++){ MC[f*3+k]=c; c=mul(c,base);} } })();
+
+  // ---- coordinates ----
+  var Cnk=[]; for(var n=0;n<13;n++){Cnk[n]=[];for(var k=0;k<13;k++)Cnk[n][k]=0;} for(n=0;n<13;n++){Cnk[n][0]=1;for(k=1;k<=n;k++)Cnk[n][k]=Cnk[n-1][k-1]+(k<=n-1?Cnk[n-1][k]:0);}
+  function getTwist(c){var t=0;for(var i=0;i<7;i++)t=t*3+c.co[i];return t;}
+  function setTwist(c,t){var s=0;for(var i=6;i>=0;i--){c.co[i]=t%3;s+=c.co[i];t=(t/3)|0;}c.co[7]=(3-s%3)%3;}
+  function getFlip(c){var t=0;for(var i=0;i<11;i++)t=t*2+c.eo[i];return t;}
+  function setFlip(c,t){var s=0;for(var i=10;i>=0;i--){c.eo[i]=t&1;s+=c.eo[i];t>>=1;}c.eo[11]=s&1;}
+  function getSlice(c){var a=0,x=0;for(var j=11;j>=0;j--){if(c.ep[j]>=8){a+=Cnk[11-j][x+1];x++;}}return a;}
+  var SLICE_REP=[]; (function(){ for(var a=0;a<12;a++)for(var b=a+1;b<12;b++)for(var d=b+1;d<12;d++)for(var e=d+1;e<12;e++){
+      var c=idCube(), pos=[a,b,d,e], o=0, s=8; c.ep=[]; for(var i=0;i<12;i++){ if(pos.indexOf(i)>=0) c.ep[i]=s++; else c.ep[i]=o++; }
+      SLICE_REP[getSlice(c)]=c.ep.slice(); } })();
+  function permIdx(arr){var n=arr.length,idx=0;for(var i=0;i<n;i++){var cnt=0;for(var j=i+1;j<n;j++)if(arr[j]<arr[i])cnt++;idx=idx*(n-i)+cnt;}return idx;}
+  function idxPerm(idx,n){var digits=[];for(var i=n-1;i>=0;i--){digits[i]=idx%(n-i);idx=(idx/(n-i))|0;}var avail=[];for(i=0;i<n;i++)avail.push(i);var out=[];for(i=0;i<n;i++){out.push(avail.splice(digits[i],1)[0]);}return out;}
+  function getCperm(c){return permIdx(c.cp);}
+  function getUDperm(c){return permIdx(c.ep.slice(0,8));}
+  function getSperm(c){return permIdx(c.ep.slice(8).map(function(v){return v-8;}));}
+
+  var P2MOVES=[0,1,2,9,10,11,4,13,7,16]; // U U2 U' D D2 D' R2 L2 F2 B2
+  var ready=false, twM, flM, slM, cpM, udM, spM, prTS, prFS, prCS, prUS;
+  // CFOP tables
+  var crossDist, pairDist=[], eTo=[], eFl=[], cTo=[], cTw=[];
+
+  function init(){
+    if(ready) return;
+    var i,m,c,d;
+    twM=new Uint16Array(2187*18); flM=new Uint16Array(2048*18); slM=new Uint16Array(495*18);
+    for(i=0;i<2187;i++){c=idCube();setTwist(c,i);for(m=0;m<18;m++)twM[i*18+m]=getTwist(mul(c,MC[m]));}
+    for(i=0;i<2048;i++){c=idCube();setFlip(c,i);for(m=0;m<18;m++)flM[i*18+m]=getFlip(mul(c,MC[m]));}
+    for(i=0;i<495;i++){c=idCube();c.ep=SLICE_REP[i].slice();for(m=0;m<18;m++)slM[i*18+m]=getSlice(mul(c,MC[m]));}
+    cpM=new Uint16Array(40320*10); udM=new Uint16Array(40320*10); spM=new Uint8Array(24*10);
+    for(i=0;i<40320;i++){c=idCube();c.cp=idxPerm(i,8);for(m=0;m<10;m++)cpM[i*10+m]=getCperm(mul(c,MC[P2MOVES[m]]));}
+    for(i=0;i<40320;i++){c=idCube();c.ep=idxPerm(i,8).concat([8,9,10,11]);for(m=0;m<10;m++)udM[i*10+m]=getUDperm(mul(c,MC[P2MOVES[m]]));}
+    for(i=0;i<24;i++){c=idCube();c.ep=[0,1,2,3,4,5,6,7].concat(idxPerm(i,4).map(function(v){return v+8;}));for(m=0;m<10;m++)spM[i*10+m]=getSperm(mul(c,MC[P2MOVES[m]]));}
+    prTS=bfs(2187,495,twM,slM,18); prFS=bfs(2048,495,flM,slM,18);
+    prCS=bfs(40320,24,cpM,spM,10); prUS=bfs(40320,24,udM,spM,10);
+    // piece-level move maps for CFOP
+    for(m=0;m<18;m++){eTo[m]=[];eFl[m]=[];cTo[m]=[];cTw[m]=[];
+      for(i=0;i<12;i++){eTo[m][MC[m].ep[i]]=i;eFl[m][MC[m].ep[i]]=MC[m].eo[i];}
+      for(i=0;i<8;i++){cTo[m][MC[m].cp[i]]=i;cTw[m][MC[m].cp[i]]=MC[m].co[i];}}
+    // cross table: 4 edges (pieces 4..7), each pos*2+ori (0..23)
+    crossDist=new Int8Array(331776).fill(-1);
+    var start=crossIndex([4,5,6,7],[0,0,0,0]); crossDist[start]=0; var frontier=[start], depth=0;
+    while(frontier.length){var next=[];for(var f=0;f<frontier.length;f++){var idx=frontier[f],pos=[],ori=[],t=idx;
+        for(var k=0;k<4;k++){var v=t%24;t=(t/24)|0;pos.push(v>>1);ori.push(v&1);}
+        for(m=0;m<18;m++){var np=[],no=[];for(k=0;k<4;k++){np.push(eTo[m][pos[k]]);no.push(ori[k]^eFl[m][pos[k]]);}
+          var ni=crossIndex(np,no); if(crossDist[ni]<0){crossDist[ni]=depth+1;next.push(ni);}}}
+      frontier=next;depth++;}
+    for(var p=0;p<4;p++){var tab=new Int8Array(576).fill(-1),s0=pairIndex(4+p,0,8+p,0);tab[s0]=0;var fr=[s0],dp=0;
+      while(fr.length){var nx=[];for(var q=0;q<fr.length;q++){var id=fr[q],e=id%24,cc=(id/24)|0,cpos=(cc/3)|0,cori=cc%3,epos=e>>1,eori=e&1;
+          for(m=0;m<18;m++){var ni2=pairIndex(cTo[m][cpos],(cori+cTw[m][cpos])%3,eTo[m][epos],eori^eFl[m][epos]); if(tab[ni2]<0){tab[ni2]=dp+1;nx.push(ni2);}}}
+        fr=nx;dp++;}
+      pairDist[p]=tab;}
+    ready=true;
+  }
+  function crossIndex(pos,ori){var idx=0;for(var k=3;k>=0;k--)idx=idx*24+pos[k]*2+ori[k];return idx;}
+  function pairIndex(cpos,cori,epos,eori){return (cpos*3+cori)*24+epos*2+eori;}
+  function bfs(n1,n2,m1,m2,nm){var tab=new Int8Array(n1*n2).fill(-1);tab[0]=0;var done=1,depth=0,total=n1*n2;
+    while(done<total){var found=0;for(var i=0;i<total;i++){if(tab[i]!==depth)continue;var a=(i/n2)|0,b=i%n2;
+        for(var m=0;m<nm;m++){var j=m1[a*nm+m]*n2+m2[b*nm+m];if(tab[j]<0){tab[j]=depth+1;done++;found++;}}}
+      depth++; if(!found)break;} return tab;}
+
+  // ---- two-phase search ----
+  function kociemba(cube,opts){
+    init(); opts=opts||{}; var maxLen=opts.maxLen||23, timeLimit=opts.time||1500, t0=Date.now();
+    var best=null, bestLen=maxLen+1, sol1=[], tw0=getTwist(cube), fl0=getFlip(cube), sl0=getSlice(cube);
+    function axisSkip(f,last){ return last>=0 && (f===last || (f%3===last%3 && f<last)); }
+    function phase2(c, d1){
+      var cp=getCperm(c), ud=getUDperm(c), sp=getSperm(c), sol2=[];
+      var lim=bestLen-1-d1; if(lim<0) return;
+      for(var d2=0; d2<=Math.min(lim,18); d2++){ if(s2(cp,ud,sp,d2,sol1.length?Math.floor(sol1[sol1.length-1]/3):-1)){ best=sol1.concat(sol2); bestLen=best.length; return; } }
+      function s2(cp,ud,sp,depth,last){
+        if(depth===0) return cp===0&&ud===0&&sp===0;
+        if(Math.max(prCS[cp*24+sp],prUS[ud*24+sp])>depth) return false;
+        for(var mi=0;mi<10;mi++){var mv=P2MOVES[mi],f=Math.floor(mv/3); if(axisSkip(f,last)) continue;
+          sol2.push(mv); if(s2(cpM[cp*10+mi],udM[ud*10+mi],spM[sp*10+mi],depth-1,f)) return true; sol2.pop();}
+        return false;
+      }
+    }
+    var stop=false;
+    function s1(tw,fl,sl,depth,last){
+      if(stop) return;
+      if(depth===0){
+        if(tw===0&&fl===0&&sl===0){
+          if(sol1.length>0){var lm=sol1[sol1.length-1]; if(P2MOVES.indexOf(lm)>=0) return;}
+          var c=cube; for(var i=0;i<sol1.length;i++) c=mul(c,MC[sol1[i]]);
+          phase2(c,sol1.length);
+          if(best && Date.now()-t0>timeLimit) stop=true;
+        }
+        return;
+      }
+      if(Math.max(prTS[tw*495+sl],prFS[fl*495+sl])>depth) return;
+      for(var m=0;m<18;m++){var f=Math.floor(m/3); if(axisSkip(f,last)) continue;
+        sol1.push(m); s1(twM[tw*18+m],flM[fl*18+m],slM[sl*18+m],depth-1,f); sol1.pop(); if(stop) return;}
+    }
+    for(var d1=0; d1<bestLen && !stop; d1++){ s1(tw0,fl0,sl0,d1,-1); if(Date.now()-t0>timeLimit*4 && best) break; }
+    return best? best.map(function(m){return MOVE_NAMES[m];}) : null;
+  }
+
+  // ---- CFOP: Krest + F2L (library of optimal algs for FR slot, mapped to other slots) ----
+  var F2L_LIB=[[0, 0, 0, 0, "R U2 R' U' R U R'"], [0, 0, 0, 1, "U2 R B U B2 R B R2"], [0, 0, 1, 0, "U2 R2 U2 R' U' R U' R2"], [0, 0, 1, 1, "F' U2 F U F' U' F"], [0, 0, 2, 0, "R B U2 B' R'"], [0, 0, 2, 1, "U' F' U2 F2 R' F' R"], [0, 0, 3, 0, "U R U B' R B R2"], [0, 0, 3, 1, "F' L' U2 L F"], [0, 0, 8, 0, "R2 U R2 U R2 U2 R2"], [0, 0, 8, 1, "R U' R' F' U2 F"], [0, 1, 0, 0, "U2 R2 U R' U R U2 R2"], [0, 1, 0, 1, "R U' R' U2 F' U' F"], [0, 1, 1, 0, "R U' B U2 B' U2 R'"], [0, 1, 1, 1, "U2 F' U2 F"], [0, 1, 2, 0, "F2 U' L' U L F2"], [0, 1, 2, 1, "R2 B U B' U' R2"], [0, 1, 3, 0, "R U R'"], [0, 1, 3, 1, "R2 U2 F R2 F' U2 R2"], [0, 1, 8, 0, "U R U2 B U2 B' R'"], [0, 1, 8, 1, "U F' U' F U' R U R'"], [0, 2, 0, 0, "U R U' R'"], [0, 2, 0, 1, "F U2 F2 U' F2 U' F'"], [0, 2, 1, 0, "R U2 B U B' U R'"], [0, 2, 1, 1, "U F' U F U' F' U' F"], [0, 2, 2, 0, "R U B U2 B' U R'"], [0, 2, 2, 1, "F' U' F"], [0, 2, 3, 0, "F2 L' U' L U F2"], [0, 2, 3, 1, "R2 U B U' B' R2"], [0, 2, 8, 0, "U2 R B U2 B' U2 R'"], [0, 2, 8, 1, "U2 R U R' U2 F' U2 F"], [1, 0, 0, 0, "R U B' R B R2"], [1, 0, 0, 1, "U F' L F' L' F2"], [1, 0, 1, 0, "U R2 U2 F R F' U2 R2"], [1, 0, 1, 1, "U R B U B2 R B R2"], [1, 0, 2, 0, "U R2 U2 R' U' R U' R2"], [1, 0, 2, 1, "U F2 U2 R' F' R U2 F2"], [1, 0, 3, 0, "U R B' R B R2"], [1, 0, 3, 1, "U2 F' U2 F2 R' F' R"], [1, 0, 8, 0, "R U' B U2 B' U R'"], [1, 0, 8, 1, "R U2 R' F' U' F"], [1, 1, 0, 0, "U' R U R'"], [1, 1, 0, 1, "F' U2 F U F' U2 F"], [1, 1, 1, 0, "U R2 U R' U R U2 R2"], [1, 1, 1, 1, "U' R U' R' U2 F' U' F"], [1, 1, 2, 0, "F' U2 F U' R U R'"], [1, 1, 2, 1, "U F' U2 F"], [1, 1, 3, 0, "U' F2 U' L' U L F2"], [1, 1, 3, 1, "U F' L' U' L U2 F"], [1, 1, 8, 0, "R U2 B U2 B' R'"], [1, 1, 8, 1, "F' U' F U' R U R'"], [1, 2, 0, 0, "U R B U B' U2 R'"], [1, 2, 0, 1, "U' R2 U B U' B' R2"], [1, 2, 1, 0, "R U' R'"], [1, 2, 1, 1, "U2 R U2 R' U F' U' F"], [1, 2, 2, 0, "U' R U2 B U B' U R'"], [1, 2, 2, 1, "F' U F U' F' U' F"], [1, 2, 3, 0, "R U B U2 B' U2 R'"], [1, 2, 3, 1, "U' F' U' F"], [1, 2, 8, 0, "U R B U2 B' U2 R'"], [1, 2, 8, 1, "U R U R' U2 F' U2 F"], [2, 0, 0, 0, "R B' R B R2"], [2, 0, 0, 1, "U F' U2 F2 R' F' R"], [2, 0, 1, 0, "U' R U B' R B R2"], [2, 0, 1, 1, "F' L F' L' F2"], [2, 0, 2, 0, "R2 U2 F R F' U2 R2"], [2, 0, 2, 1, "R B U B2 R B R2"], [2, 0, 3, 0, "R2 U2 R' U' R U' R2"], [2, 0, 3, 1, "F2 U2 R' F' R U2 F2"], [2, 0, 8, 0, "R U' B U B' U R'"], [2, 0, 8, 1, "U F' U2 F R U R'"], [2, 1, 0, 0, "U2 F2 U' L' U L F2"], [2, 1, 0, 1, "F' L' U' L U2 F"], [2, 1, 1, 0, "U2 R U R'"], [2, 1, 1, 1, "U F' U' L' U2 L U2 F"], [2, 1, 2, 0, "R2 U R' U R U2 R2"], [2, 1, 2, 1, "U2 R U' R' U2 F' U' F"], [2, 1, 3, 0, "U2 R U' B U2 B' U2 R'"], [2, 1, 3, 1, "F' U2 F"], [2, 1, 8, 0, "F' L' U2 L U2 F"], [2, 1, 8, 1, "F' U F U R U R'"], [2, 2, 0, 0, "U R U2 R' U2 R U' R'"], [2, 2, 0, 1, "U2 F' U' F"], [2, 2, 1, 0, "R B U B' U2 R'"], [2, 2, 1, 1, "U2 R2 U B U' B' R2"], [2, 2, 2, 0, "R U2 R'"], [2, 2, 2, 1, "U R U2 R' U F' U' F"], [2, 2, 3, 0, "U2 R U2 B U B' U R'"], [2, 2, 3, 1, "F2 U' F U' F' U2 F2"], [2, 2, 8, 0, "R B U2 B' U2 R'"], [2, 2, 8, 1, "R U R' U2 F' U2 F"], [3, 0, 0, 0, "U' R2 U2 R' U' R U' R2"], [3, 0, 0, 1, "U F' U2 F U F' U' F"], [3, 0, 1, 0, "U R B U2 B' R'"], [3, 0, 1, 1, "F' U2 F2 R' F' R"], [3, 0, 2, 0, "U2 R U B' R B R2"], [3, 0, 2, 1, "U F' L' U2 L F"], [3, 0, 3, 0, "U R U2 R' U' R U R'"], [3, 0, 3, 1, "U' R B U B2 R B R2"], [3, 0, 8, 0, "F' U L' U2 L U' F"], [3, 0, 8, 1, "F' U2 F R U R'"], [3, 1, 0, 0, "U R U' B U2 B' U2 R'"], [3, 1, 0, 1, "F' U F"], [3, 1, 1, 0, "U F2 U' L' U L F2"], [3, 1, 1, 1, "U R2 B U B' U' R2"], [3, 1, 2, 0, "U R U R'"], [3, 1, 2, 1, "F' U' L' U2 L U2 F"], [3, 1, 3, 0, "R U' R' U R U R'"], [3, 1, 3, 1, "U R U' R' U2 F' U' F"], [3, 1, 8, 0, "U2 R U2 B U2 B' R'"], [3, 1, 8, 1, "U2 F' U' F U' R U R'"], [3, 2, 0, 0, "U R U2 B U B' U R'"], [3, 2, 0, 1, "U2 F' U F U' F' U' F"], [3, 2, 1, 0, "R U2 R' U2 R U' R'"], [3, 2, 1, 1, "U F' U' F"], [3, 2, 2, 0, "U F2 L' U' L U F2"], [3, 2, 2, 1, "U R2 U B U' B' R2"], [3, 2, 3, 0, "U2 R U' R'"], [3, 2, 3, 1, "R U2 R' U F' U' F"], [3, 2, 8, 0, "F' U2 L' U2 L F"], [3, 2, 8, 1, "R U R' U F' U' F"], [4, 0, 0, 0, "R' U2 B' R' B U2 R"], [4, 0, 0, 1, "R U2 R' U2 F' U' F"], [4, 0, 1, 0, "F' U2 F U2 R U R'"], [4, 0, 1, 1, "R' U2 B' R B U2 R"], [4, 0, 2, 0, "R U2 B U2 B' U2 R'"], [4, 0, 2, 1, "R U R' U' F' U' F"], [4, 0, 3, 0, "R U2 B U B' U2 R'"], [4, 0, 3, 1, "F U2 L F2 L' U2 F'"], [4, 0, 8, 1, "R U' R U2 F R2 F' U2 R2"], [4, 1, 0, 0, "R U2 B' R B R2"], [4, 1, 0, 1, "U2 R' F R F2 U' F"], [4, 1, 1, 0, "U2 R B U2 B' U R'"], [4, 1, 1, 1, "U R' F R F2 U' F"], [4, 1, 2, 0, "U R B U2 B' U R'"], [4, 1, 2, 1, "R' F R F2 U' F"], [4, 1, 3, 0, "R B U2 B' U R'"], [4, 1, 3, 1, "R U' R' F' U' F"], [4, 1, 8, 0, "R U2 R U2 F R F' U2 R2"], [4, 1, 8, 1, "R U2 B U B2 R B R2"], [4, 2, 0, 0, "U2 R2 B' R' B U2 R'"], [4, 2, 0, 1, "U R U2 R' F' U2 F"], [4, 2, 1, 0, "U R2 B' R' B U2 R'"], [4, 2, 1, 1, "R U2 R' F' U2 F"], [4, 2, 2, 0, "R2 B' R' B U2 R'"], [4, 2, 2, 1, "F' L' U2 L U' F"], [4, 2, 3, 0, "R U' B U2 B' R'"], [4, 2, 3, 1, "U2 R U2 R' F' U2 F"], [4, 2, 8, 0, "R U2 R U R' U R U2 R2"], [4, 2, 8, 1, "R U' R' F' L' U2 L F"]];
+  var SLOT_MAP=[{},{R:'F',F:'L',L:'B',B:'R'},{R:'L',F:'B',L:'R',B:'F'},{R:'B',F:'R',B:'L',L:'F'}];
+  function mapAlg(alg,slot){var mp=SLOT_MAP[slot];return alg.split(' ').map(function(t){var f=t[0];return (mp[f]||f)+t.slice(1);});}
+  function nameToMove(t){var f=FACES.indexOf(t[0]);var a=t.length===1?0:t[1]==='2'?1:2;return f*3+a;}
+  var LIB_MOVES=null, EXTRACT=null;
+  function cfopF2L(cube){
+    init();
+    if(!LIB_MOVES){LIB_MOVES=[];EXTRACT=[];for(var s=0;s<4;s++){LIB_MOVES[s]=F2L_LIB.map(function(r){return mapAlg(r[4],s).map(nameToMove);});
+      EXTRACT[s]=[mapAlg("R U R'",s).map(nameToMove),mapAlg("R U' R'",s).map(nameToMove),mapAlg("R U2 R'",s).map(nameToMove)];}}
+    var st={eP:[],eO:[],cP:[],cO:[]}, i;
+    for(i=0;i<12;i++){st.eP[cube.ep[i]]=i;st.eO[cube.ep[i]]=cube.eo[i];}
+    for(i=0;i<8;i++){st.cP[cube.cp[i]]=i;st.cO[cube.cp[i]]=cube.co[i];}
+    function mv(s,m){var r={eP:s.eP.slice(),eO:s.eO.slice(),cP:s.cP.slice(),cO:s.cO.slice()},k;
+      for(k=0;k<12;k++){r.eP[k]=eTo[m][s.eP[k]];r.eO[k]=s.eO[k]^eFl[m][s.eP[k]];}
+      for(k=0;k<8;k++){r.cP[k]=cTo[m][s.cP[k]];r.cO[k]=(s.cO[k]+cTw[m][s.cP[k]])%3;} return r;}
+    function seq(s,ms){for(var k=0;k<ms.length;k++)s=mv(s,ms[k]);return s;}
+    function crossOK(s){for(var k=4;k<8;k++)if(s.eP[k]!==k||s.eO[k])return false;return true;}
+    function pairOK(s,p){return s.cP[4+p]===4+p&&s.cO[4+p]===0&&s.eP[8+p]===8+p&&s.eO[8+p]===0;}
+    var steps=[];
+    // Krest: exact table descent
+    var cross=[],g=0;
+    function cIdx(s){return crossIndex([s.eP[4],s.eP[5],s.eP[6],s.eP[7]],[s.eO[4],s.eO[5],s.eO[6],s.eO[7]]);}
+    while(crossDist[cIdx(st)]>0&&g++<20){var cur=crossDist[cIdx(st)];for(var m=0;m<18;m++){var n2=mv(st,m);if(crossDist[cIdx(n2)]===cur-1){cross.push(m);st=n2;break;}}}
+    steps.push({type:'cross',moves:cross.map(function(m){return MOVE_NAMES[m];})});
+    var guard=0;
+    while(guard++<12){
+      var solved=[0,1,2,3].map(function(p){return pairOK(st,p);});
+      if(solved.indexOf(false)<0) break;
+      var best=null;
+      function tryLib(base,pre){
+        for(var p=0;p<4;p++){ if(solved[p]) continue;
+          for(var a=0;a<LIB_MOVES[p].length;a++){var ms=LIB_MOVES[p][a]; if(best && pre.length+ms.length>=best.moves.length) continue;
+            var r=seq(base,ms); if(!crossOK(r)||!pairOK(r,p)) continue; var ok=true;
+            for(var q=0;q<4;q++) if(solved[q]&&!pairOK(r,q)){ok=false;break;}
+            if(ok) best={pair:p,moves:pre.concat(ms),state:r};}}
+      }
+      tryLib(st,[]);
+      if(!best){ for(var q=0;q<4;q++){ if(solved[q]) continue; for(var x=0;x<3;x++){ tryLib(seq(st,EXTRACT[q][x]),EXTRACT[q][x]); } } }
+      if(!best) return {steps:steps,error:'f2l'};
+      st=best.state; steps.push({type:'f2l',pair:best.pair,moves:best.moves.map(function(m){return MOVE_NAMES[m];})});
+    }
+    return {steps:steps};
+  }
+  return {init:init, kociemba:kociemba, cfopF2L:cfopF2L, stickersToCubie:stickersToCubie, verify:verify, mul:mul, MC:MC, MOVE_NAMES:MOVE_NAMES, idCube:idCube, stToCubie:stToCubie, solvedSt:solvedSt, stMove:stMove};
+})();
+
+
+function SOLVER_HANDLE(d){
+  try{
+    if(d.cmd==='init'){SOLVER.init();return {id:d.id,ok:1};}
+    var st=d.st, N={U:[0,1,0],D:[0,-1,0],R:[1,0,0],L:[-1,0,0],F:[0,0,1],B:[0,0,-1]};
+    var get=function(f,p){var n=N[f];for(var i=0;i<st.length;i++){var t=st[i];if(t.p[0]===p[0]&&t.p[1]===p[1]&&t.p[2]===p[2]&&t.n[0]===n[0]&&t.n[1]===n[1]&&t.n[2]===n[2])return t.c;}return null;};
+    var c=SOLVER.stickersToCubie(get);
+    if(c.error) return {id:d.id,error:c.error,pos:c.pos,cols:c.cols};
+    var v=SOLVER.verify(c); if(v) return {id:d.id,error:v};
+    return {id:d.id, short:SOLVER.kociemba(c,{time:900}), cfop:SOLVER.cfopF2L(c)};
+  }catch(err){ return {id:d.id,error:'crash',msg:String(err)}; }
+}
+</script>
 <script>
 // ===================== STORAGE & LANGUAGE =====================
 const KEY='cubeTrainer.v1';
@@ -252,7 +520,7 @@ class Cube3D{
 // ===================== DATA =====================
 // [id, uzName, enName, alg, uzHint, enHint]
 const SETS = {
- oll1:{title:["2-look OLL · 1: sariq xoch","2-look OLL · 1: yellow cross"],short:["OLL xoch","OLL cross"],view:'oll-edge',pic:'top',cases:[
+ oll1:{title:["2-look OLL · 1: sariq Krest (X)","2-look OLL · 1: yellow cross"],short:["OLL krest","OLL cross"],view:'oll-edge',pic:'top',cases:[
   ['line',"Chiziq","Line","F R U R' U' F'","Tepada ikki qarama-qarshi sariq qirra. Chiziqni gorizontal (chapdan o'ngga) ushlang.","Two opposite yellow edges on top. Hold the line horizontally (left to right)."],
   ['L',"L shakli","L shape","F U R U' R' F'","Ikki qo'shni sariq qirra. Ularni orqa va chap tomonga (soat 12 va 9) qaratib ushlang.","Two adjacent yellow edges. Hold them at the back and left (12 and 9 o'clock)."],
   ['dot',"Nuqta","Dot","F R U R' U' F' f R U R' U' f'","Faqat markaz sariq, sariq qirra yo'q. Ikki qismni oraliq burilishsiz ketma-ket bajaring.","Only the center is yellow, no yellow edges. Do both halves back to back, with no U turn in between."]]},
@@ -325,7 +593,7 @@ function topSVG(st,view,size){
     s+=rect(o+3*u+gap,o+(z+1)*u+gap/2,side,u-gap,stickerColor(stk(st,[1,1,z],[1,0,0]),view)); }
   return s+'</svg>';
 }
-function isoSVG(st,view,size){
+function isoSVG(st,view,size,overlay){
   size=size||170; const c=Math.cos(Math.PI/6), sc=size/6.3;
   const P=(X,Y,Z)=>[((X-Z)*c)*sc+size/2, (-Y+(X+Z)*0.5)*sc+size/2];
   let s=`<svg viewBox="0 0 ${size} ${size}" width="${size}" height="${size}" role="img">`;
@@ -337,6 +605,7 @@ function isoSVG(st,view,size){
     const pts=[[-k,-k],[k,-k],[k,k],[-k,k]].map(([a,b])=>{const q=ctr.slice(); q[tan[0]]+=a; q[tan[1]]+=b; return P(q[0],q[1],q[2]);});
     s+=`<polygon points="${pts.map(q=>q.map(v=>v.toFixed(1)).join(',')).join(' ')}" fill="${stickerColor(t,view)}" stroke="rgba(0,0,0,.3)" stroke-width="0.6" stroke-linejoin="round"/>`;
   }
+  if(overlay) s+=overlay(P,size);
   return s+'</svg>';
 }
 function netSVG(st,size){
@@ -368,34 +637,48 @@ function copyText(text,btn){
 const copyBtn=(text,cls)=>`<button class="${cls||'icon ghost'}" data-copy="${text}" title="${L('Nusxa olish','Copy')}">⧉</button>`;
 
 // ===================== SHELL / ROUTING =====================
-const VIEWS=['reja','darslar','mashq','qollar','taymer'];
+const VIEWS=['reja','darslar','mashq','qollar','yechuvchi','taymer'];
+const ALIAS={metronom:'qollar'};
+const NAV_ICONS={
+ reja:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M3.5 6l1.5 1.5L7.5 5M3.5 12l1.5 1.5L7.5 11M3.5 18l1.5 1.5L7.5 17"/></svg>',
+ darslar:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 21V5M8 7h7"/></svg>',
+ mashq:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/></svg>',
+ yechuvchi:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg>',
+ qollar:'',
+ taymer:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M10 2h4M19 5l1.5-1.5"/></svg>'};
 function renderHeader(){
   document.documentElement.lang=DB.lang;
   $('appName').textContent=L('Speedcubing trener','Speedcubing trainer');
   document.title=L('Speedcubing trener — CFOP','Speedcubing trainer — CFOP');
   $('langBtn').innerHTML=DB.lang==='en'?'🇺🇿 <span class="lbl">O\'zbekcha</span>':'🇬🇧 <span class="lbl">English</span>';
   $('simBtn').innerHTML='🧊<span class="lbl"> '+L('Simulyator','Simulator')+'</span>';
-  const names=[L('1. Reja','1. Plan'),L('2. Darslar va holatlar','2. Lessons & cases'),L('3. Tanib olish mashqi','3. Recognition drill'),L("4. Qo'l texnikasi",'4. Finger tricks'),L('5. Taymer','5. Timer')];
-  $('nav').innerHTML=VIEWS.map((v,i)=>`<a href="#${v}">${names[i]}</a>`).join('');
+  const names=[L('Reja','Plan'),L('Darslar','Lessons'),L('Tanib olish mashqi','Recognition drill'),L("Qo'l texnikasi",'Finger tricks'),L('Yechuvchi','Solver'),L('Taymer','Timer')];
+  const short={mashq:L('Mashq','Practice')};
+  $('nav').innerHTML=VIEWS.map((v,i)=>`<a href="#${v}" data-v="${v}">${i+1}. ${names[i]}</a>`).join('');
+  $('bnav').innerHTML=VIEWS.filter(v=>v!=='qollar').map(v=>`<a href="#${v}" data-v="${v}">${NAV_ICONS[v]}<span>${short[v]||names[VIEWS.indexOf(v)]}</span></a>`).join('');
   $('footer').textContent=L("Natijalar va belgilar faqat shu brauzerda saqlanadi.","Your progress and times are saved in this browser only.");
   applyTheme(); markNav();
 }
-function markNav(){const v=curView(); document.querySelectorAll('#nav a').forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+v));}
-function curView(){const h=(location.hash||'#reja').slice(1); return VIEWS.includes(h)?h:'reja';}
-function route(){const v=curView(); VIEWS.forEach(k=>$('v-'+k).classList.toggle('on',k===v)); markNav(); if(v!=='qollar') metroStop(); window.scrollTo(0,0);}
+function markNav(){const v=curView(); document.querySelectorAll('#nav a').forEach(a=>a.classList.toggle('on',a.dataset.v===v)); const bv=v==='qollar'?'mashq':v; document.querySelectorAll('#bnav a').forEach(a=>a.classList.toggle('on',a.dataset.v===bv));}
+function rawHash(){return (location.hash||'#reja').slice(1);}
+function curView(){const h=rawHash(); return VIEWS.includes(h)?h:(ALIAS[h]||'reja');}
+function curSub(){return curView()==='qollar'?'metro':'rec';}
+function showSub(){ const sub=curSub(); document.querySelectorAll('.subtabs a').forEach(a=>a.classList.toggle('on',a.dataset.sub===sub)); }
+function route(){const v=curView(); VIEWS.forEach(k=>$('v-'+k).classList.toggle('on',k===v)); markNav(); showSub();
+  if(v!=='qollar') metroStop(); if(v==='yechuvchi') warmSolver(); window.scrollTo(0,0);}
 window.addEventListener('hashchange',route);
 function curTheme(){return DB.theme||(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');}
 function applyTheme(){const t=curTheme(); document.documentElement.dataset.theme=t; const tm=document.querySelector('meta[name=theme-color]'); if(tm) tm.content=t==='dark'?'#141416':'#f6f5f2'; const b=$('themeBtn'); b.textContent=t==='dark'?'☀️':'🌙'; b.title=t==='dark'?L("Yorug' rejim","Light mode"):L("Qorong'i rejim","Dark mode");}
 
 // ===================== PLAN =====================
 const PLAN=[
- {tag:["1-hafta","Week 1"],title:["Asos: notatsiya, xoch, qo'l texnikasi","Basics: notation, cross, finger tricks"],tasks:[
+ {tag:["1-hafta","Week 1"],title:["Asos: notatsiya, Krest (X), qo'l texnikasi","Basics: notation, cross, finger tricks"],tasks:[
   ["Darslar → Notatsiya bo'limini o'qing: R, U, F, M, r, f, x harakatlarini bilib oling","Lessons → read Notation: learn the R, U, F, M, r, f, x moves"],
-  ["Qo'l texnikasi: R U R' U' (sexy move) ni metronomda 120 harakat/daq tezlikda xatosiz bajaring","Finger tricks: do R U R' U' (sexy move) cleanly at 120 moves/min on the metronome"],
-  ["Oq xochni pastda yig'ishga o'ting (ko'zdan kechirishda butun xochni rejalashtiring, 8 harakatdan kam)","Switch to solving the white cross on the bottom (plan the whole cross during inspection, under 8 moves)"],
+  ["Qo'l texnikasi: R U R' U' (gold trigger) ni metronomda 120 harakat/daq tezlikda xatosiz bajaring","Finger tricks: do R U R' U' (gold trigger) cleanly at 120 moves/min on the metronome"],
+  ["Oq Krest (X)ni pastda yig'ishga o'ting (ko'zdan kechirishda butun krestni rejalashtiring, 8 harakatdan kam)","Switch to solving the white cross on the bottom (plan the whole cross during inspection, under 8 moves)"],
   ["2-look OLL 1-qadam: Chiziq, L, Nuqta (3 ta formula)","2-look OLL step 1: Line, L, Dot (3 algorithms)"],
   ["OLL burchaklar: Sune va Antisune","OLL corners: Sune and Antisune"],
-  ["Tanib olish mashqi: 'OLL xoch' + 'OLL burchak' — 90% aniqlik","Recognition drill: 'OLL cross' + 'OLL corners' — 90% accuracy"]]},
+  ["Tanib olish mashqi: 'OLL krest' + 'OLL burchak' — 90% aniqlik","Recognition drill: 'OLL cross' + 'OLL corners' — 90% accuracy"]]},
  {tag:["2-hafta","Week 2"],title:["Intuitiv F2L va qolgan OLL","Intuitive F2L and the rest of OLL"],tasks:[
   ["F2L darsini o'qing: burchak + qirrani tepada juftlash g'oyasi","Read the F2L lesson: pairing the corner and edge on top"],
   ["F2L 4 ta asosiy holat (R U R', F' U' F, U R U' R', U' F' U F) — ko'rmasdan bajaring","The 4 basic F2L cases (R U R', F' U' F, U R U' R', U' F' U F) — without looking"],
@@ -434,7 +717,7 @@ function renderPlanView(){
     <tr><td>10–15 ${L("daq","min")}</td><td>${L("<b>Taymer</b>: 12 ta to'liq yechim, ao12 natijani kuzating","<b>Timer</b>: 12 full solves, track your ao12")}</td></tr>
   </table></div>
   <div class="panel"><h3>${L("Asosiy qoidalar","Key rules")}</h3><ul class="clean">
-    <li>${L("Oq xoch <b>pastda</b>, sariq tepada yig'iladi. Bu sahifadagi barcha rasmlar ham shunday.","White cross on the <b>bottom</b>, yellow on top. Every picture here uses that orientation.")}</li>
+    <li>${L("Oq Krest (X) <b>pastda</b>, sariq tepada yig'iladi. Bu sahifadagi barcha rasmlar ham shunday.","White cross on the <b>bottom</b>, yellow on top. Every picture here uses that orientation.")}</li>
     <li>${L("<b>Sekin, lekin to'xtamasdan</b> yechish tez-to'xta-tez yechishdan foydaliroq. Pauzalar — vaqtning asosiy yo'qotilishi.","Solving <b>slowly but without pauses</b> beats fast-stop-fast. Pauses are where most time is lost.")}</li>
     <li>${L("Formulani yodlashda avval <b>rasm → nom → formula</b> zanjirini o'rnating. Faqat harflarni yodlash emas.","When learning an algorithm, build the <b>picture → name → algorithm</b> chain, not just the letters.")}</li>
     <li>${L("Haftada bir marta ao12 natijangizni yozib boring — o'sishni ko'rish motivatsiya beradi.","Write down your ao12 once a week — seeing progress keeps you going.")}</li></ul></div></div>`;
@@ -457,12 +740,12 @@ function lessonText(k){
  <li>${L("<b>3D ko'rinish</b> (F2L): tepa, old (chapda) va o'ng tomon. Kulrang — ahamiyatsiz stikerlar.","<b>3D view</b> (F2L): top, front (left) and right faces. Gray stickers don't matter.")}</li>
  <li>${L("<b>OLL</b> rasmlarida faqat sariq muhim, qolgani kulrang.","In <b>OLL</b> pictures only yellow matters; everything else is gray.")}</li>
  <li>${L("Barcha holatlarda: sariq tepada, yashil oldda, to'q sariq o'ngda.","In every case: yellow on top, green in front, orange on the right.")}</li></ul></div></div>`;
- if(k==='cross') return `<h2 id="l-cross">${L("Cross — oq xoch (pastda)","Cross — the white cross (on the bottom)")}</h2>
+ if(k==='cross') return `<h2 id="l-cross">${L("Krest (X) — oq krest pastda","Cross — the white cross (on the bottom)")}</h2>
  <div class="grid g2"><div class="panel"><ul class="clean">
- <li>${L("LBL'da xochni tepada yig'ib, keyin ag'darasiz. CFOP'da xoch <b>darhol pastda</b> yig'iladi — shunda F2L juftlarini tepada ko'rib turasiz.","In LBL you build the cross on top and flip the cube. In CFOP the cross goes <b>straight to the bottom</b>, so you can see the F2L pairs on top.")}</li>
- <li>${L("Musobaqada 15 soniya ko'zdan kechirish bor. Shu vaqtda <b>butun xochni</b> boshida rejalashtiring.","Competitions give you 15 seconds of inspection. Use it to plan the <b>whole cross</b> in advance.")}</li>
- <li>${L("Yaxshi xoch — 8 harakat yoki kam. Avval xochni tepada rejalashtirib, keyin pastda bajarishni mashq qiling.","A good cross is 8 moves or fewer. Practice planning it, then executing it on the bottom.")}</li></ul></div>
- <div class="panel"><h3>${L("Mashq","Practice")}</h3><ul class="clean"><li>${L("Taymerda aralashtiring, 15 soniya qarang, keyin <b>kubga qaramasdan</b> xochni yig'ishga urinib ko'ring. Avval 2 ta qirra, keyin 3, keyin 4.","Scramble with the timer, inspect for 15 seconds, then try to build the cross <b>without looking</b>. Start with 2 edges, then 3, then 4.")}</li>
+ <li>${L("LBL'da krestni tepada yig'ib, keyin ag'darasiz. CFOP'da Krest (X) <b>darhol pastda</b> yig'iladi — shunda F2L juftlarini tepada ko'rib turasiz.","In LBL you build the cross on top and flip the cube. In CFOP the cross goes <b>straight to the bottom</b>, so you can see the F2L pairs on top.")}</li>
+ <li>${L("Musobaqada 15 soniya ko'zdan kechirish bor. Shu vaqtda <b>butun krestni</b> boshida rejalashtiring.","Competitions give you 15 seconds of inspection. Use it to plan the <b>whole cross</b> in advance.")}</li>
+ <li>${L("Yaxshi Krest (X) — 8 harakat yoki kam. Avval krestni tepada rejalashtirib, keyin pastda bajarishni mashq qiling.","A good cross is 8 moves or fewer. Practice planning it, then executing it on the bottom.")}</li></ul></div>
+ <div class="panel"><h3>${L("Mashq","Practice")}</h3><ul class="clean"><li>${L("Taymerda aralashtiring, 15 soniya qarang, keyin <b>kubga qaramasdan</b> krestni yig'ishga urinib ko'ring. Avval 2 ta qirra, keyin 3, keyin 4.","Scramble with the timer, inspect for 15 seconds, then try to build the cross <b>without looking</b>. Start with 2 edges, then 3, then 4.")}</li>
  <li>${L("Qirralarni qo'yishda <b>F2L slotlarini</b> (bo'sh burchak-qirra joylari) eslab qoling.","While placing edges, keep track of the <b>F2L slots</b> (empty corner-edge spots).")}</li></ul></div></div>`;
  if(k==='f2l') return `<h2 id="l-f2l">${L("F2L — birinchi ikki qatlam birga","F2L — the first two layers together")}</h2>
  <div class="grid g2"><div class="panel"><h3>${L("G'oya","The idea")}</h3><ul class="clean">
@@ -475,7 +758,7 @@ function lessonText(k){
  <li>${L("Shu ikki savolga javob — holatni aniqlaydi. Quyidagi rasmlarda maqsad slot — old-o'ng.","Those two answers identify the case. In the pictures below the target slot is front-right.")}</li>
  <li>${L("Formulalarni yodlashdan ko'ra, <b>Qadamma-qadam</b> ko'rib, juft qanday hosil bo'lishini tushuning.","Rather than memorizing, use <b>Step by step</b> to see how the pair forms.")}</li></ul></div></div>`;
  if(k==='oll') return `<h2 id="l-oll">${L("OLL — tepani sariq qilish (2 qadamda)","OLL — making the top yellow (in 2 steps)")}</h2>
- <div class="tip">${L("Avval sariq xoch (3 holat), keyin burchaklar (7 holat). Burchaklarni tanishda <b>tepadagi sariq burchaklar sonini</b> sanang: 0 ta → H yoki Pi; 1 ta → Sune yoki Antisune; 2 ta → Faralar, T yoki Kapalak. Keyin yon tomondagi sariq stikerlarga qarang.","First the yellow cross (3 cases), then the corners (7 cases). To recognize corners, count the <b>yellow corners on top</b>: 0 → H or Pi; 1 → Sune or Antisune; 2 → Headlights, T or Bowtie. Then look at the yellow stickers on the sides.")}</div>`;
+ <div class="tip">${L("Avval sariq Krest (X) (3 holat), keyin burchaklar (7 holat). Burchaklarni tanishda <b>tepadagi sariq burchaklar sonini</b> sanang: 0 ta → H yoki Pi; 1 ta → Sune yoki Antisune; 2 ta → Faralar, T yoki Kapalak. Keyin yon tomondagi sariq stikerlarga qarang.","First the yellow cross (3 cases), then the corners (7 cases). To recognize corners, count the <b>yellow corners on top</b>: 0 → H or Pi; 1 → Sune or Antisune; 2 → Headlights, T or Bowtie. Then look at the yellow stickers on the sides.")}</div>`;
  if(k==='pll') return `<h2 id="l-pll">${L("PLL — tepa qatlamni joyiga qo'yish","PLL — permuting the last layer")}</h2>
  <div class="tip">${L("<b>Faralar</b> — bir tomondagi ikki burchak bir xil rang. <b>Blok</b> — burchak va qirra yonma-yon bir rang. <b>Qator</b> — butun tomon bir rang. Pro kubchilar PLL'ni faqat 2 ta tomonga qarab taniydi: faralar va bloklarni qidiradi. Har bir rasm ostida tomonlar tahlili berilgan.","<b>Headlights</b> — two corners on one side share a color. <b>Block</b> — a corner and edge next to each other share a color. <b>Bar</b> — a whole side is one color. Pros recognize PLL from just 2 sides by looking for headlights and blocks. Each picture has a side-by-side breakdown below it.")}</div>`;
 }
@@ -487,12 +770,74 @@ function caseCard(k,c){
    <div class="row" style="gap:6px"><button class="sm" data-step="${k}|${c.id}">▶ ${L("Qadamma-qadam","Step by step")}</button><button class="sm" data-sim="${c.alg}">🧊 ${L("Simulyatorda","In simulator")}</button></div></div>`;
 }
 function renderLessonsView(){
-  const nav=[['l-notation',L('Notatsiya','Notation')],['l-cross','Cross'],['l-f2l','F2L'],['l-oll','OLL'],['l-pll','PLL']];
+  const nav=[['l-notation',L('Notatsiya','Notation')],['l-fingers',L('Barmoqlar','Fingers')],['l-cross',L('Krest (X)','Cross')],['l-f2l','F2L'],['l-oll','OLL'],['l-pll','PLL']];
   const block=k=>`<h3 style="margin:18px 0 10px">${ST(k)} <span class="muted" style="font-weight:500">· ${SETS[k].cases.length}</span></h3><div class="grid g3">${SETS[k].cases.map(c=>caseCard(k,c)).join('')}</div>`;
   $('v-darslar').innerHTML=`<h1>${L("Darslar va holatlar kutubxonasi","Lessons and case library")}</h1>
   <p class="lead">${L("Har bir holat rasmi formuladan hisoblab chizilgan — rasm aynan formula bajarilishidan oldingi holatni ko'rsatadi. Kubni rasmdagidek ushlang. <b>Qadamma-qadam</b> formulani harakat bo'yicha ko'rsatadi, <b>Simulyatorda</b> esa holatni 3D kubga yuklaydi.","Every picture is computed from its algorithm — it shows exactly the state before you run it. Hold the cube as pictured. <b>Step by step</b> walks through the moves; <b>In simulator</b> loads the case onto the 3D cube.")}</p>
   <div class="row" style="margin-bottom:8px">${nav.map(([id,n])=>`<button class="sm" data-jump="${id}">${n}</button>`).join('')}</div>
-  ${lessonText('notation')+lessonText('cross')+lessonText('f2l')+block('f2l')+lessonText('oll')+block('oll1')+block('oll2')+lessonText('pll')+block('pll1')+block('pll2')}`;
+  ${lessonText('notation')+fingerLesson()+lessonText('cross')+lessonText('f2l')+block('f2l')+lessonText('oll')+block('oll1')+block('oll2')+lessonText('pll')+block('pll1')+block('pll2')}`;
+}
+
+
+// ===================== FINGER LESSON =====================
+const FINGERS=[
+ ['R',["O'ng qo'l · bilak","Right hand · wrist"],["Bilakni yuqoriga (o'zingizdan nariga) burang. Barmoqlar emas, bilak ishlaydi; bosh barmoq old tomonda qoladi.","Turn your wrist up (away from you). The wrist does the work, not the fingers; your thumb stays on the front."]],
+ ["R'",["O'ng qo'l · bilak","Right hand · wrist"],["Bilakni pastga (o'zingizga tomon) burang.","Turn your wrist down (toward you)."]],
+ ['U',["O'ng ko'rsatkich","Right index"],["Barmoq tepa qatlamning o'ng-orqa burchagida turadi va uni o'zingizga tomon chertadi.","The finger rests on the back-right of the top layer and flicks it toward you."]],
+ ["U'",["Chap ko'rsatkich","Left index"],["Barmoq tepa qatlamning chap-orqa burchagida turadi va uni o'zingizga tomon chertadi.","The finger rests on the back-left of the top layer and flicks it toward you."]],
+ ['U2',["O'ng ko'rsatkich + o'rta","Right index + middle"],["Ketma-ket ikki chertish (double flick): avval ko'rsatkich, darhol o'rta barmoq.","Two flicks in a row (double flick): index, then immediately middle finger."]],
+ ['L',["Chap qo'l · bilak","Left hand · wrist"],["Chap bilakni pastga (o'zingizga tomon) burang.","Turn your left wrist down (toward you)."]],
+ ["L'",["Chap qo'l · bilak","Left hand · wrist"],["Chap bilakni yuqoriga (nariga) burang.","Turn your left wrist up (away from you)."]],
+ ['F',["O'ng ko'rsatkich","Right index"],["Old qatlamning o'ng-yuqori qismini pastga tortib burang. Bilak joyida qoladi.","Pull the top-right of the front layer down. The wrist stays put."]],
+ ["F'",["O'ng bosh barmoq","Right thumb"],["Old qatlamning o'ng-past qismini bosh barmoq bilan yuqoriga itaring.","Push the bottom-right of the front layer up with your thumb."]],
+ ['D',["Chap halqa barmoq","Left ring finger"],["Pastki qatlamni orqa tomondan chapga torting.","Pull the bottom layer to the left from the back."]],
+ ["D'",["O'ng halqa barmoq","Right ring finger"],["Pastki qatlamni orqa tomondan o'ngga torting.","Pull the bottom layer to the right from the back."]],
+ ["M'",["Chap halqa barmoq","Left ring finger"],["O'rta qatlamni pastki-orqa tomondan o'zingizga tomon itaring — old qismi yuqoriga chiqadi. H va Z-perm'da kerak.","Push the middle slice from the bottom-back toward you — the front goes up. Needed for H and Z-perm."]],
+ ['M',["Chap halqa yoki ko'rsatkich","Left ring or index"],["Teskari yo'nalish: pastki qismni orqaga itaring yoki tepasini o'zingizga torting.","The reverse: push the bottom away, or pull the top toward you."]],
+];
+function moveArrow(mv){
+  const m=parseTok(mv), [ax,pr]=MOVES[m.f];
+  const vis=t=>(t.n[1]===1&&t.p[1]===1)||(t.n[2]===1&&t.p[2]===1)||(t.n[0]===1&&t.p[0]===1);
+  let best=null;
+  for(const t of solvedCube()){ if(!vis(t)||!pr(t.p[ax])) continue;
+    const c={p:t.p.slice(),n:t.n.slice()}; move([c],m.f,m.a===2?1:m.a);
+    if(!vis(c)||c.n.join()===t.n.join()) continue;
+    const sc=t.p.filter(v=>v!==0).length; if(!best||sc<best.sc) best={a:t,b:c,sc}; }
+  if(!best) return null;
+  const A=best.a.p.map((v,i)=>v+best.a.n[i]*0.5), B=best.b.p.map((v,i)=>v+best.b.n[i]*0.5);
+  const M3=A.map((v,i)=>(v+B[i])/2*1.3);
+  return (P,size)=>{const a=P(...A),b=P(...B),c=P(...M3), id='ah'+Math.random().toString(36).slice(2,8);
+    const d=`M${a[0].toFixed(1)},${a[1].toFixed(1)} Q${c[0].toFixed(1)},${c[1].toFixed(1)} ${b[0].toFixed(1)},${b[1].toFixed(1)}`;
+    return `<defs><marker id="${id}" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ff5a1f" stroke="#fff" stroke-width="1.2"/></marker></defs>
+      <path d="${d}" fill="none" stroke="#fff" stroke-width="${size*0.05}" stroke-linecap="round"/>
+      <path d="${d}" fill="none" stroke="#ff5a1f" stroke-width="${size*0.03}" stroke-linecap="round" marker-end="url(#${id})"/>
+      ${m.a===2?`<text x="${(b[0]+6).toFixed(1)}" y="${(b[1]-6).toFixed(1)}" font-size="${size*0.12}" font-weight="800" fill="#ff5a1f" stroke="#fff" stroke-width="0.8" font-family="system-ui">×2</text>`:''}`;};
+}
+function fingerLesson(){
+  const cards=FINGERS.map(([mv,who,how])=>`<div class="card fcard"><div class="pic" data-fpic="${mv}">${isoSVG(solvedCube(),'pll',140,moveArrow(mv))}</div>
+    <div class="row" style="justify-content:space-between"><span class="alg" style="font-size:18px">${mv}</span><button class="sm" data-fplay="${mv}">▶ ${L("Ko'rish",'Show')}</button></div>
+    <div class="who">${L(...who)}</div><div class="hint">${L(...how)}</div></div>`).join('');
+  return `<h2 id="l-fingers">${L("Qo'l texnikasi: qaysi barmoq qaysi qatlamni buradi","Finger technique: which finger turns which layer")}</h2>
+  <div class="grid g2" style="margin-bottom:14px">
+   <div class="panel"><h3>${L("Asosiy ushlash (home grip)","Home grip")}</h3><ul class="clean">
+    <li>${L("Bosh barmoqlar <b>old tomonda</b>, pastki-o'rta qatlam atrofida.","Thumbs on the <b>front</b>, around the bottom and middle layers.")}</li>
+    <li>${L("Ko'rsatkichlar <b>tepa qatlamning orqa burchaklarida</b> turadi — U va U' uchun tayyor.","Index fingers rest on the <b>back corners of the top layer</b>, ready for U and U'.")}</li>
+    <li>${L("Qolgan barmoqlar orqada. Kubni kaft bilan emas, <b>barmoq uchlari</b> bilan yengil ushlang.","The other fingers sit on the back. Hold the cube <b>lightly with your fingertips</b>, not your palms.")}</li>
+    <li>${L("Oddiy qoida: <b>R/L — bilak</b>, <b>U/U' — ko'rsatkich</b>, <b>D — halqa barmoq</b>, <b>F — ko'rsatkich yoki bosh barmoq</b>.","Rule of thumb: <b>R/L — wrist</b>, <b>U/U' — index finger</b>, <b>D — ring finger</b>, <b>F — index or thumb</b>.")}</li></ul></div>
+   <div class="panel"><h3>${L("Best practice","Best practice")}</h3><ul class="clean">
+    <li>${L("Har bir formula uchun <b>bitta barmoq tartibini</b> tanlang va doim shunday bajaring — mushak xotirasi shunda shakllanadi.","Pick <b>one fingering</b> per algorithm and always use it — that's how muscle memory forms.")}</li>
+    <li>${L("<b>Regrip</b> va kub aylantirishni (<code>x</code>, <code>y</code>) kamaytiring: har biri ~0,3 s.","Cut <b>regrips</b> and cube rotations (<code>x</code>, <code>y</code>): each costs ~0.3 s.")}</li>
+    <li>${L("Avval sekin va to'g'ri, keyin tez. Metronom bilan ritmni ushlang (Qo'l texnikasi bo'limi).","Slow and correct first, then fast. Keep the rhythm with the metronome (Finger tricks section).")}</li>
+    <li>${L("Misollar: <b>Gold trigger</b> <code>R U R' U'</code> = bilak · o'ng ko'rsatkich · bilak · chap ko'rsatkich. <b>Sledgehammer</b> <code>R' F R F'</code> = bilak · o'ng ko'rsatkich · bilak · o'ng bosh barmoq.","Examples: <b>Gold trigger</b> <code>R U R' U'</code> = wrist · right index · wrist · left index. <b>Sledgehammer</b> <code>R' F R F'</code> = wrist · right index · wrist · right thumb.")}</li></ul></div>
+  </div>
+  <p class="muted" style="margin-top:0">${L("Strelka — qatlam qaysi tomonga harakatlanishi. <b>▶ Ko'rish</b> harakatni 3D kubda ko'rsatadi.","The arrow shows which way the layer moves. <b>▶ Show</b> plays the move on a 3D cube.")}</p>
+  <div class="grid g3">${cards}</div>`;
+}
+function playFinger(mv){
+  const box=document.querySelector(`[data-fpic="${CSS.escape(mv)}"]`); if(!box||box.dataset.busy) return; box.dataset.busy=1;
+  const cube=new Cube3D(box,{height:140,size:28,dur:()=>650}); cube.rx=-30; cube.ry=-45; cube.view(); box.querySelector('.scene').style.width='100%';
+  setTimeout(()=>cube.enqueue([mv],false),350);
+  setTimeout(()=>{box.innerHTML=isoSVG(solvedCube(),'pll',140,moveArrow(mv)); delete box.dataset.busy;},2600);
 }
 
 // ===================== STEPPER =====================
@@ -517,8 +862,12 @@ $('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal();})
 // ===================== DRILL =====================
 let CUR=null, SESSION={n:0,ok:0,times:[]};
 const statKey=(k,id)=>k+':'+id;
+const subtabsHTML=()=>`<div class="subtabs"><a href="#mashq" data-sub="rec">🎯 ${L('Tanib olish','Recognition')}</a><a href="#qollar" data-sub="metro">🎵 ${L("Metronom va qo'llar",'Metronome & hands')}</a></div>`;
+function renderMashqShell(){
+  $('v-mashq').innerHTML=subtabsHTML()+`<div id="mashq-rec"></div>`;
+}
 function renderDrillView(){
-  $('v-mashq').innerHTML=`<h1>${L("Tanib olish mashqi","Recognition drill")}</h1>
+  $('mashq-rec').innerHTML=`<h1>${L("Tanib olish mashqi","Recognition drill")}</h1>
   <p class="lead">${L("Pro kubchilar holatni 0,5 soniyadan tez taniydi. Bu yerda holat tasodifiy burchakda ko'rsatiladi — siz nomini topasiz. Xato qilgan holatlaringiz keyinroq tez-tez qaytadi.","Pros recognize a case in under half a second. Here a case appears at a random angle and you name it. Cases you miss come back more often.")}</p>
   <div class="panel" style="margin-bottom:14px">
     <div class="row" style="margin-bottom:10px"><b>${L("To'plamlar","Sets")}:</b><span id="setChips" class="row"></span></div>
@@ -611,7 +960,7 @@ function renderDrillStats(){
 }
 
 // ===================== METRONOME (with 3D cube) =====================
-const TRIGGERS=[["Sexy move","R U R' U'"],["Sledgehammer","R' F R F'"],[["Teskari sexy","Reverse sexy"],"U R U' R'"],[["Chap sexy","Left sexy"],"L' U' L U"]];
+const TRIGGERS=[["Gold trigger","R U R' U'"],["Sledgehammer","R' F R F'"],[["Teskari gold trigger","Reverse gold trigger"],"U R U' R'"],[["Chap gold trigger","Left gold trigger"],"L' U' L U"]];
 function metroList(){const out=TRIGGERS.map(([n,a])=>({name:Array.isArray(n)?L(...n):n,alg:a,isCase:false}));
   SET_ORDER.forEach(k=>SETS[k].cases.forEach(c=>out.push({name:SH(k)+' · '+NM(c),alg:c.alg,isCase:true}))); return out;}
 let M={on:false,timer:null,i:0,reps:0,ctx:null,sel:0,cube:null};
@@ -619,7 +968,7 @@ function metroItem(){return metroList()[M.sel];}
 function metroStartState(){const it=metroItem(); return it.isCase?caseState(it.alg,0,0):solvedCube();}
 function renderHandsView(){
   metroStop();
-  $('v-qollar').innerHTML=`<h1>${L("Qo'l texnikasi (finger tricks)","Finger tricks")}</h1>
+  $('v-qollar').innerHTML=subtabsHTML()+`<h1>${L("Qo'l texnikasi (finger tricks)","Finger tricks")}</h1>
   <p class="lead">${L("Tezlik qo'lning kuchidan emas, harakatlarning uzluksizligidan keladi. Metronom bilan formulalarni bir xil ritmda bajarishni o'rganing — avval sekin, keyin asta-sekin tezlashtiring.","Speed comes from flow, not force. Learn to run algorithms at an even rhythm with the metronome — slowly first, then gradually faster.")}</p>
   <div class="grid g2">
     <div class="panel">
@@ -628,25 +977,27 @@ function renderHandsView(){
       <div class="row" style="margin-bottom:10px;flex-wrap:nowrap"><select id="metroAlg" style="flex:1;min-width:0">${metroList().map((it,i)=>`<option value="${i}" ${i===M.sel?'selected':''}>${it.name} — ${it.alg}</option>`).join('')}</select><button class="sm" id="metroCopy" title="${L('Nusxa olish','Copy')}">⧉ ${L('Nusxa','Copy')}</button></div>
       <div class="row" style="margin-bottom:14px"><span>${L('Tezlik','Speed')}:</span><input type="range" id="bpm" min="40" max="300" step="10" value="${DB.bpm||90}"><b id="bpmVal">${DB.bpm||90}</b><span class="muted">${L('harakat/daq','moves/min')} (<span id="tps">${((DB.bpm||90)/60).toFixed(1)}</span> TPS)</span></div>
       <div class="metro" id="metroShow"></div>
-      <div id="metroCube" style="margin-top:14px"></div>
       <div class="row" style="justify-content:center;margin-top:14px">
         <button class="primary" id="metroBtn">▶ ${L('Boshlash','Start')}</button>
         <span class="muted" id="metroReps"></span>
       </div>
+      <div id="metroCube" style="margin-top:14px"></div>
       <div class="tip">${L("Formulani 10 marta xatosiz bajara olsangiz, tezlikni 10–20 ga oshiring. Xato ko'paysa, qaytib pasaytiring. Holat formulalarida kub har takror boshida holatga qaytadi va oxirida yig'ilgan bo'ladi.","Once you can do it 10 times cleanly, raise the speed by 10–20. If mistakes pile up, slow back down. For case algorithms the cube resets to the case at the start of every rep and ends solved.")}</div>
     </div>
     <div class="panel">
       <h3>${L("Asosiy qoidalar","Key techniques")}</h3>
       <table>
         <tr><th>${L('Harakat','Move')}</th><th>${L('Qanday bajariladi','How to do it')}</th></tr>
-        <tr><td><code>U</code></td><td>${L("O'ng ko'rsatkich barmoq bilan tepani chapga \"chertish\"","Flick the top layer left with your right index finger")}</td></tr>
-        <tr><td><code>U'</code></td><td>${L("Chap ko'rsatkich barmoq bilan tepani o'ngga chertish","Flick the top layer right with your left index finger")}</td></tr>
+        <tr><td><code>U</code></td><td>${L("O'ng ko'rsatkich: tepa qatlamning o'ng-orqa burchagini o'zingizga tomon chertish","Right index: flick the back-right of the top layer toward you")}</td></tr>
+        <tr><td><code>U'</code></td><td>${L("Chap ko'rsatkich: tepa qatlamning chap-orqa burchagini o'zingizga tomon chertish","Left index: flick the back-left of the top layer toward you")}</td></tr>
         <tr><td><code>U2</code></td><td>${L("O'ng ko'rsatkich + o'rta barmoq ketma-ket (ikki chertish)","Right index then middle finger (a double flick)")}</td></tr>
-        <tr><td><code>R</code> / <code>R'</code></td><td>${L("Butun qo'l emas, faqat bilakni burang. Bosh barmoq pastda qoladi","Turn with your wrist, not your whole arm. Thumb stays at the bottom")}</td></tr>
-        <tr><td><code>F</code> / <code>F'</code></td><td>${L("Bilakni burmasdan, o'ng qo'lning bosh yoki ko'rsatkich barmog'i bilan. <code>R' F R F'</code> (sledgehammer) triggerida ayniqsa muhim","Without turning the wrist, using the right thumb or index finger. Especially important in the <code>R' F R F'</code> (sledgehammer) trigger")}</td></tr>
-        <tr><td><code>M'</code></td><td>${L("Chap qo'l halqa barmog'i bilan o'rta qatlamni orqa-pastdan yuqoriga itarish (<code>M</code> — teskari)","Push the middle slice up from the back-bottom with your left ring finger (<code>M</code> is the reverse)")}</td></tr>
-        <tr><td><code>D</code> / <code>D'</code></td><td>${L("Halqa barmog'i bilan pastki qatlam: <code>D</code> — chap qo'l, <code>D'</code> — o'ng qo'l","Bottom layer with a ring finger: <code>D</code> left hand, <code>D'</code> right hand")}</td></tr>
+        <tr><td><code>R</code> / <code>R'</code></td><td>${L("Butun qo'l emas, faqat bilakni burang. Bosh barmoq old tomonda qoladi","Turn with your wrist, not your whole arm. Thumb stays on the front")}</td></tr>
+        <tr><td><code>L</code> / <code>L'</code></td><td>${L("Chap bilak: <code>L</code> — pastga, <code>L'</code> — yuqoriga","Left wrist: <code>L</code> down, <code>L'</code> up")}</td></tr>
+        <tr><td><code>F</code> / <code>F'</code></td><td>${L("<code>F</code> — o'ng ko'rsatkich pastga tortadi, <code>F'</code> — o'ng bosh barmoq yuqoriga itaradi. Bilak joyida","<code>F</code> — right index pulls down, <code>F'</code> — right thumb pushes up. Wrist stays put")}</td></tr>
+        <tr><td><code>D</code> / <code>D'</code></td><td>${L("Halqa barmog'i bilan pastki qatlamni orqadan tortish: <code>D</code> — chap qo'l, <code>D'</code> — o'ng qo'l","Pull the bottom layer from the back with a ring finger: <code>D</code> left hand, <code>D'</code> right hand")}</td></tr>
+        <tr><td><code>M'</code></td><td>${L("Chap halqa barmog'i o'rta qatlamni pastki-orqadan o'zingizga tomon itaradi (<code>M</code> — teskari)","Left ring finger pushes the middle slice from the bottom-back toward you (<code>M</code> is the reverse)")}</td></tr>
       </table>
+      <div class="row" style="margin-top:12px"><button class="sm" data-goto="l-fingers">✋ ${L("Rasmli va animatsiyali dars","Lesson with pictures & animation")} →</button></div>
       <h3 style="margin-top:16px">${L("Silliqlik uchun","For smoothness")}</h3>
       <ul class="clean">
         <li>${L("<b>Regrip</b>ni kamaytiring: formula davomida kubni qayta ushlamang.","Minimize <b>regrips</b>: don't re-grip the cube in the middle of an algorithm.")}</li>
@@ -656,7 +1007,7 @@ function renderHandsView(){
       </ul>
     </div>
   </div>`;
-  M.cube=new Cube3D($('metroCube'),{height:250,size:44,state:metroStartState(),dur:()=>Math.min(260,(60000/+$('bpm').value)*0.7)});
+  M.cube=new Cube3D($('metroCube'),{height:window.innerWidth<760?210:250,size:window.innerWidth<760?38:44,state:metroStartState(),dur:()=>Math.min(260,(60000/+$('bpm').value)*0.7)});
   $('metroAlg').onchange=e=>{M.sel=+e.target.value; metroStop(); M.reps=0; M.cube.setState(metroStartState()); drawMetro();};
   $('metroCopy').onclick=e=>copyText(metroItem().alg,e.currentTarget);
   const bpm=$('bpm'); bpm.oninput=()=>{DB.bpm=+bpm.value; save(); $('bpmVal').textContent=bpm.value; $('tps').textContent=(bpm.value/60).toFixed(1); if(M.on){metroStop(true);metroStart();}};
@@ -793,9 +1144,188 @@ function simOpen(){document.body.classList.add('sim-open'); DB.simOpen=true; sav
 function simClose(){document.body.classList.remove('sim-open'); DB.simOpen=false; save();}
 function simLoad(alg){SIM.cube.hist.length=0; SIM.cube.setState(caseState(alg,0,0)); $('simAlg').value=alg; simOpen(); simMsg(L("Holat o'rnatildi. O'zingiz yechib ko'ring yoki ▶ Bajarish'ni bosing.","Case set up. Solve it yourself, or press ▶ Run."));}
 
+
+// ===================== SOLVER (Yechuvchi) =====================
+const SFACES=['U','F','R','B','L','D'];
+const FNM={U:['Tepa','Up'],F:['Old','Front'],R:["O'ng",'Right'],B:['Orqa','Back'],L:['Chap','Left'],D:['Past','Down']};
+const CNM={Y:['sariq','yellow'],W:['oq','white'],G:['yashil','green'],B:["ko'k",'blue'],R:['qizil','red'],O:["to'q sariq",'orange']};
+const FN={U:[0,1,0],D:[0,-1,0],R:[1,0,0],L:[-1,0,0],F:[0,0,1],B:[0,0,-1]};
+const HOLD={
+ U:["Yashil markaz sizga qarab tursin, kubni biroz egib <b>tepasiga</b> qarang. Rasmning pastki qatori — yashil tomonga tegib turgan qator.","Keep green facing you and tilt the cube to look at the <b>top</b>. The bottom row here is the row next to green."],
+ F:["Sariq tepada, <b>yashil</b> markaz sizga qaragan holda ushlang.","Yellow on top, <b>green</b> center facing you."],
+ R:["Sariq tepada qolsin. Kubni chapga burib, <b>to'q sariq</b> markazni o'zingizga qarating (yashil chapda bo'ladi).","Keep yellow on top. Turn the cube left so <b>orange</b> faces you (green ends up on the left)."],
+ B:["Sariq tepada. Kubni yana chapga burib, <b>ko'k</b> markazni o'zingizga qarating (to'q sariq chapda).","Yellow on top. Turn left again so <b>blue</b> faces you (orange on the left)."],
+ L:["Sariq tepada, <b>qizil</b> markaz sizga qaragan (yashil o'ng tomonda).","Yellow on top, <b>red</b> center facing you (green on the right)."],
+ D:["Yashil sizga qaragan holda kubni oldinga ag'daring: <b>oq</b> tomon sizga qaraydi, yashil tepaga chiqadi. Rasmning yuqori qatori — yashil tomonga tegib turgan qator.","With green facing you, tip the cube forward: <b>white</b> faces you and green goes to the top. The top row here is the row next to green."]};
+function facePos(f,r,c){switch(f){case 'U':return[c-1,1,r-1];case 'F':return[c-1,1-r,1];case 'R':return[1,1-r,1-c];case 'B':return[1-c,1-r,-1];case 'L':return[-1,1-r,c-1];default:return[c-1,-1,1-r];}}
+function blankInput(){const o={};SFACES.forEach(f=>{o[f]=Array(9).fill(null);o[f][4]=SCHEME_LL[f];});return o;}
+function inpToStickers(inp){const st=[];SFACES.forEach(f=>{for(let r=0;r<3;r++)for(let c=0;c<3;c++){const p=facePos(f,r,c);st.push({p,n:FN[f].slice(),c:inp[f][r*3+c],h:p.slice()});}});return st;}
+function stickersToInp(st){const o=blankInput();SFACES.forEach(f=>{for(let r=0;r<3;r++)for(let c=0;c<3;c++){const t=stk(st,facePos(f,r,c),FN[f]);o[f][r*3+c]=t?t.c:null;}});return o;}
+let SV={face:'U',color:'Y',inp:(DB.solverInp&&DB.solverInp.U)?DB.solverInp:blankInput(),mode:DB.solverMode||'cfop',res:null,cube:null,start:null,toks:[],segs:[],i:0,play:null,busy:false};
+function saveInp(){DB.solverInp=SV.inp; save(); if(SV.res){SV.res=null; svStop(); svOut('');}}
+// --- worker ---
+let SWK=null, swId=0; const swCb={};
+function getWorker(){ if(SWK!==null) return SWK;
+  try{ const src=$('solverSrc').textContent+'\nself.onmessage=function(e){postMessage(SOLVER_HANDLE(e.data));};';
+    SWK=new Worker(URL.createObjectURL(new Blob([src],{type:'text/javascript'})));
+    SWK.onmessage=e=>{const cb=swCb[e.data.id]; delete swCb[e.data.id]; if(cb) cb(e.data);};
+    SWK.onerror=()=>{ SWK=false; Object.keys(swCb).forEach(k=>{const cb=swCb[k]; delete swCb[k]; mainThreadCall(cb._msg,cb);}); };
+  }catch(e){ SWK=false; }
+  return SWK;
+}
+function mainThreadCall(msg,res){ setTimeout(()=>{ try{ if(typeof SOLVER_HANDLE==='undefined') (0,eval)($('solverSrc').textContent); res(SOLVER_HANDLE(msg)); }catch(e){ res({error:'crash',msg:String(e)}); } },30); }
+function solverCall(msg){ return new Promise(res=>{ const w=getWorker(); const id=++swId; msg=Object.assign({id},msg);
+  if(!w){ mainThreadCall(msg,res); return; } res._msg=msg; swCb[id]=res; w.postMessage(msg); }); }
+let warmed=false; function warmSolver(){ if(warmed) return; warmed=true; solverCall({cmd:'init'}).then(()=>{SV.ready=true; const el=$('svReady'); if(el) el.textContent='';}); }
+// --- last layer (2-look OLL + 1-look PLL) on sticker model ---
+const AUFS=['',"U","U2","U'"];
+function centerC(st,n){return stk(st,n,n).c;}
+function llUDone(st){const y=centerC(st,[0,1,0]);for(let x=-1;x<=1;x++)for(let z=-1;z<=1;z++)if(stk(st,[x,1,z],[0,1,0]).c!==y)return false;return true;}
+function llEdgesDone(st){const y=centerC(st,[0,1,0]);return [[1,1,0],[-1,1,0],[0,1,1],[0,1,-1]].every(p=>stk(st,p,[0,1,0]).c===y);}
+function isSolvedSt(st){const g={};for(const t of st){const k=t.n.join();if(g[k]===undefined)g[k]=t.c;else if(g[k]!==t.c)return false;}return true;}
+function solvedAUF(st){for(let k=0;k<4;k++){const s=cloneSt(st);if(k)apply(s,AUFS[k]);if(isSolvedSt(s))return k;}return -1;}
+function solveLL(st){
+  const steps=[]; let cur=cloneSt(st);
+  const pick=(keys,pred)=>{let best=null;for(const k of keys)for(const c of SETS[k].cases)for(let a=0;a<4;a++){const s=cloneSt(cur);if(a)apply(s,AUFS[a]);apply(s,c.alg);if(pred(s)){const len=(a?1:0)+tokens(c.alg).length;if(!best||len<best.len)best={k,c,a,len,s};}}return best;};
+  const add=(type,b)=>{steps.push({type,k:b.k,c:b.c,moves:tokens((b.a?AUFS[b.a]+' ':'')+b.c.alg)}); cur=b.s;};
+  if(!llEdgesDone(cur)){const b=pick(['oll1'],llEdgesDone); if(!b) return null; add('oll1',b);}
+  if(!llUDone(cur)){const b=pick(['oll2'],llUDone); if(!b) return null; add('oll2',b);}
+  if(solvedAUF(cur)<0){const b=pick(['pll1','pll2'],s=>solvedAUF(s)>=0); if(!b) return null; add('pll',b);}
+  const k=solvedAUF(cur); if(k>0) steps.push({type:'auf',moves:[AUFS[k]]});
+  return steps;
+}
+const PAIRNM=[["yashil–to'q sariq","green–orange"],["yashil–qizil","green–red"],["ko'k–qizil","blue–red"],["ko'k–to'q sariq","blue–orange"]];
+const SLOTNM=[["old-o'ng","front-right"],["old-chap","front-left"],["orqa-chap","back-left"],["orqa-o'ng","back-right"]];
+function posNm(code){return code.split('').map(f=>L(...FNM[f]).toLowerCase()).join('–');}
+function solverErr(r){
+  const cols=r.cols?r.cols.map(c=>L(...CNM[c])).join(', '):'';
+  return ({corner:L(`<b>${posNm(r.pos||'')}</b> burchagida bunday ranglar birikmasi yo'q (${cols}). Shu atrofdagi stikerlarni tekshiring.`,`The <b>${posNm(r.pos||'')}</b> corner has an impossible colour combination (${cols}). Check the stickers around it.`),
+    edge:L(`<b>${posNm(r.pos||'')}</b> qirrasida bunday ranglar birikmasi yo'q (${cols}). Shu atrofdagi stikerlarni tekshiring.`,`The <b>${posNm(r.pos||'')}</b> edge has an impossible colour combination (${cols}). Check the stickers around it.`),
+    dupCorner:L("Bir xil burchak ikki marta uchrayapti — qaysidir stiker noto'g'ri kiritilgan.","The same corner appears twice — a sticker is wrong."),
+    dupEdge:L("Bir xil qirra ikki marta uchrayapti — qaysidir stiker noto'g'ri kiritilgan.","The same edge appears twice — a sticker is wrong."),
+    twist:L("Bitta burchak buralgan holatda: bunday holatni yig'ib bo'lmaydi. Stikerlarni tekshiring (yoki kub ochilib noto'g'ri yig'ilgan).","One corner is twisted: this state can't be solved. Check the stickers (or the cube was reassembled wrong)."),
+    flip:L("Bitta qirra teskari aylangan: bunday holatni yig'ib bo'lmaydi. Stikerlarni tekshiring.","One edge is flipped: this state can't be solved. Check the stickers."),
+    parity:L("Ikki bo'lak o'rni almashgan: bunday holatni yig'ib bo'lmaydi. Stikerlarni tekshiring.","Two pieces are swapped: this state can't be solved. Check the stickers."),
+    crash:L("Ichki xato yuz berdi.","Internal error.")})[r.error]||r.error;
+}
+function renderSolverView(){
+  $('v-yechuvchi').innerHTML=`<h1>${L("Yechuvchi","Solver")}</h1>
+  <p class="lead">${L("Kubingiz ranglarini kiriting — dastur holatni tekshiradi va yechimni topadi: eng qisqa (~20 harakat) yoki CFOP bo'yicha qadamma-qadam (Krest (X) → F2L → OLL → PLL).","Enter your cube's colours — the solver checks the state and finds a solution: the shortest (~20 moves) or step by step with CFOP (Cross → F2L → OLL → PLL).")}</p>
+  <div class="grid g2">
+   <div class="panel" style="display:flex;flex-direction:column;gap:12px">
+     <div class="ftabs" id="svTabs"></div>
+     <div class="tip" style="margin:0;font-size:13.5px" id="svHold"></div>
+     <div class="fgrid" id="svGrid"></div>
+     <div class="palette" id="svPal"></div>
+     <div class="counts" id="svCounts"></div>
+     <div class="row" style="justify-content:center;gap:6px">
+       <button class="sm" id="svFromSim">🧊 ${L("Simulyatordan olish","From simulator")}</button>
+       <button class="sm" id="svRandom">🎲 ${L("Tasodifiy","Random")}</button>
+       <button class="sm ghost" id="svClear">${L("Tozalash","Clear")}</button>
+     </div>
+     <div id="svNet" style="display:flex;justify-content:center"></div>
+   </div>
+   <div class="panel" style="display:flex;flex-direction:column;gap:12px">
+     <div class="row"><b>${L("Yechim turi","Solution type")}:</b>
+       <label class="chip"><input type="radio" name="svmode" value="cfop" ${SV.mode==='cfop'?'checked':''}> CFOP ${L("qadamma-qadam","step by step")}</label>
+       <label class="chip"><input type="radio" name="svmode" value="short" ${SV.mode==='short'?'checked':''}> ${L("Eng qisqa","Shortest")} (~20)</label></div>
+     <button class="primary" id="svSolve" style="font-size:16px;padding:12px">🧩 ${L("Yechimni topish","Find solution")}</button>
+     <div class="muted" style="font-size:12.5px" id="svReady">${SV.ready?'':L("Birinchi marta jadvallar tayyorlanadi (telefonda 2–4 soniya).","The first run prepares lookup tables (2–4 s on a phone).")}</div>
+     <div id="svOut"></div>
+   </div>
+  </div>`;
+  document.querySelectorAll('input[name=svmode]').forEach(r=>r.onchange=()=>{SV.mode=r.value; DB.solverMode=r.value; save(); if(SV.res) showSolution();});
+  $('svSolve').onclick=runSolve;
+  $('svFromSim').onclick=()=>{const st=SIM.cube.st; const ok=SFACES.every(f=>centerC(st,FN[f])===SCHEME_LL[f]);
+    if(!ok){svOut(`<div class="err">${L("Simulyatordagi kub butunicha aylantirilgan (x/y/z). Sariq tepada, yashil oldda bo'lishi kerak.","The simulator cube has been rotated (x/y/z). Yellow must be on top and green in front.")}</div>`); return;}
+    SV.inp=stickersToInp(st); saveInp(); drawEditor(); svOut('');};
+  $('svRandom').onclick=()=>{SV.inp=stickersToInp(apply(solvedCube(),genScramble())); saveInp(); drawEditor(); svOut('');};
+  $('svClear').onclick=()=>{SV.inp=blankInput(); saveInp(); drawEditor(); svOut('');};
+  drawEditor();
+  if(SV.res) showSolution();
+}
+function svOut(h){const o=$('svOut'); if(o) o.innerHTML=h;}
+function counts(){const c={Y:0,W:0,G:0,B:0,R:0,O:0},miss=[0];SFACES.forEach(f=>SV.inp[f].forEach(v=>{if(v)c[v]++;else miss[0]++;}));return {c,miss:miss[0]};}
+function drawEditor(){
+  if(!$('svTabs')) return;
+  $('svTabs').innerHTML=SFACES.map(f=>{const done=SV.inp[f].every(v=>v);return `<button class="${SV.face===f?'on':''}" data-face="${f}"><span class="sw" style="background:${HEX[SCHEME_LL[f]]}"></span>${L(...FNM[f])}${done?'<span class="ok">✓</span>':''}</button>`;}).join('');
+  $('svTabs').querySelectorAll('[data-face]').forEach(b=>b.onclick=()=>{SV.face=b.dataset.face; drawEditor();});
+  $('svHold').innerHTML='✋ '+L(...HOLD[SV.face]);
+  $('svGrid').innerHTML=SV.inp[SV.face].map((v,i)=>`<button data-si="${i}" class="${i===4?'cen':''}" style="background:${v?HEX[v]:'var(--gray)'}">${v?'':'?'}</button>`).join('');
+  $('svGrid').querySelectorAll('[data-si]').forEach(b=>b.onclick=()=>{const i=+b.dataset.si; if(i===4) return; SV.inp[SV.face][i]=SV.inp[SV.face][i]===SV.color?null:SV.color; saveInp(); drawEditor();});
+  $('svPal').innerHTML=['Y','W','G','B','R','O'].map(c=>`<button data-col="${c}" class="${SV.color===c?'on':''}" style="background:${HEX[c]}" title="${L(...CNM[c])}"></button>`).join('');
+  $('svPal').querySelectorAll('[data-col]').forEach(b=>b.onclick=()=>{SV.color=b.dataset.col; drawEditor();});
+  const {c,miss}=counts();
+  $('svCounts').innerHTML=Object.keys(c).map(k=>`<span class="${c[k]>9?'bad':''}">${L(...CNM[k])}: ${c[k]}/9</span>`).join('')+(miss?`<span>${L("Bo'sh",'Empty')}: ${miss}</span>`:'');
+  $('svNet').innerHTML=miniNet();
+  $('svNet').querySelectorAll('[data-nf]').forEach(g=>g.onclick=()=>{SV.face=g.dataset.nf; drawEditor();});
+}
+function miniNet(){const u=14,fw=3*u+4,pos={U:[1,0],L:[0,1],F:[1,1],R:[2,1],B:[3,1],D:[1,2]};
+  let s=`<svg class="netmini" viewBox="0 0 ${4*fw} ${3*fw}" width="${4*fw*1.2}" height="${3*fw*1.2}">`;
+  SFACES.forEach(f=>{const[fx,fy]=pos[f]; s+=`<g data-nf="${f}"><rect x="${fx*fw}" y="${fy*fw}" width="${3*u+2}" height="${3*u+2}" rx="3" fill="${SV.face===f?'var(--accent)':'#111'}"/>`;
+    SV.inp[f].forEach((v,i)=>{const r=(i/3)|0,c=i%3; s+=`<rect x="${fx*fw+1+c*u+1}" y="${fy*fw+1+r*u+1}" width="${u-2}" height="${u-2}" rx="2" fill="${v?HEX[v]:'#666'}"/>`;}); s+='</g>';});
+  return s+'</svg>';}
+async function runSolve(){
+  const {c,miss}=counts();
+  if(miss){svOut(`<div class="err">${L(`Hali ${miss} ta stiker bo'yalmagan. Har bir tomonni to'ldiring (✓ belgisi to'liq tomonni bildiradi).`,`${miss} stickers are still empty. Fill in every face (✓ marks a complete face).`)}</div>`); return;}
+  const bad=Object.keys(c).filter(k=>c[k]!==9);
+  if(bad.length){svOut(`<div class="err">${L("Har bir rangdan 9 tadan bo'lishi kerak:","Each colour must appear exactly 9 times:")} ${bad.map(k=>`${L(...CNM[k])} — ${c[k]}`).join(', ')}</div>`); return;}
+  if(SV.busy) return; SV.busy=true;
+  svOut(`<div class="muted">⏳ ${L("Hisoblanmoqda…","Solving…")}</div>`); $('svSolve').disabled=true;
+  const start=inpToStickers(SV.inp);
+  const r=await solverCall({cmd:'solve',st:start.map(t=>({p:t.p,n:t.n,c:t.c}))});
+  SV.busy=false; if($('svSolve')) $('svSolve').disabled=false; SV.ready=true; if($('svReady')) $('svReady').textContent='';
+  if(r.error){ SV.res=null; svOut(`<div class="err">${solverErr(r)}</div>`); return; }
+  // CFOP: Krest + F2L from worker, then OLL/PLL here
+  const cfop=[]; const st=cloneSt(start);
+  if(r.cfop && !r.cfop.error){
+    r.cfop.steps.forEach(sp=>{ if(sp.type==='cross') cfop.push({title:L('Krest (X)','Cross'),sub:L('oq krest pastda','white cross on the bottom'),moves:sp.moves});
+      else cfop.push({title:'F2L',sub:L(`${PAIRNM[sp.pair][0]} jufti → ${SLOTNM[sp.pair][0]} slot`,`${PAIRNM[sp.pair][1]} pair → ${SLOTNM[sp.pair][1]} slot`),moves:sp.moves}); apply(st,sp.moves.join(' ')); });
+    const ll=solveLL(st);
+    if(ll) ll.forEach(sp=>{ if(sp.type==='oll1') cfop.push({title:L('OLL krest','OLL cross'),sub:NM(sp.c),moves:sp.moves,setKey:sp.k,caseId:sp.c.id});
+      else if(sp.type==='oll2') cfop.push({title:'OLL',sub:NM(sp.c),moves:sp.moves,setKey:sp.k,caseId:sp.c.id});
+      else if(sp.type==='pll') cfop.push({title:'PLL',sub:NM(sp.c),moves:sp.moves,setKey:sp.k,caseId:sp.c.id});
+      else cfop.push({title:'AUF',sub:L("tepani to'g'irlash","align the top layer"),moves:sp.moves}); });
+  }
+  SV.res={start, short:r.short?[{title:L('Eng qisqa yechim','Shortest solution'),sub:r.short.length+' '+L('harakat','moves'),moves:r.short}]:[], cfop};
+  showSolution();
+}
+function showSolution(){
+  const segs=(SV.mode==='short'?SV.res.short:SV.res.cfop).filter(sg=>sg.moves.length);
+  SV.segs=[]; SV.toks=[]; segs.forEach(sg=>{SV.segs.push({...sg,from:SV.toks.length}); SV.toks.push(...sg.moves);});
+  SV.segs.forEach(sg=>sg.to=sg.from+sg.moves.length);
+  const total=SV.toks.length;
+  svOut(total===0?`<div class="tip" style="margin:0">${L("Kub allaqachon yig'ilgan ✓","The cube is already solved ✓")}</div>`:`
+   <div class="row" style="justify-content:space-between"><b>${L('Jami','Total')}: ${total} ${L('harakat','moves')}</b>
+     <div class="row" style="gap:6px"><button class="sm" data-copy="${SV.toks.join(' ')}">⧉ ${L('Nusxa','Copy')}</button><button class="sm" id="svToSim">🧊 ${L('Simulyatorda','In simulator')}</button></div></div>
+   <div id="svCube"></div>
+   <div class="tokens" id="svToks" style="max-height:110px;overflow:auto"></div>
+   <div class="row" style="justify-content:center;gap:6px"><button id="svFirst">⏮</button><button id="svPrev">◀</button><button class="primary" id="svPlay">▶ ${L("O'ynash",'Play')}</button><button id="svNext">▶|</button><button id="svLast">⏭</button></div>
+   <div class="steps" id="svSteps">${SV.segs.map((sg,i)=>`<div class="step" data-seg="${i}"><span class="num">${i+1}</span><div class="seg"><b>${sg.title}</b> <span class="muted">· ${sg.sub}</span><div class="alg" style="margin-top:4px;font-size:13px">${sg.moves.join(' ')}</div></div></div>`).join('')}</div>`);
+  if(!total) return;
+  SV.start=SV.res.start; SV.cube=new Cube3D($('svCube'),{height:240,size:40,state:cloneSt(SV.start),dur:()=>260});
+  svSet(0);
+  $('svFirst').onclick=()=>svSet(0); $('svLast').onclick=()=>svSet(SV.toks.length);
+  $('svNext').onclick=svNext; $('svPrev').onclick=svPrev; $('svPlay').onclick=()=>SV.play?svStop():svPlayTo(SV.toks.length);
+  $('svToSim').onclick=()=>{SIM.cube.hist.length=0; SIM.cube.setState(cloneSt(SV.start)); $('simAlg').value=SV.toks.join(' '); simOpen(); simMsg(L("Holat yuklandi. ▶ Bajarish yechimni o'ynaydi.","State loaded. ▶ Run plays the solution."));};
+  $('svSteps').querySelectorAll('[data-seg]').forEach(el=>el.onclick=()=>{const sg=SV.segs[+el.dataset.seg]; svSet(sg.from); svPlayTo(sg.to);});
+}
+function svSet(i){svStop(); SV.i=i; const st=cloneSt(SV.start); if(i) apply(st,SV.toks.slice(0,i).join(' ')); SV.cube.setState(st); svDraw();}
+function svNext(){ if(SV.i>=SV.toks.length||SV.cube.busy) return; SV.cube.enqueue([SV.toks[SV.i]],false); SV.i++; svDraw(); }
+function svPrev(){ svStop(); if(SV.i<=0||SV.cube.busy) return; SV.i--; SV.cube.enqueue([invert(SV.toks[SV.i])],false); svDraw(); }
+function svPlayTo(end){ svStop(); SV.end=end; $('svPlay').innerHTML='■ '+L("To'xtatish",'Stop');
+  SV.play=setInterval(()=>{ if(!SV.cube||SV.cube.busy) return; if(SV.i>=SV.end){svStop(); return;} svNext(); },40); }
+function svStop(){ if(SV.play){clearInterval(SV.play); SV.play=null;} const b=$('svPlay'); if(b) b.innerHTML='▶ '+L("O'ynash",'Play'); }
+function svDraw(){ const el=$('svToks'); if(!el) return;
+  el.innerHTML=SV.toks.map((t,k)=>`<span class="${k<SV.i?'done':k===SV.i?'cur':''}">${t}</span>`).join('');
+  const cur=el.querySelector('.cur'); if(cur) cur.scrollIntoView({block:'nearest'});
+  document.querySelectorAll('#svSteps [data-seg]').forEach(s=>{const sg=SV.segs[+s.dataset.seg]; s.classList.toggle('cur',SV.i>=sg.from&&SV.i<sg.to);}); }
+
 // ===================== GLOBAL EVENTS =====================
 document.addEventListener('click',e=>{
   const cp=e.target.closest('[data-copy]'); if(cp){copyText(cp.dataset.copy,cp); return;}
+  const gt=e.target.closest('[data-goto]'); if(gt){location.hash='#darslar'; setTimeout(()=>{const el=$(gt.dataset.goto); if(el) el.scrollIntoView({behavior:'smooth',block:'start'});},80); return;}
+  const fp=e.target.closest('[data-fplay]'); if(fp){playFinger(fp.dataset.fplay); return;}
   const j=e.target.closest('[data-jump]'); if(j){$(j.dataset.jump).scrollIntoView({behavior:'smooth',block:'start'}); return;}
   const sm=e.target.closest('[data-sim]'); if(sm){simLoad(sm.dataset.sim); return;}
   const b=e.target.closest('[data-step]'); if(b){const[k,id]=b.dataset.step.split('|'); openStepper(k,SETS[k].cases.find(c=>c.id===id));}
@@ -830,7 +1360,7 @@ $('simBtn').onclick=()=>document.body.classList.contains('sim-open')?simClose():
 
 // ===================== INIT =====================
 function renderAll(){
-  renderHeader(); renderPlanView(); renderLessonsView(); renderDrillView(); renderHandsView(); renderTimerView(); renderSimDrawer();
+  svStop(); renderHeader(); renderPlanView(); renderLessonsView(); renderMashqShell(); renderDrillView(); renderHandsView(); renderSolverView(); renderTimerView(); renderSimDrawer(); showSub();
   if(STEP) drawStepper();
   VIEWS.forEach(k=>$('v-'+k).classList.toggle('on',k===curView()));
 }

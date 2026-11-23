@@ -1,6 +1,6 @@
 // Speedcubing trener — internetsiz ishlash uchun service worker.
 // Yangi versiya chiqarsangiz, CACHE nomidagi raqamni oshiring.
-const CACHE = 'cube-trener-v3';
+const CACHE = 'cube-trener-v7';
 const FILES = ['./', './index.html', './manifest.json', './icons/icon-192.png', './icons/icon-512.png', './icons/maskable-512.png', './icons/apple-touch-icon.png'];
 
 self.addEventListener('install', e => {
