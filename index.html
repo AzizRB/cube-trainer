@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Speedcubing trener — CFOP</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#141416">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Cube trener">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<style>
+:root{
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+  --bg:#f6f5f2; --panel:#ffffff; --ink:#1b1b1f; --muted:#6b6b74; --line:#e3e1dc;
+  --accent:#d9480f; --accent-soft:#fff0e6; --ok:#2b8a3e; --ok-soft:#e6f6ea; --bad:#c92a2a; --bad-soft:#fdeaea;
+  --gray:#c9c9c9; --code:#f1efe9; --shadow:0 1px 2px rgba(0,0,0,.05),0 4px 16px rgba(0,0,0,.04);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme=light]){ --bg:#141416; --panel:#1d1d21; --ink:#ececf0; --muted:#9a9aa5; --line:#2e2e35;
+    --accent:#ff7a3d; --accent-soft:#2c1c12; --ok:#51cf66; --ok-soft:#14261a; --bad:#ff6b6b; --bad-soft:#2d1717;
+    --gray:#55555c; --code:#26262c; --shadow:none; }
+}
+:root[data-theme=dark]{ --bg:#141416; --panel:#1d1d21; --ink:#ececf0; --muted:#9a9aa5; --line:#2e2e35;
+    --accent:#ff7a3d; --accent-soft:#2c1c12; --ok:#51cf66; --ok-soft:#14261a; --bad:#ff6b6b; --bad-soft:#2d1717;
+    --gray:#55555c; --code:#26262c; --shadow:none; }
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:var(--accent)}
+header{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.wrap{max-width:1080px;margin:0 auto;padding:0 18px}
+.top{display:flex;align-items:center;gap:14px;padding:12px 0 0}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px;letter-spacing:-.01em;white-space:nowrap}
+.logo svg{width:28px;height:28px;flex:none}
+nav{display:flex;gap:4px;overflow-x:auto;padding:10px 0 0;scrollbar-width:none}
+nav a{white-space:nowrap;text-decoration:none;color:var(--muted);padding:8px 12px;border-bottom:2px solid transparent;font-weight:550}
+nav a.on{color:var(--ink);border-color:var(--accent)}
+main{padding:22px 0 60px}
+section.view{display:none} section.view.on{display:block}
+h1{font-size:26px;letter-spacing:-.02em;margin:0 0 6px}
+h2{font-size:19px;margin:28px 0 10px;letter-spacing:-.01em}
+h3{font-size:16px;margin:0 0 6px}
+p.lead{color:var(--muted);margin:0 0 18px;max-width:760px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:var(--shadow)}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.g3{grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
+.muted{color:var(--muted)}
+code,.alg{font-family:var(--mono)}
+.alg{background:var(--code);border-radius:8px;padding:6px 9px;font-size:14.5px;display:inline-block;word-spacing:2px;font-weight:600}
+.algrow{display:flex;gap:6px;align-items:flex-start}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:8px;box-shadow:var(--shadow)}
+.card .pic{display:flex;justify-content:center;padding:4px 0}
+.card .name{font-weight:650}
+.card .hint{font-size:13.5px;color:var(--muted)}
+.card .feat{font-size:12.5px;color:var(--muted);border-top:1px dashed var(--line);padding-top:6px}
+button{font:inherit;cursor:pointer;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:10px;padding:8px 14px;font-weight:550}
+button:hover{border-color:var(--muted)}
+button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+button.ghost{background:transparent}
+button.sm{padding:5px 10px;font-size:13px}
+button.icon{padding:4px 8px;font-size:13px;line-height:1.4;flex:none}
+button:disabled{opacity:.45;cursor:default}
+.hbtn{padding:6px 11px;font-size:13.5px;white-space:nowrap}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:13.5px;cursor:pointer;user-select:none;background:var(--panel)}
+.chip input{accent-color:var(--accent)}
+.chip.on{border-color:var(--accent);background:var(--accent-soft)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line)}
+th{color:var(--muted);font-weight:600;font-size:12.5px;text-transform:uppercase;letter-spacing:.04em}
+.tip{border-left:3px solid var(--accent);background:var(--accent-soft);padding:10px 14px;border-radius:0 10px 10px 0;margin:12px 0}
+ul.clean{padding-left:18px;margin:6px 0} ul.clean li{margin:4px 0}
+.week{display:flex;flex-direction:column;gap:8px}
+.week .tag{font-size:12px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.06em}
+.task{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-top:1px solid var(--line)}
+.task input{margin-top:4px;accent-color:var(--accent);width:16px;height:16px;flex:none}
+.task.done span{color:var(--muted);text-decoration:line-through}
+.progress{height:8px;background:var(--line);border-radius:99px;overflow:hidden}
+.progress i{display:block;height:100%;background:var(--accent);width:0;transition:width .3s}
+.drill{display:grid;grid-template-columns:minmax(260px,1fr) minmax(280px,1.1fr);gap:16px}
+@media (max-width:760px){.drill{grid-template-columns:1fr}}
+.stage{display:flex;flex-direction:column;align-items:center;gap:12px;min-height:320px;justify-content:center}
+.answers{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:8px}
+.answers button{padding:9px 8px;font-size:13.5px}
+.answers button.right{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+.answers button.wrong{background:var(--bad-soft);border-color:var(--bad);color:var(--bad)}
+.verdict{font-weight:700;font-size:17px}
+.verdict.ok{color:var(--ok)} .verdict.no{color:var(--bad)}
+.stat{display:flex;gap:18px;flex-wrap:wrap}
+.stat div b{display:block;font-size:22px;letter-spacing:-.02em}
+.stat div span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.bar{height:6px;border-radius:99px;background:var(--line);overflow:hidden;min-width:60px}
+.bar i{display:block;height:100%}
+.timer{user-select:none;-webkit-user-select:none;touch-action:none;text-align:center;padding:40px 10px;border-radius:16px;border:1px solid var(--line);background:var(--panel)}
+.timer .t{font:700 clamp(56px,13vw,112px)/1 var(--mono);letter-spacing:-.03em}
+.timer.ready .t{color:var(--ok)} .timer.hold .t{color:var(--bad)} .timer.insp .t{color:var(--accent)}
+.scramble{font:600 clamp(16px,2.4vw,21px)/1.5 var(--mono);text-align:center;word-spacing:4px}
+.times{max-height:340px;overflow:auto}
+.tokens{display:flex;flex-wrap:wrap;gap:4px;justify-content:center}
+.tokens span{font:600 16px var(--mono);padding:4px 8px;border-radius:7px;background:var(--code)}
+.tokens span.done{opacity:.45}
+.tokens span.cur{background:var(--accent);color:#fff;opacity:1}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:50;padding:16px}
+.modal.on{display:flex}
+.modal .box{background:var(--panel);border-radius:16px;max-width:620px;width:100%;padding:20px;max-height:92vh;overflow:auto}
+.metro{font:700 54px/1 var(--mono);text-align:center;min-height:60px;display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap}
+.metro span{font-size:26px;padding:6px 10px;border-radius:9px;background:var(--code);transition:background .08s}
+.metro span.cur{background:var(--accent);color:#fff}
+input[type=range]{accent-color:var(--accent);width:200px}
+select{max-width:100%;font:inherit;padding:7px 10px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink)}
+kbd{font:600 12px var(--mono);border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:1px 6px;background:var(--panel)}
+.notation td:first-child{font:700 16px var(--mono);width:70px}
+footer{color:var(--muted);font-size:13px;padding:20px 0 40px}
+/* 3D cube */
+.scene{flex:none;perspective:900px;display:flex;align-items:center;justify-content:center;touch-action:none;cursor:grab;border-radius:14px;background:var(--bg);border:1px solid var(--line);position:relative}
+.scene:active{cursor:grabbing}
+.cube3d{position:relative;width:0;height:0;transform-style:preserve-3d}
+.cubie{position:absolute;left:0;top:0;width:0;height:0;transform-style:preserve-3d}
+.face{position:absolute;left:calc(var(--cs) / -2);top:calc(var(--cs) / -2);width:var(--cs);height:var(--cs);background:#141414;border-radius:3px}
+.face.st::after{content:'';position:absolute;inset:calc(var(--cs) * .065);border-radius:calc(var(--cs) * .13);background:var(--c)}
+.scene .vbtn{position:absolute;right:8px;bottom:8px;padding:3px 8px;font-size:12px;opacity:.8}
+/* simulator drawer */
+.sim{position:fixed;top:0;right:0;height:100vh;width:400px;max-width:100%;background:var(--panel);border-left:1px solid var(--line);z-index:40;transform:translateX(100%);transition:transform .25s ease;display:flex;flex-direction:column;gap:10px;padding:14px 16px 20px;overflow-y:auto}
+body.sim-open .sim{transform:none}
+@media (min-width:900px){body.sim-open header .wrap, body.sim-open main.wrap{margin:0 400px 0 0;max-width:none}}
+@media (max-width:899px){.sim{top:auto;bottom:0;height:74vh;width:100%;border-left:0;border-top:1px solid var(--line);border-radius:18px 18px 0 0;transform:translateY(100%);box-shadow:0 -10px 30px rgba(0,0,0,.25)}}
+.sim-head{display:flex;align-items:center;gap:10px}
+.mgrid{display:grid;grid-template-columns:repeat(10,1fr);gap:4px}
+.mgrid button{padding:6px 0;font:600 13px var(--mono);border-radius:7px}
+input.txt{flex:1;min-width:0;font:600 14px var(--mono);padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.hist{font:13px var(--mono);color:var(--muted);word-spacing:3px;min-height:20px;max-height:80px;overflow:auto}
+.solved{color:var(--ok);font-weight:700}
+@media (max-width:560px){.logo .sub{display:none} .hbtn .lbl{display:none}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="top">
+      <div class="logo">
+        <svg viewBox="0 0 30 30"><rect x="1" y="1" width="8.6" height="8.6" rx="2" fill="#FFD500"/><rect x="10.7" y="1" width="8.6" height="8.6" rx="2" fill="#FFD500"/><rect x="20.4" y="1" width="8.6" height="8.6" rx="2" fill="#009E60"/><rect x="1" y="10.7" width="8.6" height="8.6" rx="2" fill="#C41E3A"/><rect x="10.7" y="10.7" width="8.6" height="8.6" rx="2" fill="#FFD500"/><rect x="20.4" y="10.7" width="8.6" height="8.6" rx="2" fill="#FFD500"/><rect x="1" y="20.4" width="8.6" height="8.6" rx="2" fill="#FFD500"/><rect x="10.7" y="20.4" width="8.6" height="8.6" rx="2" fill="#0051BA"/><rect x="20.4" y="20.4" width="8.6" height="8.6" rx="2" fill="#FF5800"/></svg>
+        <span id="appName"></span> <span class="muted sub" style="font-weight:500">· CFOP</span>
+      </div>
+      <div class="row" style="margin-left:auto;gap:6px;flex-wrap:nowrap">
+        <button class="hbtn" id="langBtn"></button>
+        <button class="hbtn" id="themeBtn"></button>
+        <button class="hbtn" id="simBtn"></button>
+      </div>
+    </div>
+    <nav id="nav"></nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="view" id="v-reja"></section>
+  <section class="view" id="v-darslar"></section>
+  <section class="view" id="v-mashq"></section>
+  <section class="view" id="v-qollar"></section>
+  <section class="view" id="v-taymer"></section>
+  <footer id="footer"></footer>
+</main>
+
+<aside class="sim" id="sim"></aside>
+<div class="modal" id="modal"><div class="box" id="modalBox"></div></div>
+
+<script>
+// ===================== STORAGE & LANGUAGE =====================
+const KEY='cubeTrainer.v1';
+let DB={plan:{},stats:{},times:[],sets:['oll2','pll1'],insp:false,lang:'uz'};
+try{const raw=localStorage.getItem(KEY); if(raw) DB=Object.assign(DB,JSON.parse(raw));}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(DB));}catch(e){}}
+const L=(uz,en)=>DB.lang==='en'?en:uz;
+const $=id=>document.getElementById(id);
+
+// ===================== CUBE MODEL =====================
+const SCHEME_LL  = {U:'Y',D:'W',F:'G',B:'B',R:'O',L:'R'};
+const SCHEME_WCA = {U:'W',D:'Y',F:'G',B:'B',R:'R',L:'O'};
+const HEX = {Y:'#FFD500',W:'#FFFFFF',G:'#009E60',B:'#0051BA',R:'#C41E3A',O:'#FF5800'};
+function faceOf(n){return n[1]===1?'U':n[1]===-1?'D':n[2]===1?'F':n[2]===-1?'B':n[0]===1?'R':'L';}
+function solvedCube(scheme){
+  scheme=scheme||SCHEME_LL; const st=[]; const N=[[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,1],[0,0,-1]];
+  for(let x=-1;x<=1;x++)for(let y=-1;y<=1;y++)for(let z=-1;z<=1;z++)for(const n of N){
+    const p=[x,y,z],a=n.findIndex(v=>v!==0); if(p[a]===n[a]) st.push({p:[x,y,z],n:n.slice(),c:scheme[faceOf(n)],h:[x,y,z]});
+  } return st;
+}
+function rot(v,a,s){const[x,y,z]=v; if(a===0)return s>0?[x,-z,y]:[x,z,-y]; if(a===1)return s>0?[z,y,-x]:[-z,y,x]; return s>0?[-y,x,z]:[y,-x,z];}
+const MOVES={R:[0,v=>v===1,-1],L:[0,v=>v===-1,1],M:[0,v=>v===0,1],U:[1,v=>v===1,-1],D:[1,v=>v===-1,1],E:[1,v=>v===0,1],
+ F:[2,v=>v===1,-1],B:[2,v=>v===-1,1],S:[2,v=>v===0,-1],r:[0,v=>v>=0,-1],l:[0,v=>v<=0,1],u:[1,v=>v>=0,-1],d:[1,v=>v<=0,1],
+ f:[2,v=>v>=0,-1],b:[2,v=>v<=0,1],x:[0,()=>true,-1],y:[1,()=>true,-1],z:[2,()=>true,-1]};
+function tokens(alg){return alg.replace(/[()\[\]]/g,' ').trim().split(/\s+/).filter(Boolean);}
+function parseTok(t){const m=t.match(/^([RLUDFBMESrludfbxyz])(w?)(2|')?(')?$/); if(!m) throw new Error(t); let f=m[1]; if(m[2])f=f.toLowerCase(); return {f,a:m[3]==='2'?2:m[3]==="'"?3:1};}
+function move(st,f,a){const[ax,pr,s]=MOVES[f]; for(let k=0;k<a;k++)for(const t of st){if(pr(t.p[ax])){t.p=rot(t.p,ax,s);t.n=rot(t.n,ax,s);}} return st;}
+function apply(st,alg){for(const t of tokens(alg)){const m=parseTok(t);move(st,m.f,m.a);} return st;}
+function invert(alg){return tokens(alg).reverse().map(t=>{const m=parseTok(t);return m.f+(m.a===1?"'":m.a===2?'2':'');}).join(' ');}
+function stk(st,p,n){return st.find(t=>t.p[0]===p[0]&&t.p[1]===p[1]&&t.p[2]===p[2]&&t.n[0]===n[0]&&t.n[1]===n[1]&&t.n[2]===n[2]);}
+function caseState(alg,pre,post){const st=solvedCube(); if(pre)move(st,'U',pre); apply(st,invert(alg)); if(post)move(st,'U',post); return st;}
+function cloneSt(st){return st.map(t=>({p:t.p.slice(),n:t.n.slice(),c:t.c,h:t.h}));}
+
+// ===================== 3D CUBE COMPONENT =====================
+const FACE_DIRS=[[[1,0,0],'rotateY(90deg)'],[[-1,0,0],'rotateY(-90deg)'],[[0,1,0],'rotateX(90deg)'],[[0,-1,0],'rotateX(-90deg)'],[[0,0,1],''],[[0,0,-1],'rotateY(180deg)']];
+class Cube3D{
+  constructor(host,o){
+    o=o||{}; this.cs=o.size||46; this.st=o.state||solvedCube(o.scheme); this.hist=o.hist||[];
+    this.rx=-28; this.ry=-36; this.queue=[]; this.busy=false; this.gen=0;
+    this.durFn=o.dur||(()=>200); this.onChange=o.onChange||(()=>{});
+    host.innerHTML=`<div class="scene" style="height:${o.height||240}px;--cs:${this.cs}px"><div class="cube3d"></div><button class="ghost vbtn" title="${L('Ko\'rinishni tiklash','Reset view')}">↺</button></div>`;
+    this.scene=host.querySelector('.scene'); this.root=host.querySelector('.cube3d');
+    this.scene.querySelector('.vbtn').onclick=e=>{e.stopPropagation(); this.rx=-28; this.ry=-36; this.view();};
+    let drag=null;
+    this.scene.addEventListener('pointerdown',e=>{ if(e.target.closest('.vbtn')) return; drag={x:e.clientX,y:e.clientY,rx:this.rx,ry:this.ry}; try{this.scene.setPointerCapture(e.pointerId);}catch(_){} });
+    this.scene.addEventListener('pointermove',e=>{ if(!drag) return; this.ry=drag.ry+(e.clientX-drag.x)*0.5; this.rx=Math.max(-89,Math.min(89,drag.rx-(e.clientY-drag.y)*0.5)); this.view(); });
+    const end=()=>{drag=null;}; this.scene.addEventListener('pointerup',end); this.scene.addEventListener('pointercancel',end);
+    this.render();
+  }
+  base(p){return `translate3d(${p[0]*this.cs}px,${-p[1]*this.cs}px,${p[2]*this.cs}px)`;}
+  render(){
+    const by={}; for(const t of this.st){const k=t.p.join(','); (by[k]||(by[k]=[])).push(t);}
+    let h='';
+    for(let x=-1;x<=1;x++)for(let y=-1;y<=1;y++)for(let z=-1;z<=1;z++){
+      if(!x&&!y&&!z) continue; const list=by[x+','+y+','+z]||[];
+      h+=`<div class="cubie" data-p="${x},${y},${z}" style="transform:${this.base([x,y,z])}">`;
+      for(const[n,r] of FACE_DIRS){const t=list.find(q=>q.n[0]===n[0]&&q.n[1]===n[1]&&q.n[2]===n[2]);
+        h+=`<div class="face${t?' st':''}" style="transform:${r} translateZ(${this.cs/2}px);${t?'--c:'+HEX[t.c]:''}"></div>`;}
+      h+='</div>';
+    }
+    this.root.innerHTML=h; this.view(); this.onChange(this);
+  }
+  view(){this.root.style.transform=`rotateX(${this.rx}deg) rotateY(${this.ry}deg)`;}
+  solved(){const g={}; for(const t of this.st){const k=t.n.join(','); if(g[k]===undefined)g[k]=t.c; else if(g[k]!==t.c) return false;} return true;}
+  halt(){this.queue=[]; this.gen++; this.busy=false;}
+  setState(st){this.halt(); this.st=st; this.render();}
+  enqueue(toks,record){toks.forEach(t=>this.queue.push({t,record:record!==false})); this.pump();}
+  pump(){
+    if(this.busy||!this.queue.length) return;
+    const {t,record}=this.queue.shift(); const m=parseTok(t); const[ax,pr,s]=MOVES[m.f];
+    const th=s*90*(m.a===3?-1:m.a), d=this.durFn()*(m.a===2?1.4:1);
+    const finish=()=>{move(this.st,m.f,m.a); if(record)this.hist.push(t); this.busy=false; this.render(); this.pump();};
+    this.busy=true;
+    if(d<10){finish(); return;}
+    const rotF=a=>ax===0?`rotateX(${-a}deg)`:ax===1?`rotateY(${a}deg)`:`rotateZ(${-a}deg)`;
+    const els=[...this.root.querySelectorAll('.cubie')].filter(el=>pr(+el.dataset.p.split(',')[ax]));
+    els.forEach(el=>{el.style.transition='none'; el.style.transform=rotF(0)+' '+this.base(el.dataset.p.split(',').map(Number));});
+    void this.root.offsetWidth;
+    els.forEach(el=>{el.style.transition=`transform ${d}ms ease-in-out`; el.style.transform=rotF(th)+' '+this.base(el.dataset.p.split(',').map(Number));});
+    const g=this.gen; setTimeout(()=>{ if(g!==this.gen) return; finish(); },d+15);
+  }
+}
+
+// ===================== DATA =====================
+// [id, uzName, enName, alg, uzHint, enHint]
+const SETS = {
+ oll1:{title:["2-look OLL · 1: sariq xoch","2-look OLL · 1: yellow cross"],short:["OLL xoch","OLL cross"],view:'oll-edge',pic:'top',cases:[
+  ['line',"Chiziq","Line","F R U R' U' F'","Tepada ikki qarama-qarshi sariq qirra. Chiziqni gorizontal (chapdan o'ngga) ushlang.","Two opposite yellow edges on top. Hold the line horizontally (left to right)."],
+  ['L',"L shakli","L shape","F U R U' R' F'","Ikki qo'shni sariq qirra. Ularni orqa va chap tomonga (soat 12 va 9) qaratib ushlang.","Two adjacent yellow edges. Hold them at the back and left (12 and 9 o'clock)."],
+  ['dot',"Nuqta","Dot","F R U R' U' F' f R U R' U' f'","Faqat markaz sariq, sariq qirra yo'q. Ikki qismni oraliq burilishsiz ketma-ket bajaring.","Only the center is yellow, no yellow edges. Do both halves back to back, with no U turn in between."]]},
+ oll2:{title:["2-look OLL · 2: burchaklar","2-look OLL · 2: corners"],short:["OLL burchak","OLL corners"],view:'oll',pic:'top',cases:[
+  ['sune',"Sune","Sune","R U R' U R U2 R'","Bitta sariq burchak tepada. Uni old-chapga qo'ying: old-o'ng burchakning sariq stikeri oldga qaraydi.","One yellow corner on top. Put it front-left: the front-right corner's yellow sticker faces you."],
+  ['antisune',"Antisune","Antisune","R U2 R' U' R U' R'","Bitta sariq burchak tepada. Uni orqa-o'ngga qo'ying: old-chap burchakning sariq stikeri oldga qaraydi.","One yellow corner on top. Put it back-right: the front-left corner's yellow sticker faces you."],
+  ['H',"H","H","R U2 R' U' R U R' U' R U' R'","Tepada sariq burchak yo'q. Ikki juft fara: ularni old va orqa tomonga qo'ying.","No yellow corners on top. Two pairs of headlights: put them front and back."],
+  ['pi',"Pi","Pi","R U2 R2 U' R2 U' R2 U2 R","Tepada sariq burchak yo'q, faqat bir tomonda fara. Farani chapga qo'ying; o'ngdagi burchaklar sariqlari old va orqaga qaraydi.","No yellow corners on top, headlights on one side only. Put them on the left; the right corners' yellows face front and back."],
+  ['headlights',"Faralar (U)","Headlights (U)","R2 D' R U2 R' D R U2 R","Ikki qo'shni sariq burchak. Ularni oldga qo'ying — orqada faralar (ikki sariq stiker orqaga qaraydi).","Two adjacent yellow corners. Put them in front — the headlights (two yellow stickers) face the back."],
+  ['T',"T (Xameleon)","T (Chameleon)","r U R' U' r' F R F'","Ikki qo'shni sariq burchak. Ularni o'ngga qo'ying — chapdagi burchaklar sariqlari old va orqaga qaraydi.","Two adjacent yellow corners. Put them on the right — the left corners' yellows face front and back."],
+  ['bowtie',"Kapalak","Bowtie","F' r U R' U' r' F R","Ikki sariq burchak diagonal. Ularni old-chap va orqa-o'ngga qo'ying; old-o'ng burchakning sariqi oldga qaraydi.","Two yellow corners on a diagonal. Put them front-left and back-right; the front-right corner's yellow faces you."]]},
+ pll1:{title:["2-look PLL","2-look PLL"],short:["PLL 2-look","PLL 2-look"],view:'pll',pic:'top',cases:[
+  ['T',"T-perm","T-perm","R U R' U' R' F R2 U' R' U' R U R' F'","1-qadam (burchaklar). Faqat burchaklarga qarang: bir tomonda faralar (ikki burchak bir rang). Faralarni chapga qo'ying.","Step 1 (corners). Look only at corners: one side has headlights (two corners of one color). Put the headlights on the left."],
+  ['Y',"Y-perm","Y-perm","F R U' R' U' R U R' F' R U R' U' R' F R F'","1-qadam (burchaklar). Hech qaysi tomonda fara yo'q — burchaklar diagonal almashadi. Istalgan burchakdan bajarsa bo'ladi.","Step 1 (corners). No headlights anywhere — the corners swap diagonally. Works from any angle."],
+  ['Ua',"Ua-perm","Ua-perm","R U' R U R U R U' R' U' R2","2-qadam (qirralar). Bitta tomon to'liq yig'ilgan — uni orqaga qo'ying. Old qirra o'ng tomon rangida bo'lsa — Ua.","Step 2 (edges). One side is fully solved — put it at the back. If the front edge has the right side's color — Ua."],
+  ['Ub',"Ub-perm","Ub-perm","R2 U R U R' U' R' U' R' U R'","2-qadam. Yig'ilgan tomonni orqaga qo'ying. Old qirra chap tomon rangida bo'lsa — Ub.","Step 2. Solved side at the back. If the front edge has the left side's color — Ub."],
+  ['H',"H-perm","H-perm","M2 U M2 U2 M2 U M2","2-qadam. Yig'ilgan tomon yo'q; har tomonda qirra qarama-qarshi tomon rangida.","Step 2. No solved side; every edge has the opposite side's color."],
+  ['Z',"Z-perm","Z-perm","M' U M2 U M2 U M' U2 M2 U'","2-qadam. Yig'ilgan tomon yo'q; qirralar qo'shni tomon rangida. Old↔chap va o'ng↔orqa qirralar almashadigan qilib ushlang.","Step 2. No solved side; edges show adjacent sides' colors. Hold it so the front↔left and right↔back edges swap."]]},
+ pll2:{title:["To'liq PLL (qolgan 15 ta)","Full PLL (remaining 15)"],short:["PLL to'liq","PLL full"],view:'pll',pic:'top',cases:[
+  ['Aa',"Aa-perm","Aa-perm","x R' U R' D2 R U' R' D2 R2 x'","Faqat 3 burchak aylanadi, qirralar joyida. Faralarni orqaga qo'ying.","Only 3 corners cycle, edges stay. Put the headlights at the back."],
+  ['Ab',"Ab-perm","Ab-perm","x R2 D2 R U R' D2 R U' R x'","Faqat 3 burchak aylanadi (Aa'ning teskari yo'nalishi). Faralarni o'ngga qo'ying.","Only 3 corners cycle (opposite direction to Aa). Put the headlights on the right."],
+  ['E',"E-perm","E-perm","x' R U' R' D R U R' D' R U R' D R U' R' D' x","Qirralar joyida, hech qaysi tomonda fara yo'q.","Edges solved, no headlights on any side."],
+  ['F',"F-perm","F-perm","R' U' F' R U R' U' R' F R2 U' R' U' R U R' U R","Chap tomonda to'liq qator; qarshi tomonda uchta stiker uch xil rangda.","Full bar on the left; the opposite side shows three different colors."],
+  ['Ga',"Ga-perm","Ga-perm","R2 U R' U R' U' R U' R2 U' D R' U R D'","G-perm: bir tomonda faralar, boshqa joyda 2x1 blok. To'rtta G'ni rasm orqali farqlash kerak.","G-perm: headlights on one side, a 2x1 block elsewhere. Tell the four Gs apart by their picture."],
+  ['Gb',"Gb-perm","Gb-perm","R' U' R U D' R2 U R' U R U' R U' R2 D","G-perm: faralar + 2x1 blok.","G-perm: headlights + 2x1 block."],
+  ['Gc',"Gc-perm","Gc-perm","R2 U' R U' R U R' U R2 U D' R U' R' D","G-perm: faralar + 2x1 blok.","G-perm: headlights + 2x1 block."],
+  ['Gd',"Gd-perm","Gd-perm","R U R' U' D R2 U' R U' R' U R' U R2 D'","G-perm: faralar + 2x1 blok.","G-perm: headlights + 2x1 block."],
+  ['Ja',"Ja-perm","Ja-perm","x R2 F R F' R U2 r' U r U2 x'","J-perm: bitta tomonda to'liq qator. Ja va Jb'ni qolgan bloklar joyi bilan farqlang.","J-perm: one side has a full bar. Tell Ja and Jb apart by where the other blocks are."],
+  ['Jb',"Jb-perm","Jb-perm","R U R' F' R U R' U' R' F R2 U' R'","J-perm: bitta tomonda to'liq qator. Eng ko'p uchraydigan PLL'lardan.","J-perm: one side has a full bar. One of the most common PLLs."],
+  ['Na',"Na-perm","Na-perm","R U R' U R U R' F' R U R' U' R' F R2 U' R' U2 R U' R'","N-perm: har bir tomonda 2x1 blok. Kam uchraydi.","N-perm: a 2x1 block on every side. Rare."],
+  ['Nb',"Nb-perm","Nb-perm","R' U R U' R' F' U' F R U R' F R' F' R U' R","N-perm: har bir tomonda 2x1 blok (Na'ning ko'zgu nusxasi).","N-perm: a 2x1 block on every side (mirror of Na)."],
+  ['Ra',"Ra-perm","Ra-perm","R U' R' U' R U R D R' U' R D' R' U2 R'","R-perm: faralar va 2x1 blok.","R-perm: headlights and a 2x1 block."],
+  ['Rb',"Rb-perm","Rb-perm","R2 F R U R U' R' F' R U2 R' U2 R","R-perm: faralar va 2x1 blok (Ra'ning ko'zgu nusxasi).","R-perm: headlights and a 2x1 block (mirror of Ra)."],
+  ['V',"V-perm","V-perm","R' U R U' R' f' U' R U2 R' U' R U' R' f R","Burchaklar diagonal almashadi; fara yo'q, lekin 2x1 blok bor.","Corners swap diagonally; no headlights, but there is a 2x1 block."]]},
+ f2l:{title:["F2L asosiy holatlari (old-o'ng slot)","F2L basic cases (front-right slot)"],short:["F2L","F2L"],view:'f2l',pic:'iso',cases:[
+  ['b1',"Asosiy: R U R'","Basic: R U R'","R U R'","Burchak slot ustida, oq stiker o'ngga qaragan. Qirra orqada, tepasi yashil.","Corner above the slot, white facing right. Edge at the back, green on top."],
+  ['b2',"Asosiy: F' U' F","Basic: F' U' F","F' U' F","Burchak slot ustida, oq stiker oldga qaragan. Qirra chapda, tepasi to'q sariq.","Corner above the slot, white facing front. Edge on the left, orange on top."],
+  ['b3',"Asosiy: U R U' R'","Basic: U R U' R'","U R U' R'","Burchak slot ustida, oq oldga qaragan. Qirra o'ngda (burchak yonida), tepasi yashil.","Corner above the slot, white facing front. Edge on the right (next to the corner), green on top."],
+  ['b4',"Asosiy: U' F' U F","Basic: U' F' U F","U' F' U F","Burchak slot ustida, oq o'ngga qaragan. Qirra oldda (burchak yonida), tepasi to'q sariq.","Corner above the slot, white facing right. Edge in front (next to the corner), orange on top."],
+  ['c5',"Juftlash 1","Pairing 1","U' R U R' U2 R U' R'","Oq oldga qaragan, qirra orqada (tepasi yashil). Avval juft hosil qiling, keyin kiriting.","White faces front, edge at the back (green on top). Build the pair first, then insert."],
+  ['c6',"Juftlash 2","Pairing 2","U F' U' F U2 F' U F","Oq o'ngga qaragan, qirra chapda (tepasi to'q sariq). Juftlash 1'ning ko'zgu nusxasi.","White faces right, edge on the left (orange on top). Mirror of Pairing 1."],
+  ['c7',"Juftlash 3","Pairing 3","U' R U2 R' U2 R U' R'","Oq oldga qaragan, qirra chapda (tepasi yashil).","White faces front, edge on the left (green on top)."],
+  ['c8',"Juftlash 4","Pairing 4","U F' U2 F U2 F' U F","Oq o'ngga qaragan, qirra orqada (tepasi to'q sariq).","White faces right, edge at the back (orange on top)."],
+  ['c9',"Juftlash 5","Pairing 5","U' R U' R' U F' U' F","Oq oldga qaragan, qirra orqada (tepasi to'q sariq).","White faces front, edge at the back (orange on top)."],
+  ['c10',"Juftlash 6","Pairing 6","U' R U R' U R U R'","Oq o'ngga qaragan, qirra chapda (tepasi yashil).","White faces right, edge on the left (green on top)."],
+  ['w1',"Oq tepada 1","White on top 1","R U2 R' U' R U R'","Burchakning oq stikeri tepaga qaragan, qirra o'ngda (tepasi yashil). Avval burchakni R U2 R' bilan qayta joylang.","The corner's white sticker faces up, edge on the right (green on top). First re-place the corner with R U2 R'."],
+  ['w2',"Oq tepada 2","White on top 2","F' U2 F U F' U' F","Oq tepaga qaragan, qirra oldda (tepasi to'q sariq).","White faces up, edge in front (orange on top)."]]},
+};
+for(const k in SETS) SETS[k].cases=SETS[k].cases.map(([id,nu,ne,alg,hu,he])=>({id,nu,ne,alg,hu,he}));
+const SET_ORDER=['f2l','oll1','oll2','pll1','pll2'];
+const NM=c=>L(c.nu,c.ne), HN=c=>L(c.hu,c.he), ST=k=>L(SETS[k].title[0],SETS[k].title[1]), SH=k=>L(SETS[k].short[0],SETS[k].short[1]);
+
+// ===================== 2D RENDER =====================
+function stickerColor(t,view){
+  const gray='var(--gray)';
+  if(view==='oll') return t.c==='Y'?HEX.Y:gray;
+  if(view==='oll-edge'){const isCorner=t.p.every(v=>v!==0); if(isCorner&&t.p[1]===1) return gray; return t.c==='Y'?HEX.Y:gray;}
+  if(view==='f2l') return t.h[1]===1?gray:HEX[t.c];
+  return HEX[t.c];
+}
+function topSVG(st,view,size){
+  size=size||170; const u=size/5.2, side=u*0.32, gap=u*0.12, o=side+gap*1.5, W=3*u+2*o;
+  let s=`<svg viewBox="0 0 ${W} ${W}" width="${size}" height="${size}" role="img">`;
+  const rect=(x,y,w,h,c)=>`<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}" rx="${(Math.min(w,h)*0.18).toFixed(1)}" fill="${c}" stroke="rgba(0,0,0,.35)" stroke-width="0.8"/>`;
+  s+=`<rect x="${o-gap/2}" y="${o-gap/2}" width="${3*u+gap}" height="${3*u+gap}" rx="${u*.2}" fill="#111"/>`;
+  for(let x=-1;x<=1;x++)for(let z=-1;z<=1;z++) s+=rect(o+(x+1)*u+gap/2,o+(z+1)*u+gap/2,u-gap,u-gap,stickerColor(stk(st,[x,1,z],[0,1,0]),view));
+  for(let x=-1;x<=1;x++){ s+=rect(o+(x+1)*u+gap/2,o-gap-side,u-gap,side,stickerColor(stk(st,[x,1,-1],[0,0,-1]),view));
+    s+=rect(o+(x+1)*u+gap/2,o+3*u+gap,u-gap,side,stickerColor(stk(st,[x,1,1],[0,0,1]),view)); }
+  for(let z=-1;z<=1;z++){ s+=rect(o-gap-side,o+(z+1)*u+gap/2,side,u-gap,stickerColor(stk(st,[-1,1,z],[-1,0,0]),view));
+    s+=rect(o+3*u+gap,o+(z+1)*u+gap/2,side,u-gap,stickerColor(stk(st,[1,1,z],[1,0,0]),view)); }
+  return s+'</svg>';
+}
+function isoSVG(st,view,size){
+  size=size||170; const c=Math.cos(Math.PI/6), sc=size/6.3;
+  const P=(X,Y,Z)=>[((X-Z)*c)*sc+size/2, (-Y+(X+Z)*0.5)*sc+size/2];
+  let s=`<svg viewBox="0 0 ${size} ${size}" width="${size}" height="${size}" role="img">`;
+  const body=[P(-1.5,1.5,1.5),P(-1.5,1.5,-1.5),P(1.5,1.5,-1.5),P(1.5,-1.5,-1.5),P(1.5,-1.5,1.5),P(-1.5,-1.5,1.5)];
+  s+=`<polygon points="${body.map(q=>q.map(v=>v.toFixed(1)).join(',')).join(' ')}" fill="#111" stroke="#111" stroke-width="3" stroke-linejoin="round"/>`;
+  for(const t of st){
+    const n=t.n; if(!((n[1]===1&&t.p[1]===1)||(n[2]===1&&t.p[2]===1)||(n[0]===1&&t.p[0]===1))) continue;
+    const ax=n.findIndex(v=>v!==0), tan=[0,1,2].filter(i=>i!==ax), k=0.43, ctr=t.p.map((v,i)=>v+n[i]*0.5);
+    const pts=[[-k,-k],[k,-k],[k,k],[-k,k]].map(([a,b])=>{const q=ctr.slice(); q[tan[0]]+=a; q[tan[1]]+=b; return P(q[0],q[1],q[2]);});
+    s+=`<polygon points="${pts.map(q=>q.map(v=>v.toFixed(1)).join(',')).join(' ')}" fill="${stickerColor(t,view)}" stroke="rgba(0,0,0,.3)" stroke-width="0.6" stroke-linejoin="round"/>`;
+  }
+  return s+'</svg>';
+}
+function netSVG(st,size){
+  size=size||260; const u=size/12.4, g=u*0.08, fw=3*u+u*0.2;
+  const pos={U:[1,0],L:[0,1],F:[1,1],R:[2,1],B:[3,1],D:[1,2]};
+  let s=`<svg viewBox="0 0 ${4*fw} ${3*fw}" width="${size}" height="${size*0.75}" role="img">`;
+  for(const t of st){
+    const f=faceOf(t.n), ax=[0,1,2].find(i=>t.n[i]!==0); if(t.p[ax]!==t.n[ax]) continue;
+    const[x,y,z]=t.p; let r,c;
+    if(f==='U'){r=z+1;c=x+1;} else if(f==='F'){r=1-y;c=x+1;} else if(f==='R'){r=1-y;c=1-z;}
+    else if(f==='B'){r=1-y;c=1-x;} else if(f==='L'){r=1-y;c=z+1;} else {r=1-z;c=x+1;}
+    const[fx,fy]=pos[f];
+    s+=`<rect x="${(fx*fw+c*u+g).toFixed(1)}" y="${(fy*fw+r*u+g).toFixed(1)}" width="${(u-2*g).toFixed(1)}" height="${(u-2*g).toFixed(1)}" rx="${(u*.15).toFixed(1)}" fill="${HEX[t.c]}" stroke="rgba(0,0,0,.4)" stroke-width="0.7"/>`;
+  }
+  return s+'</svg>';
+}
+function pllFeatures(st){
+  const sides=[[L("Orqa","Back"),[-1,0,1].map(x=>stk(st,[x,1,-1],[0,0,-1]).c)],[L("Chap","Left"),[-1,0,1].map(z=>stk(st,[-1,1,z],[-1,0,0]).c)],
+    [L("O'ng","Right"),[-1,0,1].map(z=>stk(st,[1,1,z],[1,0,0]).c)],[L("Old","Front"),[-1,0,1].map(x=>stk(st,[x,1,1],[0,0,1]).c)]];
+  return sides.map(([n,[a,b,c]])=>{let f; if(a===b&&b===c)f=L("to'liq qator","full bar"); else if(a===c)f=L("faralar","headlights"); else if(a===b||b===c)f=L("2x1 blok","2x1 block"); else f=L("3 xil rang","3 colors"); return `<b>${n}:</b> ${f}`;}).join(' · ');
+}
+
+// ===================== COPY =====================
+function copyText(text,btn){
+  const flash=msg=>{ if(!btn) return; if(!btn.dataset.orig) btn.dataset.orig=btn.innerHTML; btn.innerHTML=msg; clearTimeout(btn._t); btn._t=setTimeout(()=>{btn.innerHTML=btn.dataset.orig; delete btn.dataset.orig;},1400); };
+  const fallback=()=>{ try{const ta=document.createElement('textarea'); ta.value=text; ta.setAttribute('readonly',''); ta.style.cssText='position:fixed;top:0;left:0;opacity:0'; document.body.appendChild(ta); ta.select(); const ok=document.execCommand('copy'); ta.remove(); flash(ok?'✓':L('Nusxa olinmadi','Copy failed')); }catch(e){ flash(L('Nusxa olinmadi','Copy failed')); } };
+  try{ navigator.clipboard.writeText(text).then(()=>flash('✓'),fallback); }catch(e){ fallback(); }
+}
+const copyBtn=(text,cls)=>`<button class="${cls||'icon ghost'}" data-copy="${text}" title="${L('Nusxa olish','Copy')}">⧉</button>`;
+
+// ===================== SHELL / ROUTING =====================
+const VIEWS=['reja','darslar','mashq','qollar','taymer'];
+function renderHeader(){
+  document.documentElement.lang=DB.lang;
+  $('appName').textContent=L('Speedcubing trener','Speedcubing trainer');
+  document.title=L('Speedcubing trener — CFOP','Speedcubing trainer — CFOP');
+  $('langBtn').innerHTML=DB.lang==='en'?'🇺🇿 <span class="lbl">O\'zbekcha</span>':'🇬🇧 <span class="lbl">English</span>';
+  $('simBtn').innerHTML='🧊<span class="lbl"> '+L('Simulyator','Simulator')+'</span>';
+  const names=[L('1. Reja','1. Plan'),L('2. Darslar va holatlar','2. Lessons & cases'),L('3. Tanib olish mashqi','3. Recognition drill'),L("4. Qo'l texnikasi",'4. Finger tricks'),L('5. Taymer','5. Timer')];
+  $('nav').innerHTML=VIEWS.map((v,i)=>`<a href="#${v}">${names[i]}</a>`).join('');
+  $('footer').textContent=L("Natijalar va belgilar faqat shu brauzerda saqlanadi.","Your progress and times are saved in this browser only.");
+  applyTheme(); markNav();
+}
+function markNav(){const v=curView(); document.querySelectorAll('#nav a').forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+v));}
+function curView(){const h=(location.hash||'#reja').slice(1); return VIEWS.includes(h)?h:'reja';}
+function route(){const v=curView(); VIEWS.forEach(k=>$('v-'+k).classList.toggle('on',k===v)); markNav(); if(v!=='qollar') metroStop(); window.scrollTo(0,0);}
+window.addEventListener('hashchange',route);
+function curTheme(){return DB.theme||(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');}
+function applyTheme(){const t=curTheme(); document.documentElement.dataset.theme=t; const tm=document.querySelector('meta[name=theme-color]'); if(tm) tm.content=t==='dark'?'#141416':'#f6f5f2'; const b=$('themeBtn'); b.textContent=t==='dark'?'☀️':'🌙'; b.title=t==='dark'?L("Yorug' rejim","Light mode"):L("Qorong'i rejim","Dark mode");}
+
+// ===================== PLAN =====================
+const PLAN=[
+ {tag:["1-hafta","Week 1"],title:["Asos: notatsiya, xoch, qo'l texnikasi","Basics: notation, cross, finger tricks"],tasks:[
+  ["Darslar → Notatsiya bo'limini o'qing: R, U, F, M, r, f, x harakatlarini bilib oling","Lessons → read Notation: learn the R, U, F, M, r, f, x moves"],
+  ["Qo'l texnikasi: R U R' U' (sexy move) ni metronomda 120 harakat/daq tezlikda xatosiz bajaring","Finger tricks: do R U R' U' (sexy move) cleanly at 120 moves/min on the metronome"],
+  ["Oq xochni pastda yig'ishga o'ting (ko'zdan kechirishda butun xochni rejalashtiring, 8 harakatdan kam)","Switch to solving the white cross on the bottom (plan the whole cross during inspection, under 8 moves)"],
+  ["2-look OLL 1-qadam: Chiziq, L, Nuqta (3 ta formula)","2-look OLL step 1: Line, L, Dot (3 algorithms)"],
+  ["OLL burchaklar: Sune va Antisune","OLL corners: Sune and Antisune"],
+  ["Tanib olish mashqi: 'OLL xoch' + 'OLL burchak' — 90% aniqlik","Recognition drill: 'OLL cross' + 'OLL corners' — 90% accuracy"]]},
+ {tag:["2-hafta","Week 2"],title:["Intuitiv F2L va qolgan OLL","Intuitive F2L and the rest of OLL"],tasks:[
+  ["F2L darsini o'qing: burchak + qirrani tepada juftlash g'oyasi","Read the F2L lesson: pairing the corner and edge on top"],
+  ["F2L 4 ta asosiy holat (R U R', F' U' F, U R U' R', U' F' U F) — ko'rmasdan bajaring","The 4 basic F2L cases (R U R', F' U' F, U R U' R', U' F' U F) — without looking"],
+  ["2-qatlamni endi butunlay F2L bilan yig'ing (birinchi qatlam burchaklarini alohida qo'ymasdan)","Build the first two layers with F2L only (no separate first-layer corners)"],
+  ["OLL burchaklar: H, Pi, Faralar, T, Kapalak (5 ta)","OLL corners: H, Pi, Headlights, T, Bowtie (5)"],
+  ["Tanib olish mashqi: barcha 10 ta OLL — o'rtacha tanish vaqti 1,5 s dan kam","Recognition drill: all 10 OLLs — average recognition under 1.5 s"]]},
+ {tag:["3-hafta","Week 3"],title:["2-look PLL va lookahead","2-look PLL and lookahead"],tasks:[
+  ["PLL burchaklar: T-perm va Y-perm","PLL corners: T-perm and Y-perm"],
+  ["PLL qirralar: Ua, Ub, H, Z","PLL edges: Ua, Ub, H, Z"],
+  ["Lookahead: 5 ta yechimni ataylab sekin, lekin hech to'xtamasdan bajaring","Lookahead: do 5 solves deliberately slowly, but without ever pausing"],
+  ["Metronomda to'liq yechim: 60 bpm da boshlab, har kuni biroz oshiring","Full solves to a metronome: start at 60 bpm and raise it a little each day"],
+  ["Taymer: kuniga 12 ta yechim, ao12 ni yozib boring. Maqsad: 1 daqiqadan kam","Timer: 12 solves a day, track your ao12. Goal: under 1 minute"]]},
+ {tag:["4-hafta","Week 4"],title:["F2L'ni kengaytirish va to'liq PLL boshlanishi","Expanding F2L and starting full PLL"],tasks:[
+  ["F2L 12 ta holatning hammasini o'rganing (Darslar → F2L)","Learn all 12 F2L cases (Lessons → F2L)"],
+  ["F2L'da kubni aylantirmasdan (y harakatisiz) ishlashga harakat qiling","Try to do F2L without cube rotations (no y moves)"],
+  ["To'liq PLL: kuniga 2 ta yangi formula (Jb, Ja, Aa, Ab'dan boshlang)","Full PLL: 2 new algorithms a day (start with Jb, Ja, Aa, Ab)"],
+  ["Pro rejim: PLL'ni faqat 2 tomondan tanib olishni mashq qiling","Pro mode: practice recognizing PLL from just 2 sides"],
+  ["Maqsad: ao12 — 40–50 soniya. Keyingi bosqich: to'liq OLL (57 ta)","Goal: ao12 of 40–50 seconds. Next stage: full OLL (57)"]]},
+];
+function renderPlanView(){
+  let tot=0,done=0;
+  const weeks=PLAN.map((w,wi)=>`<div class="panel week"><div class="tag">${L(...w.tag)}</div><h3>${L(...w.title)}</h3>${w.tasks.map((t,ti)=>{const k=wi+'-'+ti; tot++; const d=!!DB.plan[k]; if(d)done++;
+    return `<label class="task ${d?'done':''}"><input type="checkbox" data-k="${k}" ${d?'checked':''}><span>${L(...t)}</span></label>`;}).join('')}</div>`).join('');
+  const pct=Math.round(done/tot*100);
+  $('v-reja').innerHTML=`<h1>${L("LBL'dan CFOP'ga: 4 haftalik reja","From LBL to CFOP: a 4-week plan")}</h1>
+  <p class="lead">${L("Maqsad — har bir holatni bir qarashda tanib, o'ylamasdan bajarish. Buning uchun uchta ko'nikma kerak: <b>tanib olish</b> (rasmni ko'rib, holat nomini bilish), <b>mushak xotirasi</b> (formulani qo'l o'zi bajarishi) va <b>lookahead</b> (bitta qadamni bajarayotib, keyingisini ko'rish). Har kuni 30–40 daqiqa yetarli.",
+   "The goal: recognize every case at a glance and execute it without thinking. That takes three skills: <b>recognition</b> (naming a case from a picture), <b>muscle memory</b> (your hands run the algorithm on their own) and <b>lookahead</b> (seeing the next step while executing the current one). 30–40 minutes a day is enough.")}</p>
+  <div class="panel" style="margin-bottom:16px"><div class="row" style="justify-content:space-between"><b>${L("Umumiy jarayon","Overall progress")}</b><span class="muted">${pct}% (${done}/${tot})</span></div><div class="progress" style="margin-top:8px"><i style="width:${pct}%"></i></div></div>
+  <div class="grid g2">${weeks}</div>
+  <h2>${L("Har kungi mashg'ulot (30–40 daqiqa)","Daily session (30–40 minutes)")}</h2>
+  <div class="grid g2"><div class="panel"><table>
+    <tr><th>${L("Vaqt","Time")}</th><th>${L("Nima qilish","What to do")}</th></tr>
+    <tr><td>5 ${L("daq","min")}</td><td>${L("Qizish: <b>Qo'l texnikasi</b> bo'limida metronom bilan triggerlar","Warm-up: triggers with the metronome in <b>Finger tricks</b>")} (<code>R U R' U'</code>, <code>R' F R F'</code>)</td></tr>
+    <tr><td>10 ${L("daq","min")}</td><td>${L("<b>Tanib olish mashqi</b>: shu haftaning holatlari, aniqlik 90% dan oshguncha","<b>Recognition drill</b>: this week's cases until accuracy is above 90%")}</td></tr>
+    <tr><td>10 ${L("daq","min")}</td><td>${L("Yangi formulalar: har birini haqiqiy kubda 20–30 marta, avval sekin","New algorithms: 20–30 reps each on a real cube, slowly at first")}</td></tr>
+    <tr><td>10–15 ${L("daq","min")}</td><td>${L("<b>Taymer</b>: 12 ta to'liq yechim, ao12 natijani kuzating","<b>Timer</b>: 12 full solves, track your ao12")}</td></tr>
+  </table></div>
+  <div class="panel"><h3>${L("Asosiy qoidalar","Key rules")}</h3><ul class="clean">
+    <li>${L("Oq xoch <b>pastda</b>, sariq tepada yig'iladi. Bu sahifadagi barcha rasmlar ham shunday.","White cross on the <b>bottom</b>, yellow on top. Every picture here uses that orientation.")}</li>
+    <li>${L("<b>Sekin, lekin to'xtamasdan</b> yechish tez-to'xta-tez yechishdan foydaliroq. Pauzalar — vaqtning asosiy yo'qotilishi.","Solving <b>slowly but without pauses</b> beats fast-stop-fast. Pauses are where most time is lost.")}</li>
+    <li>${L("Formulani yodlashda avval <b>rasm → nom → formula</b> zanjirini o'rnating. Faqat harflarni yodlash emas.","When learning an algorithm, build the <b>picture → name → algorithm</b> chain, not just the letters.")}</li>
+    <li>${L("Haftada bir marta ao12 natijangizni yozib boring — o'sishni ko'rish motivatsiya beradi.","Write down your ao12 once a week — seeing progress keeps you going.")}</li></ul></div></div>`;
+  $('v-reja').querySelectorAll('[data-k]').forEach(i=>i.onchange=()=>{DB.plan[i.dataset.k]=i.checked; save(); renderPlanView();});
+}
+
+// ===================== LESSONS =====================
+function lessonText(k){
+ if(k==='notation') return `<h2 id="l-notation">${L("Notatsiya — harakatlar tili","Notation — the language of moves")}</h2>
+ <div class="grid g2"><div class="panel"><table class="notation">
+ <tr><td>R</td><td>${L("O'ng tomonni soat yo'nalishida 90° (o'ng tomonga qarab turganda)","Right face 90° clockwise (as seen looking at the right face)")}</td></tr>
+ <tr><td>R'</td><td>${L("Teskari yo'nalishda (apostrof = teskari)","Counter-clockwise (apostrophe = inverse)")}</td></tr>
+ <tr><td>R2</td><td>${L("180° (ikki marta)","180° (twice)")}</td></tr>
+ <tr><td>U D L F B</td><td>${L("Tepa, past, chap, old, orqa tomonlar — xuddi shunday","Up, Down, Left, Front, Back — the same way")}</td></tr>
+ <tr><td>M</td><td>${L("O'rta qatlam (L va R orasida), L yo'nalishida","Middle slice (between L and R), turned like L")}</td></tr>
+ <tr><td>r, f</td><td>${L("Kichik harf: ikki qatlam birga (r = R + o'rta qatlam)","Lowercase: two layers together (r = R + middle slice)")}</td></tr>
+ <tr><td>x, y</td><td>${L("Butun kubni aylantirish: x — R yo'nalishida, y — U yo'nalishida","Whole-cube rotation: x like R, y like U")}</td></tr>
+ </table></div><div class="panel"><h3>${L("Rasmlarni qanday o'qish kerak","How to read the pictures")}</h3><ul class="clean">
+ <li>${L("<b>Tepadan ko'rinish</b> (OLL, PLL): o'rtadagi 3×3 — tepa tomon, chetidagi ingichka chiziqlar — yon tomonlarning yuqori qatori. Pastki chiziq — sizga qaragan (old) tomon.","<b>Top view</b> (OLL, PLL): the 3×3 is the top face; the thin strips are the top rows of the side faces. The bottom strip is the side facing you (front).")}</li>
+ <li>${L("<b>3D ko'rinish</b> (F2L): tepa, old (chapda) va o'ng tomon. Kulrang — ahamiyatsiz stikerlar.","<b>3D view</b> (F2L): top, front (left) and right faces. Gray stickers don't matter.")}</li>
+ <li>${L("<b>OLL</b> rasmlarida faqat sariq muhim, qolgani kulrang.","In <b>OLL</b> pictures only yellow matters; everything else is gray.")}</li>
+ <li>${L("Barcha holatlarda: sariq tepada, yashil oldda, to'q sariq o'ngda.","In every case: yellow on top, green in front, orange on the right.")}</li></ul></div></div>`;
+ if(k==='cross') return `<h2 id="l-cross">${L("Cross — oq xoch (pastda)","Cross — the white cross (on the bottom)")}</h2>
+ <div class="grid g2"><div class="panel"><ul class="clean">
+ <li>${L("LBL'da xochni tepada yig'ib, keyin ag'darasiz. CFOP'da xoch <b>darhol pastda</b> yig'iladi — shunda F2L juftlarini tepada ko'rib turasiz.","In LBL you build the cross on top and flip the cube. In CFOP the cross goes <b>straight to the bottom</b>, so you can see the F2L pairs on top.")}</li>
+ <li>${L("Musobaqada 15 soniya ko'zdan kechirish bor. Shu vaqtda <b>butun xochni</b> boshida rejalashtiring.","Competitions give you 15 seconds of inspection. Use it to plan the <b>whole cross</b> in advance.")}</li>
+ <li>${L("Yaxshi xoch — 8 harakat yoki kam. Avval xochni tepada rejalashtirib, keyin pastda bajarishni mashq qiling.","A good cross is 8 moves or fewer. Practice planning it, then executing it on the bottom.")}</li></ul></div>
+ <div class="panel"><h3>${L("Mashq","Practice")}</h3><ul class="clean"><li>${L("Taymerda aralashtiring, 15 soniya qarang, keyin <b>kubga qaramasdan</b> xochni yig'ishga urinib ko'ring. Avval 2 ta qirra, keyin 3, keyin 4.","Scramble with the timer, inspect for 15 seconds, then try to build the cross <b>without looking</b>. Start with 2 edges, then 3, then 4.")}</li>
+ <li>${L("Qirralarni qo'yishda <b>F2L slotlarini</b> (bo'sh burchak-qirra joylari) eslab qoling.","While placing edges, keep track of the <b>F2L slots</b> (empty corner-edge spots).")}</li></ul></div></div>`;
+ if(k==='f2l') return `<h2 id="l-f2l">${L("F2L — birinchi ikki qatlam birga","F2L — the first two layers together")}</h2>
+ <div class="grid g2"><div class="panel"><h3>${L("G'oya","The idea")}</h3><ul class="clean">
+ <li>${L("LBL'da avval burchakni, keyin o'rta qirrani alohida qo'yasiz. F2L'da <b>burchak va unga mos qirrani tepada juftlab</b>, bitta harakat bilan slotga kiritasiz.","In LBL you place the corner, then the middle edge, separately. In F2L you <b>pair the corner with its edge on top</b> and insert them into the slot together.")}</li>
+ <li>${L("Har bir juft — oq burchak (masalan, oq-yashil-to'q sariq) va shu ranglardagi qirra (yashil-to'q sariq).","Each pair is a white corner (e.g. white-green-orange) and the matching edge (green-orange).")}</li>
+ <li>${L("Hamma holatlar 3 ta g'oyaga tushadi: <b>juftlash</b>, <b>ajratish</b> (noto'g'ri joylashgan bo'lsa), <b>kiritish</b> (<code>R U R'</code> yoki <code>F' U' F</code>).","Every case comes down to 3 ideas: <b>pairing</b>, <b>separating</b> (when badly placed) and <b>inserting</b> (<code>R U R'</code> or <code>F' U' F</code>).")}</li></ul></div>
+ <div class="panel"><h3>${L("Tanib olish kaliti","How to recognize")}</h3><ul class="clean">
+ <li>${L("1) Burchakning <b>oq stikeri qayerga</b> qaragan: o'ngga, oldga yoki tepaga?","1) Where does the corner's <b>white sticker</b> face: right, front or up?")}</li>
+ <li>${L("2) Qirra <b>qayerda</b> va uning <b>tepasidagi rang</b> qaysi?","2) <b>Where</b> is the edge, and which <b>color is on its top</b>?")}</li>
+ <li>${L("Shu ikki savolga javob — holatni aniqlaydi. Quyidagi rasmlarda maqsad slot — old-o'ng.","Those two answers identify the case. In the pictures below the target slot is front-right.")}</li>
+ <li>${L("Formulalarni yodlashdan ko'ra, <b>Qadamma-qadam</b> ko'rib, juft qanday hosil bo'lishini tushuning.","Rather than memorizing, use <b>Step by step</b> to see how the pair forms.")}</li></ul></div></div>`;
+ if(k==='oll') return `<h2 id="l-oll">${L("OLL — tepani sariq qilish (2 qadamda)","OLL — making the top yellow (in 2 steps)")}</h2>
+ <div class="tip">${L("Avval sariq xoch (3 holat), keyin burchaklar (7 holat). Burchaklarni tanishda <b>tepadagi sariq burchaklar sonini</b> sanang: 0 ta → H yoki Pi; 1 ta → Sune yoki Antisune; 2 ta → Faralar, T yoki Kapalak. Keyin yon tomondagi sariq stikerlarga qarang.","First the yellow cross (3 cases), then the corners (7 cases). To recognize corners, count the <b>yellow corners on top</b>: 0 → H or Pi; 1 → Sune or Antisune; 2 → Headlights, T or Bowtie. Then look at the yellow stickers on the sides.")}</div>`;
+ if(k==='pll') return `<h2 id="l-pll">${L("PLL — tepa qatlamni joyiga qo'yish","PLL — permuting the last layer")}</h2>
+ <div class="tip">${L("<b>Faralar</b> — bir tomondagi ikki burchak bir xil rang. <b>Blok</b> — burchak va qirra yonma-yon bir rang. <b>Qator</b> — butun tomon bir rang. Pro kubchilar PLL'ni faqat 2 ta tomonga qarab taniydi: faralar va bloklarni qidiradi. Har bir rasm ostida tomonlar tahlili berilgan.","<b>Headlights</b> — two corners on one side share a color. <b>Block</b> — a corner and edge next to each other share a color. <b>Bar</b> — a whole side is one color. Pros recognize PLL from just 2 sides by looking for headlights and blocks. Each picture has a side-by-side breakdown below it.")}</div>`;
+}
+function caseCard(k,c){
+  const S=SETS[k], st=caseState(c.alg,0,0);
+  const feat=S.view==='pll'?`<div class="feat">${pllFeatures(st)}</div>`:'';
+  return `<div class="card"><div class="pic">${S.pic==='iso'?isoSVG(st,S.view,150):topSVG(st,S.view,150)}</div>
+   <div class="name">${NM(c)}</div><div class="algrow"><span class="alg">${c.alg}</span>${copyBtn(c.alg)}</div><div class="hint">${HN(c)}</div>${feat}
+   <div class="row" style="gap:6px"><button class="sm" data-step="${k}|${c.id}">▶ ${L("Qadamma-qadam","Step by step")}</button><button class="sm" data-sim="${c.alg}">🧊 ${L("Simulyatorda","In simulator")}</button></div></div>`;
+}
+function renderLessonsView(){
+  const nav=[['l-notation',L('Notatsiya','Notation')],['l-cross','Cross'],['l-f2l','F2L'],['l-oll','OLL'],['l-pll','PLL']];
+  const block=k=>`<h3 style="margin:18px 0 10px">${ST(k)} <span class="muted" style="font-weight:500">· ${SETS[k].cases.length}</span></h3><div class="grid g3">${SETS[k].cases.map(c=>caseCard(k,c)).join('')}</div>`;
+  $('v-darslar').innerHTML=`<h1>${L("Darslar va holatlar kutubxonasi","Lessons and case library")}</h1>
+  <p class="lead">${L("Har bir holat rasmi formuladan hisoblab chizilgan — rasm aynan formula bajarilishidan oldingi holatni ko'rsatadi. Kubni rasmdagidek ushlang. <b>Qadamma-qadam</b> formulani harakat bo'yicha ko'rsatadi, <b>Simulyatorda</b> esa holatni 3D kubga yuklaydi.","Every picture is computed from its algorithm — it shows exactly the state before you run it. Hold the cube as pictured. <b>Step by step</b> walks through the moves; <b>In simulator</b> loads the case onto the 3D cube.")}</p>
+  <div class="row" style="margin-bottom:8px">${nav.map(([id,n])=>`<button class="sm" data-jump="${id}">${n}</button>`).join('')}</div>
+  ${lessonText('notation')+lessonText('cross')+lessonText('f2l')+block('f2l')+lessonText('oll')+block('oll1')+block('oll2')+lessonText('pll')+block('pll1')+block('pll2')}`;
+}
+
+// ===================== STEPPER =====================
+let STEP=null;
+function openStepper(k,c){STEP={k,c,toks:tokens(c.alg),i:0}; drawStepper(); $('modal').classList.add('on');}
+function drawStepper(){
+  const {k,c,toks,i}=STEP, S=SETS[k];
+  const st=caseState(c.alg,0,0); toks.slice(0,i).forEach(t=>{const m=parseTok(t);move(st,m.f,m.a);});
+  $('modalBox').innerHTML=`<div class="row" style="justify-content:space-between"><h3 style="margin:0">${NM(c)} <span class="muted" style="font-weight:500">· ${SH(k)}</span></h3><button class="sm ghost" id="mClose">✕</button></div>
+   <div class="row" style="justify-content:center;gap:24px;margin:14px 0">${isoSVG(st,S.view,190)}${topSVG(st,S.view,170)}</div>
+   <div class="tokens">${toks.map((t,j)=>`<span class="${j<i?'done':j===i?'cur':''}">${t}</span>`).join('')}</div>
+   <p class="muted" style="text-align:center;margin:10px 0">${i===0?L("Boshlang'ich holat","Starting position"):i===toks.length?L('Tayyor ✓','Done ✓'):L('Keyingi harakat','Next move')+': <b>'+toks[i]+'</b>'} · ${i}/${toks.length}</p>
+   <div class="row" style="justify-content:center"><button id="mFirst">⏮</button><button id="mPrev">◀ ${L('Orqaga','Back')}</button><button class="primary" id="mNext">${L('Keyingi','Next')} ▶</button><button id="mLast">⏭</button></div>
+   <p class="muted" style="font-size:13px;text-align:center;margin-bottom:0">${L('Klaviatura','Keyboard')}: <kbd>←</kbd> <kbd>→</kbd>. ${L("Haqiqiy kubni ham parallel ravishda burang.","Turn your real cube along with it.")}</p>`;
+  const set=v=>{STEP.i=Math.max(0,Math.min(toks.length,v)); drawStepper();};
+  $('mClose').onclick=closeModal; $('mFirst').onclick=()=>set(0); $('mLast').onclick=()=>set(toks.length);
+  $('mPrev').onclick=()=>set(STEP.i-1); $('mNext').onclick=()=>set(STEP.i+1);
+}
+function closeModal(){$('modal').classList.remove('on'); STEP=null;}
+$('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal();});
+
+// ===================== DRILL =====================
+let CUR=null, SESSION={n:0,ok:0,times:[]};
+const statKey=(k,id)=>k+':'+id;
+function renderDrillView(){
+  $('v-mashq').innerHTML=`<h1>${L("Tanib olish mashqi","Recognition drill")}</h1>
+  <p class="lead">${L("Pro kubchilar holatni 0,5 soniyadan tez taniydi. Bu yerda holat tasodifiy burchakda ko'rsatiladi — siz nomini topasiz. Xato qilgan holatlaringiz keyinroq tez-tez qaytadi.","Pros recognize a case in under half a second. Here a case appears at a random angle and you name it. Cases you miss come back more often.")}</p>
+  <div class="panel" style="margin-bottom:14px">
+    <div class="row" style="margin-bottom:10px"><b>${L("To'plamlar","Sets")}:</b><span id="setChips" class="row"></span></div>
+    <div class="row"><b>${L("Rejim","Mode")}:</b>
+      <label class="chip"><input type="radio" name="mode" value="rec" ${DB.mode!=='alg'?'checked':''}> ${L("Nomini topish","Name the case")}</label>
+      <label class="chip"><input type="radio" name="mode" value="alg" ${DB.mode==='alg'?'checked':''}> ${L("Formulani eslash","Recall the algorithm")}</label>
+      <label class="chip"><input type="checkbox" id="proView" ${DB.pro?'checked':''}> ${L("Pro: PLL'ni 2 tomondan (3D)","Pro: PLL from 2 sides (3D)")}</label></div>
+  </div>
+  <div class="drill"><div class="panel stage" id="stage"></div><div class="panel"><div id="drillSide"></div></div></div>
+  <h2>${L("Statistika","Statistics")}</h2>
+  <div class="panel"><div class="stat" id="drillStat" style="margin-bottom:12px"></div><div style="overflow-x:auto"><table id="caseStats"></table></div>
+  <div class="row" style="margin-top:10px"><button class="sm ghost" id="resetStats">${L("Statistikani tozalash","Reset statistics")}</button></div></div>`;
+  renderSetChips(); renderDrillStats();
+  $('resetStats').onclick=()=>{DB.stats={}; SESSION={n:0,ok:0,times:[]}; save(); renderDrillStats();};
+  document.querySelectorAll('input[name=mode]').forEach(i=>i.onchange=()=>{DB.mode=i.value; save(); nextCase();});
+  $('proView').onchange=e=>{DB.pro=e.target.checked; save(); drawDrill();};
+  if(CUR) drawDrill(); else nextCase();
+}
+function renderSetChips(){
+  $('setChips').innerHTML=SET_ORDER.map(k=>`<label class="chip ${DB.sets.includes(k)?'on':''}"><input type="checkbox" data-set="${k}" ${DB.sets.includes(k)?'checked':''}> ${SH(k)} <span class="muted">(${SETS[k].cases.length})</span></label>`).join('');
+  document.querySelectorAll('[data-set]').forEach(i=>i.onchange=()=>{const k=i.dataset.set; DB.sets=DB.sets.filter(s=>s!==k); if(i.checked)DB.sets.push(k);
+    if(!DB.sets.length)DB.sets=[k]; save(); renderSetChips(); nextCase();});
+}
+function pool(){const out=[]; SET_ORDER.filter(k=>DB.sets.includes(k)).forEach(k=>SETS[k].cases.forEach(c=>out.push({k,c}))); return out;}
+function weight(k,id){const s=DB.stats[statKey(k,id)]; if(!s) return 3; const acc=s.r/(s.r+s.w); const avg=s.t/Math.max(1,s.r); return 1+(1-acc)*6+Math.min(3,avg/1500)+(s.r+s.w<3?2:0);}
+function nextCase(){
+  const P=pool(); let tot=0; const ws=P.map(o=>{const w=weight(o.k,o.c.id); tot+=w; return w;});
+  let r=Math.random()*tot, idx=0; for(;idx<P.length;idx++){r-=ws[idx]; if(r<=0)break;} idx=Math.min(idx,P.length-1);
+  if(CUR && P.length>1 && P[idx].k===CUR.k && P[idx].c.id===CUR.c.id) idx=(idx+1+Math.floor(Math.random()*(P.length-1)))%P.length;
+  const o=P[idx], S=SETS[o.k];
+  CUR={k:o.k,c:o.c,pre:S.view==='pll'?Math.floor(Math.random()*4):0,post:Math.floor(Math.random()*4),t0:performance.now(),answered:false};
+  drawDrill();
+}
+const mode=()=>{const r=document.querySelector('input[name=mode]:checked'); return r?r.value:'rec';};
+function drawDrill(){
+  if(!$('stage')) return;
+  const {k,c,pre,post}=CUR, S=SETS[k];
+  const iso=$('proView').checked && S.view==='pll';
+  const st=caseState(c.alg,pre,post);
+  $('stage').innerHTML=`<div class="muted" style="font-size:13px">${ST(k)}</div>${(S.pic==='iso'||iso)?isoSVG(st,S.view,250):topSVG(st,S.view,240)}<div id="verdict" style="min-height:26px"></div>`;
+  const side=$('drillSide'); CUR.answered=false; CUR.t0=performance.now();
+  if(mode()==='rec'){
+    side.innerHTML=`<h3>${L("Bu qaysi holat?","Which case is this?")}</h3><p class="muted" style="margin-top:0;font-size:13.5px">${L("Tez tanishga harakat qiling — vaqt o'lchanmoqda.","Be quick — you're being timed.")}</p>
+     <div class="answers">${pool().map(o=>`<button data-ans="${o.k}|${o.c.id}">${NM(o.c)}${DB.sets.length>1?`<br><span class="muted" style="font-size:11px">${SH(o.k)}</span>`:''}</button>`).join('')}</div><div id="after"></div>`;
+    side.querySelectorAll('[data-ans]').forEach(b=>b.onclick=()=>answer(b));
+  } else {
+    side.innerHTML=`<h3>${L("Formulani eslang","Recall the algorithm")}</h3><p class="muted" style="margin-top:0">${L("Holatni tanib, formulani haqiqiy kubda bajaring. Keyin tekshiring.","Recognize the case and run the algorithm on your cube. Then check.")}</p>
+     <button class="primary" id="reveal">${L("Formulani ko'rsatish","Show algorithm")} <kbd style="color:inherit;border-color:rgba(255,255,255,.5);background:transparent">Space</kbd></button><div id="after"></div>`;
+    $('reveal').onclick=reveal;
+  }
+}
+function record(ok,ms){
+  const key=statKey(CUR.k,CUR.c.id); const s=DB.stats[key]||(DB.stats[key]={r:0,w:0,t:0});
+  if(ok){s.r++; s.t+=ms;} else s.w++; SESSION.n++; if(ok){SESSION.ok++; SESSION.times.push(ms);} save(); renderDrillStats();
+}
+function afterCard(ok){
+  const {k,c}=CUR, S=SETS[k], ref=caseState(c.alg,0,0);
+  const feat=S.view==='pll'?`<div class="feat" style="margin-top:6px">${pllFeatures(ref)}</div>`:'';
+  return `<div class="card" style="margin-top:14px;background:${ok?'var(--ok-soft)':'var(--bad-soft)'}"><div class="row" style="align-items:flex-start;flex-wrap:nowrap;gap:12px">
+   <div style="flex:none">${S.pic==='iso'?isoSVG(ref,S.view,110):topSVG(ref,S.view,110)}</div>
+   <div><div class="name">${NM(c)}</div><div class="algrow" style="margin:4px 0"><span class="alg">${c.alg}</span>${copyBtn(c.alg)}</div><div class="hint">${HN(c)}</div>${feat}</div></div>
+   <div class="muted" style="font-size:12.5px">${L("Chapdagi rasm — formulani boshlash holati. Kerak bo'lsa avval <code>U</code> bilan tepani shu holatga keltiring.","The small picture is the starting position. If needed, turn <code>U</code> first to match it.")}</div>
+   <div><button class="sm" data-sim="${c.alg}">🧊 ${L("Simulyatorda ko'rish","See it in the simulator")}</button></div></div>`;
+}
+function answer(btn){
+  if(CUR.answered) return; CUR.answered=true; const ms=performance.now()-CUR.t0;
+  const[k,id]=btn.dataset.ans.split('|'); const ok=(k===CUR.k&&id===CUR.c.id);
+  document.querySelectorAll('[data-ans]').forEach(b=>{const[bk,bid]=b.dataset.ans.split('|'); if(bk===CUR.k&&bid===CUR.c.id)b.classList.add('right');});
+  if(!ok) btn.classList.add('wrong');
+  $('verdict').innerHTML=`<span class="verdict ${ok?'ok':'no'}">${ok?L("To'g'ri!","Correct!")+' '+(ms/1000).toFixed(2)+' s':L('Xato — bu ','Wrong — it\'s ')+NM(CUR.c)}</span>`;
+  record(ok,ms);
+  $('after').innerHTML=afterCard(ok)+`<div class="row" style="margin-top:12px"><button class="primary" id="nextBtn">${L('Keyingi','Next')} ▶ <kbd style="color:inherit;border-color:rgba(255,255,255,.5);background:transparent">Enter</kbd></button></div>`;
+  $('nextBtn').onclick=nextCase;
+}
+function reveal(){
+  if(CUR.answered) return; CUR.answered=true; CUR.ms=performance.now()-CUR.t0; $('reveal').remove();
+  $('after').innerHTML=afterCard(true)+`<div class="row" style="margin-top:12px"><button class="primary" id="knew">✓ ${L('Bildim','I knew it')} <kbd style="color:inherit;border-color:rgba(255,255,255,.5);background:transparent">1</kbd></button><button id="didnt">✗ ${L('Bilmadim',"I didn't")} <kbd>2</kbd></button></div>`;
+  $('knew').onclick=()=>{record(true,CUR.ms); nextCase();}; $('didnt').onclick=()=>{record(false,0); nextCase();};
+}
+const fmtMs=ms=>(ms/1000).toFixed(2)+' s';
+function renderDrillStats(){
+  if(!$('drillStat')) return;
+  const avg=SESSION.times.length?SESSION.times.reduce((a,b)=>a+b,0)/SESSION.times.length:0;
+  $('drillStat').innerHTML=`<div><b>${SESSION.n}</b><span>${L("Shu seans","This session")}</span></div><div><b>${SESSION.n?Math.round(SESSION.ok/SESSION.n*100):0}%</b><span>${L("Aniqlik","Accuracy")}</span></div><div><b>${avg?fmtMs(avg):'—'}</b><span>${L("O'rtacha tanish","Avg recognition")}</span></div>`;
+  const rows=[]; SET_ORDER.forEach(k=>SETS[k].cases.forEach(c=>{const s=DB.stats[statKey(k,c.id)]; if(s) rows.push({k,c,s,acc:s.r/(s.r+s.w),avg:s.r?s.t/s.r:0});}));
+  rows.sort((a,b)=>a.acc-b.acc||b.avg-a.avg);
+  $('caseStats').innerHTML=rows.length?`<tr><th>${L('Holat','Case')}</th><th>${L("To'plam",'Set')}</th><th>${L('Urinish','Attempts')}</th><th>${L('Aniqlik','Accuracy')}</th><th>${L("O'rt. vaqt",'Avg time')}</th></tr>`+rows.map(r=>`<tr><td>${NM(r.c)}</td><td class="muted">${SH(r.k)}</td><td>${r.s.r+r.s.w}</td>
+    <td><div class="row" style="gap:8px;flex-wrap:nowrap"><div class="bar" style="width:70px"><i style="width:${Math.round(r.acc*100)}%;background:${r.acc>=.9?'var(--ok)':r.acc>=.6?'var(--accent)':'var(--bad)'}"></i></div>${Math.round(r.acc*100)}%</div></td><td>${r.avg?fmtMs(r.avg):'—'}</td></tr>`).join('')
+    :`<tr><td class="muted">${L("Hali ma'lumot yo'q — mashqni boshlang. Eng zaif holatlar shu yerda tepada ko'rinadi.","No data yet — start drilling. Your weakest cases will show up at the top here.")}</td></tr>`;
+}
+
+// ===================== METRONOME (with 3D cube) =====================
+const TRIGGERS=[["Sexy move","R U R' U'"],["Sledgehammer","R' F R F'"],[["Teskari sexy","Reverse sexy"],"U R U' R'"],[["Chap sexy","Left sexy"],"L' U' L U"]];
+function metroList(){const out=TRIGGERS.map(([n,a])=>({name:Array.isArray(n)?L(...n):n,alg:a,isCase:false}));
+  SET_ORDER.forEach(k=>SETS[k].cases.forEach(c=>out.push({name:SH(k)+' · '+NM(c),alg:c.alg,isCase:true}))); return out;}
+let M={on:false,timer:null,i:0,reps:0,ctx:null,sel:0,cube:null};
+function metroItem(){return metroList()[M.sel];}
+function metroStartState(){const it=metroItem(); return it.isCase?caseState(it.alg,0,0):solvedCube();}
+function renderHandsView(){
+  metroStop();
+  $('v-qollar').innerHTML=`<h1>${L("Qo'l texnikasi (finger tricks)","Finger tricks")}</h1>
+  <p class="lead">${L("Tezlik qo'lning kuchidan emas, harakatlarning uzluksizligidan keladi. Metronom bilan formulalarni bir xil ritmda bajarishni o'rganing — avval sekin, keyin asta-sekin tezlashtiring.","Speed comes from flow, not force. Learn to run algorithms at an even rhythm with the metronome — slowly first, then gradually faster.")}</p>
+  <div class="grid g2">
+    <div class="panel">
+      <h3>${L("Metronom bilan formula mashqi","Metronome algorithm practice")}</h3>
+      <p class="muted" style="margin-top:0">${L("Har bir \"chiq\" ovozida bitta harakat qiling. 3D kub ham shu ritmda harakatlanadi.","Make one move on every click. The 3D cube moves to the same beat.")}</p>
+      <div class="row" style="margin-bottom:10px;flex-wrap:nowrap"><select id="metroAlg" style="flex:1;min-width:0">${metroList().map((it,i)=>`<option value="${i}" ${i===M.sel?'selected':''}>${it.name} — ${it.alg}</option>`).join('')}</select><button class="sm" id="metroCopy" title="${L('Nusxa olish','Copy')}">⧉ ${L('Nusxa','Copy')}</button></div>
+      <div class="row" style="margin-bottom:14px"><span>${L('Tezlik','Speed')}:</span><input type="range" id="bpm" min="40" max="300" step="10" value="${DB.bpm||90}"><b id="bpmVal">${DB.bpm||90}</b><span class="muted">${L('harakat/daq','moves/min')} (<span id="tps">${((DB.bpm||90)/60).toFixed(1)}</span> TPS)</span></div>
+      <div class="metro" id="metroShow"></div>
+      <div id="metroCube" style="margin-top:14px"></div>
+      <div class="row" style="justify-content:center;margin-top:14px">
+        <button class="primary" id="metroBtn">▶ ${L('Boshlash','Start')}</button>
+        <span class="muted" id="metroReps"></span>
+      </div>
+      <div class="tip">${L("Formulani 10 marta xatosiz bajara olsangiz, tezlikni 10–20 ga oshiring. Xato ko'paysa, qaytib pasaytiring. Holat formulalarida kub har takror boshida holatga qaytadi va oxirida yig'ilgan bo'ladi.","Once you can do it 10 times cleanly, raise the speed by 10–20. If mistakes pile up, slow back down. For case algorithms the cube resets to the case at the start of every rep and ends solved.")}</div>
+    </div>
+    <div class="panel">
+      <h3>${L("Asosiy qoidalar","Key techniques")}</h3>
+      <table>
+        <tr><th>${L('Harakat','Move')}</th><th>${L('Qanday bajariladi','How to do it')}</th></tr>
+        <tr><td><code>U</code></td><td>${L("O'ng ko'rsatkich barmoq bilan tepani chapga \"chertish\"","Flick the top layer left with your right index finger")}</td></tr>
+        <tr><td><code>U'</code></td><td>${L("Chap ko'rsatkich barmoq bilan tepani o'ngga chertish","Flick the top layer right with your left index finger")}</td></tr>
+        <tr><td><code>U2</code></td><td>${L("O'ng ko'rsatkich + o'rta barmoq ketma-ket (ikki chertish)","Right index then middle finger (a double flick)")}</td></tr>
+        <tr><td><code>R</code> / <code>R'</code></td><td>${L("Butun qo'l emas, faqat bilakni burang. Bosh barmoq pastda qoladi","Turn with your wrist, not your whole arm. Thumb stays at the bottom")}</td></tr>
+        <tr><td><code>F</code> / <code>F'</code></td><td>${L("Bilakni burmasdan, o'ng qo'lning bosh yoki ko'rsatkich barmog'i bilan. <code>R' F R F'</code> (sledgehammer) triggerida ayniqsa muhim","Without turning the wrist, using the right thumb or index finger. Especially important in the <code>R' F R F'</code> (sledgehammer) trigger")}</td></tr>
+        <tr><td><code>M'</code></td><td>${L("Chap qo'l halqa barmog'i bilan o'rta qatlamni orqa-pastdan yuqoriga itarish (<code>M</code> — teskari)","Push the middle slice up from the back-bottom with your left ring finger (<code>M</code> is the reverse)")}</td></tr>
+        <tr><td><code>D</code> / <code>D'</code></td><td>${L("Halqa barmog'i bilan pastki qatlam: <code>D</code> — chap qo'l, <code>D'</code> — o'ng qo'l","Bottom layer with a ring finger: <code>D</code> left hand, <code>D'</code> right hand")}</td></tr>
+      </table>
+      <h3 style="margin-top:16px">${L("Silliqlik uchun","For smoothness")}</h3>
+      <ul class="clean">
+        <li>${L("<b>Regrip</b>ni kamaytiring: formula davomida kubni qayta ushlamang.","Minimize <b>regrips</b>: don't re-grip the cube in the middle of an algorithm.")}</li>
+        <li>${L("<b>Kubni aylantirish</b>ni (<code>y</code>, <code>x</code>) kamaytiring — har biri ~0,3 s yo'qotadi.","Minimize <b>cube rotations</b> (<code>y</code>, <code>x</code>) — each costs ~0.3 s.")}</li>
+        <li>${L("Kubni <b>yengil</b> ushlang. Siqib ushlash harakatni sekinlashtiradi.","Hold the cube <b>lightly</b>. Gripping hard slows you down.")}</li>
+        <li>${L("Magnitli speedcube va silikon moy (lube) katta farq qiladi.","A magnetic speedcube and silicone lube make a big difference.")}</li>
+      </ul>
+    </div>
+  </div>`;
+  M.cube=new Cube3D($('metroCube'),{height:250,size:44,state:metroStartState(),dur:()=>Math.min(260,(60000/+$('bpm').value)*0.7)});
+  $('metroAlg').onchange=e=>{M.sel=+e.target.value; metroStop(); M.reps=0; M.cube.setState(metroStartState()); drawMetro();};
+  $('metroCopy').onclick=e=>copyText(metroItem().alg,e.currentTarget);
+  const bpm=$('bpm'); bpm.oninput=()=>{DB.bpm=+bpm.value; save(); $('bpmVal').textContent=bpm.value; $('tps').textContent=(bpm.value/60).toFixed(1); if(M.on){metroStop(true);metroStart();}};
+  $('metroBtn').onclick=()=>M.on?metroStop():metroStart();
+  drawMetro();
+}
+const metroToks=()=>tokens(metroItem().alg);
+function drawMetro(){ if(!$('metroShow')) return; const t=metroToks(); $('metroShow').innerHTML=t.map((x,k)=>`<span class="${M.on&&k===M.cur?'cur':''}">${x}</span>`).join(''); $('metroReps').textContent=L('Takror','Reps')+': '+M.reps;}
+function click(acc){ if(!M.ctx) return; try{const o=M.ctx.createOscillator(), g=M.ctx.createGain(); o.frequency.value=acc?1500:1000; g.gain.setValueAtTime(0.25,M.ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.001,M.ctx.currentTime+0.06); o.connect(g).connect(M.ctx.destination); o.start(); o.stop(M.ctx.currentTime+0.07);}catch(e){} }
+function metroStart(){
+  try{ M.ctx=M.ctx||new (window.AudioContext||window.webkitAudioContext)(); M.ctx.resume&&M.ctx.resume(); }catch(e){ M.ctx=null; }
+  M.on=true; M.i=0; $('metroBtn').innerHTML='■ '+L("To'xtatish",'Stop');
+  const iv=60000/+$('bpm').value;
+  const tick=()=>{ const t=metroToks(), it=metroItem(), n=t.length+(it.isCase?1:0); // holat formulalarida 1 dam olish zarbi: yig'ilgan kub ko'rinadi
+    if(M.i===0 && it.isCase) M.cube.setState(caseState(it.alg,0,0));
+    if(M.i<t.length){ M.cur=M.i; click(M.i===0); M.cube.enqueue([t[M.i]],false); } else M.cur=-1;
+    drawMetro(); M.i++; if(M.i>=n){M.i=0; M.reps++;} };
+  tick(); M.timer=setInterval(tick,iv);
+}
+function metroStop(keep){ if(M.timer)clearInterval(M.timer); M.timer=null; const was=M.on; M.on=false; const b=$('metroBtn'); if(b)b.innerHTML='▶ '+L('Boshlash','Start');
+  if(was && !keep && M.cube){ M.cube.setState(metroStartState()); } drawMetro(); }
+
+// ===================== TIMER (with 3D scramble cube) =====================
+let T={state:'idle',start:0,raf:0,holdT:0,inspStart:0,scr:'',cube:null};
+function genScramble(){
+  const faces=['U','D','L','R','F','B'], axis={U:0,D:0,L:1,R:1,F:2,B:2}, suf=['',"'",'2']; const out=[];
+  while(out.length<20){const f=faces[Math.floor(Math.random()*6)]; const n=out.length;
+    if(n&&out[n-1][0]===f) continue; if(n>1&&axis[out[n-1][0]]===axis[f]&&out[n-2][0]===f) continue;
+    out.push(f+suf[Math.floor(Math.random()*3)]);} return out.join(' ');
+}
+function showScramble(){ $('scr').textContent=T.scr; const st=apply(solvedCube(SCHEME_WCA),T.scr); if(T.cube) T.cube.setState(st); $('scrNet').innerHTML=netSVG(st,230); }
+function newScramble(){T.scr=genScramble(); showScramble();}
+function fmt(ms){if(ms==null||!isFinite(ms))return 'DNF'; const s=ms/1000; if(s<60)return s.toFixed(2); const m=Math.floor(s/60); return m+':'+(s-m*60).toFixed(2).padStart(5,'0');}
+function avgN(arr,n){if(arr.length<n)return null; const a=arr.slice(-n).map(t=>t.ms).sort((x,y)=>x-y); const cut=Math.ceil(n*0.05)||1; const mid=a.slice(cut,n-cut); return mid.reduce((x,y)=>x+y,0)/mid.length;}
+function renderTimes(){
+  if(!$('tstat')) return;
+  const ts=DB.times; const best=ts.length?Math.min(...ts.map(t=>t.ms)):null; const mean=ts.length?ts.reduce((a,t)=>a+t.ms,0)/ts.length:null;
+  const a5=avgN(ts,5), a12=avgN(ts,12);
+  $('tstat').innerHTML=`<div><b>${best!=null?fmt(best):'—'}</b><span>${L('Eng yaxshi','Best')}</span></div><div><b>${a5!=null?fmt(a5):'—'}</b><span>ao5</span></div><div><b>${a12!=null?fmt(a12):'—'}</b><span>ao12</span></div><div><b>${mean!=null?fmt(mean):'—'}</b><span>${L("O'rtacha",'Mean')} (${ts.length})</span></div>`;
+  $('ttable').innerHTML=ts.length?`<tr><th>#</th><th>${L('Vaqt','Time')}</th><th>${L('Aralashtirish','Scramble')}</th></tr>`+ts.map((t,i)=>`<tr><td class="muted">${i+1}</td><td><b>${fmt(t.ms)}</b></td><td class="muted" style="font-family:var(--mono);font-size:12px">${t.scr} ${copyBtn(t.scr)}</td></tr>`).reverse().join(''):`<tr><td class="muted">${L("Hali yechim yo'q.",'No solves yet.')}</td></tr>`;
+}
+function setTimerUI(cls,txt,hint){const el=$('timer'); if(!el) return; el.className='timer '+(cls||''); if(txt!=null)$('tdisp').textContent=txt; if(hint!=null)$('thint').textContent=hint;}
+const idleHint=()=>window.matchMedia('(pointer:coarse)').matches?L("Bosib turing, qo'yib yuborganda boshlanadi","Press and hold, release to start"):L("Space ni bosib turing, qo'yib yuborganda boshlanadi","Hold Space, release to start");
+function renderTimerView(){
+  $('v-taymer').innerHTML=`<h1>${L('Taymer','Timer')}</h1>
+  <p class="lead">${L("Rasmiy usul: aralashtirishda <b>oq tepada, yashil oldda</b> ushlang. Yechishni boshlashdan oldin kubni ag'darib, oqni pastga qo'ying.","Official orientation: scramble with <b>white on top, green in front</b>. Before solving, flip the cube so white is on the bottom.")}</p>
+  <div class="grid g2">
+    <div class="grid" style="gap:12px">
+      <div class="panel">
+        <div class="row" style="justify-content:space-between;margin-bottom:8px"><b>${L('Aralashtirish','Scramble')}</b><div class="row" style="gap:6px"><button class="sm" id="copyScr">⧉ ${L('Nusxa','Copy')}</button><button class="sm" id="newScr">↻ ${L('Yangi','New')}</button></div></div>
+        <div class="scramble" id="scr"></div>
+        <div class="row" style="justify-content:center;gap:14px;margin-top:12px;align-items:center">
+          <div id="scrCube" style="width:230px"></div>
+          <div id="scrNet"></div>
+        </div>
+        <div class="row" style="justify-content:center;margin-top:10px"><button class="sm" id="playScr">▶ ${L("Aralashtirishni ko'rsatish",'Play the scramble')}</button><span class="muted" style="font-size:12.5px">${L("Kubingizni shu bilan solishtiring","Compare it with your cube")}</span></div>
+      </div>
+      <div class="timer" id="timer"><div class="t" id="tdisp">0.00</div><div class="muted" id="thint" style="margin-top:12px"></div></div>
+      <div class="row"><label class="chip"><input type="checkbox" id="insp" ${DB.insp?'checked':''}> ${L("15 soniya ko'zdan kechirish",'15-second inspection')}</label></div>
+    </div>
+    <div class="panel">
+      <div class="stat" id="tstat" style="margin-bottom:12px"></div>
+      <div class="times"><table id="ttable"></table></div>
+      <div class="row" style="margin-top:10px"><button class="sm" id="delLast">${L("Oxirgisini o'chirish",'Delete last')}</button><button class="sm ghost" id="clrTimes">${L('Hammasini tozalash','Clear all')}</button></div>
+      <div class="tip">${L("<b>ao5</b> — oxirgi 5 ta yechimning eng yaxshi va eng yomonini olib tashlab, qolgan 3 tasining o'rtachasi. <b>ao12</b> ham shunday. Kubchilar natijani bitta rekord bilan emas, o'rtacha bilan o'lchaydi.","<b>ao5</b> — the mean of your last 5 solves after dropping the best and worst. <b>ao12</b> works the same way. Cubers measure themselves by averages, not single records.")}</div>
+    </div>
+  </div>`;
+  T.cube=new Cube3D($('scrCube'),{height:220,size:40,scheme:SCHEME_WCA,dur:()=>180});
+  if(!T.scr) T.scr=genScramble(); showScramble(); renderTimes(); T.state='idle'; T.inspecting=false; setTimerUI('','0.00',idleHint());
+  $('newScr').onclick=newScramble; $('copyScr').onclick=e=>copyText(T.scr,e.currentTarget);
+  $('playScr').onclick=()=>{T.cube.setState(solvedCube(SCHEME_WCA)); setTimeout(()=>T.cube.enqueue(tokens(T.scr),false),250);};
+  const tEl=$('timer'); tEl.addEventListener('pointerdown',e=>{e.preventDefault(); pressDown();}); tEl.addEventListener('pointerup',e=>{e.preventDefault(); pressUp();});
+  $('delLast').onclick=()=>{DB.times.pop(); save(); renderTimes();};
+  $('clrTimes').onclick=function(){ if(this.dataset.c){DB.times=[]; save(); renderTimes(); this.textContent=L('Hammasini tozalash','Clear all'); delete this.dataset.c;} else {this.dataset.c=1; this.textContent=L('Tasdiqlash: tozalash','Confirm: clear');} };
+  $('insp').onchange=e=>{DB.insp=e.target.checked; save();};
+}
+function pressDown(){
+  if(T.state==='running'){const ms=performance.now()-T.start; cancelAnimationFrame(T.raf); T.state='idle'; DB.times.push({ms:Math.round(ms),scr:T.scr}); save(); setTimerUI('',fmt(ms),idleHint()); renderTimes(); newScramble(); T.justStopped=true; return;}
+  if(T.state==='idle' && $('insp').checked && !T.inspecting){ T.inspecting=true; T.inspStart=performance.now(); T.state='insp';
+    const loop=()=>{ if(!['insp','hold','ready'].includes(T.state))return; const left=15-Math.floor((performance.now()-T.inspStart)/1000); if(T.state==='insp') setTimerUI('insp',left>0?String(left):'+2',L("Ko'zdan kechiring, keyin bosib turing","Inspect, then press and hold")); T.raf=requestAnimationFrame(loop);}; loop(); T.justStopped=true; return; }
+  if(T.state==='idle'||T.state==='insp'){T.prev=T.state; T.state='hold'; setTimerUI('hold',null,L('Ushlab turing…','Keep holding…')); T.holdT=setTimeout(()=>{if(T.state==='hold'){T.state='ready'; setTimerUI('ready','0.00',L("Qo'yib yuboring!",'Release!'));}},300);}
+}
+function pressUp(){
+  if(T.justStopped){T.justStopped=false; return;}
+  if(T.state==='hold'){clearTimeout(T.holdT); T.state=T.prev==='insp'?'insp':'idle'; if(T.state==='idle')setTimerUI('',null,idleHint());}
+  else if(T.state==='ready'){T.state='running'; T.inspecting=false; T.start=performance.now(); setTimerUI('','0.00',L("Istalgan tugmani bosib to'xtating",'Press any key to stop'));
+    const loop=()=>{ if(T.state!=='running')return; $('tdisp').textContent=fmt(performance.now()-T.start); T.raf=requestAnimationFrame(loop);}; loop();}
+}
+
+// ===================== SIMULATOR DRAWER =====================
+const SIM={cube:null,st:null,hist:[]};
+function renderSimDrawer(){
+  if(SIM.cube){SIM.st=SIM.cube.st; SIM.hist=SIM.cube.hist; SIM.cube.halt();}
+  const faces=['R','L','U','D','F','B','M','x','y','z'];
+  $('sim').innerHTML=`<div class="sim-head"><b>🧊 ${L('Simulyator','Simulator')}</b><span id="simStatus"></span><button class="sm ghost" id="simClose" style="margin-left:auto">✕</button></div>
+  <div id="simCube"></div>
+  <div class="muted" style="font-size:12.5px">${L("Aylantirish uchun sudrang","Drag to rotate")}</div>
+  <div class="mgrid">${['',"'",'2'].map(sf=>faces.map(f=>`<button data-mv="${f+sf}">${f+sf}</button>`).join('')).join('')}</div>
+  <div class="row" style="flex-wrap:nowrap;gap:6px"><input type="text" class="txt" id="simAlg" placeholder="${L('Formula','Algorithm')}: R U R' U'" autocomplete="off" spellcheck="false"><button class="icon" id="simCopy" title="${L('Nusxa olish','Copy')}">⧉</button><button class="primary sm" id="simRun">▶ ${L('Bajarish','Run')}</button></div>
+  <div class="row" style="gap:6px">
+    <button class="sm" id="simSetup" title="${L('Shu formula yechadigan holatni yaratadi','Creates the state this algorithm solves')}">${L("Holatni o'rnatish",'Set up case')}</button>
+    <button class="sm" id="simScr">${L('Aralashtirish','Scramble')}</button>
+    <button class="sm" id="simUndo">↶ ${L('Orqaga','Undo')}</button>
+    <button class="sm" id="simReset">${L('Tiklash','Reset')}</button>
+  </div>
+  <div class="row"><span class="muted" style="font-size:13px">${L('Animatsiya','Animation')}:</span><input type="range" id="simSpeed" min="0" max="500" step="20" value="${DB.simSpeed!=null?DB.simSpeed:200}" style="width:160px"><span class="muted" style="font-size:13px" id="simSpeedVal"></span></div>
+  <div id="simMsg" style="font-size:13px;min-height:18px"></div>
+  <div><div class="row" style="justify-content:space-between"><span class="muted" style="font-size:12px;text-transform:uppercase;letter-spacing:.05em">${L('Harakatlar tarixi','Move history')}</span><button class="icon ghost" id="histCopy" title="${L('Nusxa olish','Copy')}">⧉</button></div><div class="hist" id="simHist">—</div></div>
+  <div class="tip" style="font-size:13px;margin:0">${L("<b>Holatni o'rnatish</b> — formula yechadigan holatni yaratadi: avval o'zingiz yechib ko'ring, keyin <b>Bajarish</b> bilan tekshiring.<br>Klaviatura:","<b>Set up case</b> creates the state the algorithm solves: try solving it yourself first, then check with <b>Run</b>.<br>Keyboard:")} <kbd>R</kbd> <kbd>L</kbd> <kbd>U</kbd> <kbd>D</kbd> <kbd>F</kbd> <kbd>B</kbd> <kbd>M</kbd> <kbd>E</kbd> <kbd>S</kbd>, <kbd>X</kbd> <kbd>Y</kbd> <kbd>Z</kbd> — ${L('butun kub','whole cube')}; <kbd>Shift</kbd> — ${L("teskari (')","inverse (')")}.</div>`;
+  SIM.cube=new Cube3D($('simCube'),{height:260,size:46,state:SIM.st||solvedCube(),hist:SIM.hist,dur:()=>+$('simSpeed').value,onChange:simInfo});
+  $('sim').querySelector('.mgrid').onclick=e=>{const b=e.target.closest('[data-mv]'); if(b) SIM.cube.enqueue([b.dataset.mv]);};
+  $('simClose').onclick=simClose;
+  $('simRun').onclick=()=>{const t=simParse(); if(t){simMsg(''); SIM.cube.enqueue(t);}};
+  $('simAlg').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault(); $('simRun').click();}});
+  $('simCopy').onclick=e=>{const v=$('simAlg').value.trim(); if(v) copyText(v,e.currentTarget);};
+  $('histCopy').onclick=e=>{ if(SIM.cube.hist.length) copyText(SIM.cube.hist.join(' '),e.currentTarget);};
+  $('simSetup').onclick=()=>{const t=simParse(); if(t) simLoad(t.join(' '));};
+  $('simScr').onclick=()=>{const sc=genScramble(); SIM.cube.hist.length=0; SIM.cube.setState(apply(solvedCube(),sc)); $('simAlg').value=sc; simMsg(L('Aralashtirildi','Scrambled')+': '+sc);};
+  $('simReset').onclick=()=>{SIM.cube.hist.length=0; SIM.cube.setState(solvedCube()); simMsg('');};
+  $('simUndo').onclick=()=>{ if(SIM.cube.busy||SIM.cube.queue.length) return; const t=SIM.cube.hist.pop(); if(!t) return; SIM.cube.enqueue([invert(t)],false); };
+  const sp=$('simSpeed'); const spv=()=>$('simSpeedVal').textContent=sp.value==='0'?L('darhol','instant'):(sp.value/1000).toFixed(2)+' s';
+  sp.oninput=()=>{DB.simSpeed=+sp.value; save(); spv();}; spv();
+}
+function simInfo(cube){
+  if(!$('simStatus')) return;
+  $('simStatus').innerHTML=cube.solved()?`<span class="solved">${L("Yig'ilgan ✓",'Solved ✓')}</span>`:'';
+  const hs=cube.hist.slice(-40); $('simHist').textContent=hs.length?(cube.hist.length>40?'… ':'')+hs.join(' '):'—';
+}
+function simMsg(t,bad){const el=$('simMsg'); el.textContent=t||''; el.style.color=bad?'var(--bad)':'var(--muted)';}
+function simParse(){const v=$('simAlg').value.trim(); if(!v){simMsg(L('Avval formula yozing.','Type an algorithm first.'),true); return null;}
+  const t=tokens(v); const bad=t.find(x=>{try{parseTok(x);return false;}catch(_){return true;}});
+  if(bad){simMsg(L('Tushunarsiz harakat','Unknown move')+': '+bad,true); return null;} return t;}
+function simOpen(){document.body.classList.add('sim-open'); DB.simOpen=true; save();}
+function simClose(){document.body.classList.remove('sim-open'); DB.simOpen=false; save();}
+function simLoad(alg){SIM.cube.hist.length=0; SIM.cube.setState(caseState(alg,0,0)); $('simAlg').value=alg; simOpen(); simMsg(L("Holat o'rnatildi. O'zingiz yechib ko'ring yoki ▶ Bajarish'ni bosing.","Case set up. Solve it yourself, or press ▶ Run."));}
+
+// ===================== GLOBAL EVENTS =====================
+document.addEventListener('click',e=>{
+  const cp=e.target.closest('[data-copy]'); if(cp){copyText(cp.dataset.copy,cp); return;}
+  const j=e.target.closest('[data-jump]'); if(j){$(j.dataset.jump).scrollIntoView({behavior:'smooth',block:'start'}); return;}
+  const sm=e.target.closest('[data-sim]'); if(sm){simLoad(sm.dataset.sim); return;}
+  const b=e.target.closest('[data-step]'); if(b){const[k,id]=b.dataset.step.split('|'); openStepper(k,SETS[k].cases.find(c=>c.id===id));}
+});
+document.addEventListener('keydown',e=>{
+  // stepper
+  if(STEP){ if(e.key==='Escape')closeModal(); if(e.key==='ArrowRight'){STEP.i=Math.min(STEP.toks.length,STEP.i+1);drawStepper();} if(e.key==='ArrowLeft'){STEP.i=Math.max(0,STEP.i-1);drawStepper();} return; }
+  const inField=['INPUT','SELECT','TEXTAREA'].includes(e.target.tagName)&&e.target.type!=='checkbox'&&e.target.type!=='radio';
+  const view=curView();
+  // timer
+  if(view==='taymer' && !e.repeat && !inField){ if(e.key===' '||T.state==='running'){e.preventDefault(); pressDown(); return;} }
+  // drill
+  if(view==='mashq' && CUR && !inField){
+    if(CUR.answered && e.key==='Enter' && mode()==='rec'){e.preventDefault(); nextCase(); return;}
+    if(mode()==='alg'){
+      if(!CUR.answered && e.key===' '){e.preventDefault(); reveal(); return;}
+      if(CUR.answered && e.key==='1'){record(true,CUR.ms); nextCase(); return;}
+      if(CUR.answered && e.key==='2'){record(false,0); nextCase(); return;}
+    }
+  }
+  // simulator keys
+  if(document.body.classList.contains('sim-open') && !inField && !e.ctrlKey && !e.metaKey && !e.altKey && !e.repeat){
+    const k=e.key.length===1?e.key.toLowerCase():''; let f=null;
+    if(k && 'rludfbmes'.includes(k)) f=k.toUpperCase(); else if(k && 'xyz'.includes(k)) f=k;
+    if(f){ e.preventDefault(); SIM.cube.enqueue([f+(e.shiftKey?"'":'')]); }
+  }
+});
+document.addEventListener('keyup',e=>{ if(curView()!=='taymer') return; if(e.key===' '||T.justStopped){e.preventDefault(); pressUp();} });
+$('langBtn').onclick=()=>{ if(T.state==='running') return; DB.lang=DB.lang==='en'?'uz':'en'; save(); renderAll(); };
+$('themeBtn').onclick=()=>{DB.theme=curTheme()==='dark'?'light':'dark'; save(); applyTheme();};
+$('simBtn').onclick=()=>document.body.classList.contains('sim-open')?simClose():simOpen();
+
+// ===================== INIT =====================
+function renderAll(){
+  renderHeader(); renderPlanView(); renderLessonsView(); renderDrillView(); renderHandsView(); renderTimerView(); renderSimDrawer();
+  if(STEP) drawStepper();
+  VIEWS.forEach(k=>$('v-'+k).classList.toggle('on',k===curView()));
+}
+renderAll();
+if(DB.simOpen && window.innerWidth>=900) simOpen();
+route();
+if('serviceWorker' in navigator){ window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{})); }
+</script>
+</body>
+</html>

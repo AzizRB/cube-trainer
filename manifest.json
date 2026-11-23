@@ -1,0 +1,17 @@
+{
+  "name": "Speedcubing trener — CFOP",
+  "short_name": "Cube trener",
+  "description": "CFOP o'rganish: holatlar, tanib olish mashqi, metronom, taymer va 3D simulyator",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#141416",
+  "theme_color": "#141416",
+  "lang": "uz",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
