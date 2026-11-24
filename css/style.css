@@ -220,3 +220,5 @@ header .top{padding-top:14px;padding-bottom:10px}
   .bnav a.on span{display:inline}
   main{padding-bottom:calc(100px + env(safe-area-inset-bottom))}
 }
+
+@media (max-width:760px){main.wrap{padding-bottom:calc(110px + env(safe-area-inset-bottom))}}
