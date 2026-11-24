@@ -94,3 +94,6 @@
 .pswitch a.ld,.switch a.ld{opacity:.75}
 .pswitch a.ld::after,.switch a.ld::after{content:"";display:inline-block;width:10px;height:10px;margin-left:6px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:lspin .6s linear infinite;vertical-align:-1px}
 @keyframes lspin{to{transform:rotate(360deg)}}
+
+.tipsfig{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-top:8px}
+.tipsfig ul{margin:0;padding-left:18px;line-height:1.9;color:var(--ink)}

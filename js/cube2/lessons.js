@@ -49,8 +49,12 @@ function lessons2(){
   const cll=c2cases('CLL'), grp=g=>cll.filter(c=>c.grp===g).map(c=>cc2('CLL',c));
   const G=['sune','antisune','H','pi','headlights','T','bowtie','pll'];
   return [
- {id:'lbl',num:1,name:["Boshlang'ich (LBL)","Beginner (LBL)"],color:'var(--lv1)',goalTime:'20–40 s',intro:["2x2 — markazsiz kub: faqat 8 ta burchak. 3 qadam: <b>birinchi qatlam</b> → <b>OLL</b> → <b>PLL</b>. 3x3 bilsangiz, OLL va PLL sizga tanish. Rasmlarda chap — holat, o'ng — natija. \"Hosil qilish\" bilan holatni kubingizda yarating.","The 2x2 is a cube without centres — just 8 corners. 3 steps: <b>first layer</b> → <b>OLL</b> → <b>PLL</b>. If you know the 3x3, OLL and PLL will feel familiar. Left picture — case, right — result. Use \"Set up\" to create the case on your cube."],
+ {id:'lbl',num:1,_n:1,name:["Boshlang'ich (LBL)","Beginner (LBL)"],color:'var(--lv1)',goalTime:'20–40 s',intro:["2x2 — markazsiz kub: faqat 8 ta burchak. 3 qadam: <b>birinchi qatlam</b> → <b>OLL</b> → <b>PLL</b>. 3x3 bilsangiz, OLL va PLL sizga tanish. Rasmlarda chap — holat, o'ng — natija. \"Hosil qilish\" bilan holatni kubingizda yarating.","The 2x2 is a cube without centres — just 8 corners. 3 steps: <b>first layer</b> → <b>OLL</b> → <b>PLL</b>. If you know the 3x3, OLL and PLL will feel familiar. Left picture — case, right — result. Use \"Set up\" to create the case on your cube."],
   steps:[
+   {id:'notation',short:['Notatsiya','Notation'],title:['Tomonlar va notatsiya','Sides and notation'],exam:false,goal:null,
+    extra:[`<div class="lorient">Ushlash: <i style="background:#FFD500"></i> sariq tepada, <i style="background:#009E60"></i> yashil oldingizda (<i style="background:#FF5800"></i> to'q sariq o'ngda).</div><div class="tipsfig">${c2facesSVG(170)}<ul><li><b>U</b> (Up) — tepa tomon</li><li><b>F</b> (Front) — sizga qaragan old tomon</li><li><b>R</b> (Right) — o'ng tomon</li><li><b>'</b> — teskari yo'nalish, <b>2</b> — 180°</li></ul></div>`,`<div class="lorient">Hold: <i style="background:#FFD500"></i> yellow on top, <i style="background:#009E60"></i> green facing you (<i style="background:#FF5800"></i> orange on the right).</div><div class="tipsfig">${c2facesSVG(170)}<ul><li><b>U</b> (Up) — top face</li><li><b>F</b> (Front) — face toward you</li><li><b>R</b> (Right) — right face</li><li><b>'</b> — counter-clockwise, <b>2</b> — 180°</li></ul></div>`],
+    text:["Harf — qaysi tomonni burish. Harakat soat yo'nalishida, o'sha tomonga to'g'ridan qaraganda. 2x2'da bu 3 ta tomon yetarli: pastki chap-orqa burchak doim joyida turadi.","A letter names the face to turn — clockwise, as seen looking straight at that face. On the 2x2 these 3 faces are enough: the bottom-back-left corner never moves."],
+    exTitle:['Harakatlar','Moves'],examples:['R',"R'",'U',"U'",'F','R2'].map(m=>({name:[m,m],setup:'',sol:m,view:'full'}))},
    {id:'layer',short:['Birinchi qatlam','First layer'],title:['Birinchi qatlam — oq pastda','First layer — white on the bottom'],text:["Bitta oq burchakni pastga qo'ying, qolgan 3 tasini unga moslab qo'shing. Burchakni slot ustiga olib keling (U bilan) va <code>R U R' U'</code> (gold trigger) ni oq tomoni pastga tushguncha takrorlang. Rasmlar — kubning ostki tomoni (pastdan qaraganda, old tomon tepada).","Put one white corner down and add the other 3 to match it. Bring a corner above its slot (with U) and repeat <code>R U R' U'</code> (gold trigger) until white faces down. Pictures show the bottom face (seen from below, front at the top)."],
     goal:{setup:'',view:'D'},examples:[ex2("Oq tomoni o'ngga qaragan","White facing right","R U' R'","R U R'",'D',"Bitta gold trigger yetarli.","One trigger is enough."),
       ex2("Oq tomoni oldga qaragan","White facing front","F' U F","F' U' F",'D',"Ko'zgu nusxasi: F' U' F.","The mirror: F' U' F."),
@@ -103,4 +107,11 @@ function renderLessons2(){
   const lv=lessons2().find(l=>l.id===(CDB.lv2||'lbl'))||lessons2()[0];
   $('v-lessons').innerHTML=`<h1>${L("2x2 darslari","2x2 lessons")}</h1>${levelPicker(lessons2(),lv.id,'data-lv2')}<h2 style="margin-top:6px">${lv.num}. ${LEARN.T(lv.name)}</h2>${LEARN.lessonHTML(lv)}`;
   document.querySelectorAll('[data-lv2]').forEach(b=>b.onclick=()=>{CDB.lv2=b.dataset.lv2; csave(); renderLessons2();});
+}
+
+// labelled faces picture for the notation lesson
+function c2facesSVG(size){
+  const c=Math.cos(Math.PI/6), sc=size/4.4, P=(X,Y,Z)=>[((X-Z)*c)*sc+size/2,(-Y+(X+Z)*0.5)*sc+size/2];
+  const lab=(t,X,Y,Z)=>{const [x,y]=P(X,Y,Z); return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(size*.075).toFixed(1)}" fill="rgba(0,0,0,.55)"/><text x="${x.toFixed(1)}" y="${(y+size*.03).toFixed(1)}" text-anchor="middle" font-size="${(size*.085).toFixed(1)}" font-weight="800" fill="#fff" font-family="system-ui">${t}</text>`;};
+  return c2iso(C2A.solved(),size).replace('</svg>','')+lab('U',0,1,0)+lab('F',0,0,1)+lab('R',1,0,0)+'</svg>';
 }

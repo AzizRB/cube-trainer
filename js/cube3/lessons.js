@@ -105,7 +105,7 @@ function renderLessons3(){
   const lvls=lessons3(); if(!lvls.find(l=>l.id===LESSON_LV)) LESSON_LV='cfop';
   const lv=lvls.find(l=>l.id===LESSON_LV);
   lv.steps.forEach(s=>{ if(s.extra&&s.extra[0]==='__FINGERS__') s.extra=[fingerLesson(),fingerLesson()]; });
-  $('v-darslar').innerHTML=`<div class="seg3">${lvls.map(l=>{const b=LEARN.best(l.id+'|all'); return `<button class="${l.id===lv.id?'on':''}" data-l3="${l.id}">${l.num}. ${LEARN.T(l.name)}${b!=null&&b>=80?' ✓':''}</button>`;}).join('')}</div>
+  $('v-darslar').innerHTML=`<div class="lvpick n${lvls.length}">${lvls.map(l=>{const b=LEARN.best(l.id+'|all'); return `<button class="${l.id===lv.id?'on':''}" data-l3="${l.id}"><span class="dot" style="background:${l.color&&l.color!=='var(--muted)'?l.color:'#868e96'}">${l.num}</span><span class="tx"><b>${LEARN.T(l.name)}</b><small>${l.steps.length} ${L('qadam','steps')}${b!=null&&b>=80?' · ✓':''}</small></span></button>`;}).join('')}</div>
     <h1>${LEARN.T(lv.name)}</h1>${LEARN.lessonHTML(lv)}`;
   document.querySelectorAll('[data-l3]').forEach(b=>b.onclick=()=>{LESSON_LV=b.dataset.l3; DB.lessonLv=LESSON_LV; save(); renderLessons3(); window.scrollTo(0,0);});
 }

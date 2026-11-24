@@ -198,3 +198,25 @@ input.txt{flex:1;min-width:0;font:600 14px var(--mono);padding:8px 10px;border-r
 header .wrap{max-width:none!important;margin:0!important;padding:0 20px}
 header .top{padding-top:14px;padding-bottom:10px}
 @media (max-width:760px){header .wrap{padding:0 20px} header .top{padding-top:9px}}
+
+/* level cards (same as 2x2 / Pyraminx) */
+.lvpick{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;margin:4px 0 14px}
+.lvpick button{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:16px;text-align:left;background:var(--panel);border:1px solid var(--line);min-height:0;color:var(--ink);transition:border-color .15s,box-shadow .15s,transform .1s}
+.lvpick button:active{transform:scale(.98)}
+.lvpick button.on{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.lvpick .dot{width:30px;height:30px;border-radius:10px;color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;flex:none}
+.lvpick .tx{display:flex;flex-direction:column;line-height:1.3;min-width:0}
+.lvpick small{color:var(--muted);font-size:12px;font-weight:500}
+@media (max-width:760px){
+  .lvpick.n3{grid-template-columns:repeat(3,1fr)}
+  .lvpick.n3 button{flex-direction:column;align-items:flex-start;gap:6px;padding:10px}
+  .lvpick.n3 b{font-size:13.5px}
+  /* floating pill bottom nav, same as 2x2 / Pyraminx */
+  .bnav{left:50%;right:auto;bottom:calc(12px + env(safe-area-inset-bottom));transform:translateX(-50%);width:auto;max-width:calc(100% - 20px);gap:2px;padding:6px;border-radius:26px;border:1px solid var(--line);background:color-mix(in srgb,var(--panel) 86%,transparent);backdrop-filter:blur(16px) saturate(1.4);box-shadow:0 10px 30px rgba(0,0,0,.16)}
+  .bnav a{flex:none;flex-direction:row;gap:7px;padding:10px 13px;border-radius:20px;font-size:13px;transition:background .2s,color .2s}
+  .bnav a svg{width:22px;height:22px}
+  .bnav a span{display:none;white-space:nowrap}
+  .bnav a.on{color:#fff;background:linear-gradient(135deg,var(--accent),color-mix(in srgb,var(--accent) 75%,#000));box-shadow:0 4px 14px color-mix(in srgb,var(--accent) 40%,transparent)}
+  .bnav a.on span{display:inline}
+  main{padding-bottom:calc(100px + env(safe-area-inset-bottom))}
+}
