@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pyraminx — Speedcubing trener</title>
+<meta name="theme-color" content="#f7f6f2">
+<link rel="stylesheet" href="css/pyra.css">
+<link rel="stylesheet" href="css/learn.css">
+<link rel="manifest" href="manifest.json">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Cube trener">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+</head>
+<body>
+<div class="topbar">
+  <div class="brand"><svg viewBox="0 0 32 28"><path d="M16 1 1 27h30z" fill="#16a34a"/><path d="M16 1 8.5 14h15z" fill="#facc15"/><path d="M8.5 14 1 27h15z" fill="#dc2626"/><path d="M23.5 14 16 27h15z" fill="#2563eb"/><path d="M16 1 1 27h30z" fill="none" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/></svg><span class="nm" id="nm"></span></div>
+  <nav class="switch"><a href="index.html" id="swCube">3x3</a><a href="2x2.html">2x2</a><a href="pyraminx.html" class="on">Pyraminx</a></nav>
+  <div class="tools"><button id="langBtn" style="font-size:13px;font-weight:750"></button><button id="thBtn"></button><button id="simBtn">🔺</button></div>
+</div>
+<div class="layout">
+  <nav class="rail" id="rail"></nav>
+  <main>
+    <section class="view" id="v-lessons"></section>
+    <section class="view" id="v-drill"></section>
+    <section class="view" id="v-exam"></section>
+    <section class="view" id="v-solver"></section>
+    <section class="view" id="v-timer"></section>
+    <footer id="foot"></footer>
+  </main>
+</div>
+<nav class="pill" id="pill"></nav>
+<div class="sheet" id="sheet"></div>
+<div class="modal" id="modal"><div class="box" id="mbox"></div></div>
+<script src="js/core/core.js"></script>
+<script src="js/pyraminx/model.js"></script>
+<script src="js/pyraminx/view3d.js"></script>
+<script src="js/pyraminx/solver.js"></script>
+<script src="js/pyraminx/data.js"></script>
+<script src="js/core/learn.js"></script>
+<script src="js/pyraminx/lessons.js"></script>
+<script src="js/pyraminx/app.js"></script>
+<script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));}</script>
+</body>
+</html>
