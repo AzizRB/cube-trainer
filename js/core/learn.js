@@ -16,7 +16,7 @@ var LEARN=(function(){
       <div class="ba"><figure>${A.pic(before,c.view,sz)}<figcaption>${L('Holat','Case')}</figcaption></figure><span class="arr">→</span><figure>${A.pic(after,c.afterView||c.view,sz)}<figcaption>${L('Natija','Result')}</figcaption></figure></div>
       <div class="lrow"><span class="k">${L('Yechim','Solution')}</span><span><code>${c.sol||'—'}</code></span>${c.sol?`<button class="cp ghost" data-copy="${esc(c.sol)}" title="${L('Nusxa','Copy')}">⧉</button>`:'<span></span>'}</div>
       <div class="lrow"><span class="k">${L('Hosil qilish','Set up')}</span><span><code>${setup||'—'}</code></span>${setup?`<button class="cp ghost" data-copy="${esc(setup)}" title="${L('Nusxa','Copy')}">⧉</button>`:'<span></span>'}</div>
-      <div class="lbtns"><button data-lplay="${esc(setup)}" data-lsol="${esc(c.sol)}" data-ltitle="${esc(T(c.name||''))}">▶ ${L("Ko'rish",'Watch')}</button></div>
+      <div class="lbtns"><button data-lplay="${esc(setup)}" data-lsol="${esc(c.sol)}" data-ltitle="${esc(T(c.name||''))}" data-lview="${c.view||''}">▶ ${L("Ko'rish",'Watch')}</button></div>
     </div>`;
   }
   function stepCard(s,i,level){
@@ -44,13 +44,13 @@ var LEARN=(function(){
     pause:'<svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1" fill="currentColor"/><rect x="14" y="5" width="4" height="14" rx="1" fill="currentColor"/></svg>',
     again:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v5h5"/></svg>'};
   let PL=null;
-  function openPlayer(setup,sol,title){
+  function openPlayer(setup,sol,title,view){
     if(PL&&PL.t) clearInterval(PL.t);
     const m=modal(), box=m.firstChild, toks=A.tokens(sol||''); const start=()=>A.apply(A.solved(),setup||'');
     box.innerHTML=`<div class="row" style="display:flex;justify-content:space-between;align-items:center"><h3 style="margin:0">${title||''}</h3><button class="ghost lpb" data-lclose aria-label="close">✕</button></div>
       ${A.orient?`<div class="lorient">${T(A.orient)}</div>`:''}<div class="lpc" style="margin:8px 0"></div><div class="ltok"></div>
       <div class="lpbar"><button class="lpb" data-p="0" title="${L('Boshidan','Restart')}">${ICO.first}</button><button class="lpb" data-p="-1" title="${L('Orqaga','Back')}">${ICO.prev}</button><button class="lpb pri big" data-p="play"></button><button class="lpb" data-p="1" title="${L('Bitta harakat','One move')}">${ICO.next}</button></div>`;
-    const cube=A.make3D(box.querySelector('.lpc'),start(),{height:240,dur:()=>420});
+    const cube=A.make3D(box.querySelector('.lpc'),start(),{height:240,dur:()=>420,view:view||null});
     const P=PL={i:0,playing:false,t:null,wait:0};
     const draw=()=>{box.querySelector('.ltok').innerHTML=toks.length?toks.map((t,k)=>`<span class="${k<P.i?'done':k===P.i&&P.i<toks.length?'cur':''}">${t}</span>`).join(''):`<span>${L("Bu holat allaqachon yig'ilgan","Already solved")}</span>`;
       const pb=box.querySelector('[data-p="play"]'); pb.innerHTML=P.playing?ICO.pause:P.i>=toks.length&&toks.length?ICO.again:ICO.play; pb.title=P.playing?L('Pauza','Pause'):L("O'ynatish",'Play');};
@@ -110,7 +110,7 @@ var LEARN=(function(){
         ${q.kind==='real'?`<button data-xreal="0">✗ ${L('Yecholmadim',"Couldn't")}</button><button class="pri" data-xreal="1">✓ ${L('Yechdim','Solved')}</button>`:''}
         <button class="pri" data-xnext style="display:none">${X.i+1<X.qs.length?L('Keyingi','Next')+' ▶':L('Natija','Results')+' ▶'}</button></div></div></div>`;
     const H=X.host, msg=(t,ok)=>{const el=H.querySelector('[data-xmsg]'); el.textContent=t; el.className='xmsg '+(ok===true?'ok':ok===false?'no':'');};
-    const solBox=()=>{H.querySelector('[data-xsolbox]').innerHTML=`<div class="xsol"><b>${q.name?T(q.name)+' — ':''}</b>${L('Yechim','Solution')}: <code>${q.sol||'—'}</code>${A.orient?`<div class="lorient" style="margin:8px 0 0">${T(A.orient)}</div>`:''} <button class="ghost" data-lplay="${esc(q.setup||'')}" data-lsol="${esc(q.sol||'')}" data-ltitle="${esc(T(q.name||''))}" style="padding:2px 8px;min-height:0">▶</button></div>`;};
+    const solBox=()=>{H.querySelector('[data-xsolbox]').innerHTML=`<div class="xsol"><b>${q.name?T(q.name)+' — ':''}</b>${L('Yechim','Solution')}: <code>${q.sol||'—'}</code>${A.orient?`<div class="lorient" style="margin:8px 0 0">${T(A.orient)}</div>`:''} <button class="ghost" data-lplay="${esc(q.setup||'')}" data-lsol="${esc(q.sol||'')}" data-ltitle="${esc(T(q.name||''))}" data-lview="${q.view||''}" style="padding:2px 8px;min-height:0">▶</button></div>`;};
     const finish=score=>{ if(X.cur.done) return; X.cur.done=true; let s=score; if(s===1&&(X.cur.hint||X.cur.shown)) s=.5; X.res[X.i]=s; H.querySelector('[data-xnext]').style.display=''; H.querySelector('.xprog').outerHTML=prog(); if(X.timer){clearInterval(X.timer);X.timer=null;} };
     H.querySelector('[data-xquit]').onclick=()=>{ if(X.timer) clearInterval(X.timer); X.cfg.onExit(); };
     H.querySelector('[data-xhint]').onclick=()=>{ if(X.cur.hint) return; X.cur.hint=true; const tk=A.tokens(q.sol||''), parts=[], nm=q.name?T(q.name):'', ht=q.hint?T(q.hint):'';
@@ -145,7 +145,7 @@ var LEARN=(function(){
     const col=r=>r===1?'var(--ok)':r===.5?'#eab308':'var(--bad)', ic=r=>r===1?'✓':r===.5?'½':'✗';
     X.host.innerHTML=`<div class="xrun xres"><div class="xbar"><div><div class="muted">${T(X.cfg.title)}</div><div class="xbig" style="color:${pct>=80?'var(--ok)':pct>=50?'#ca8a04':'var(--bad)'}">${pct}%</div></div><span class="sp"></span>
       <div style="text-align:right">${pct>=80?`<span class="badge" style="font-size:14px">✓ ${L("O'tdi!",'Passed!')}</span>`:`<span class="muted">${L("O'tish uchun 80% kerak",'80% needed to pass')}</span>`}<div class="muted" style="margin-top:4px">${Math.floor(secs/60)}:${String(secs%60).padStart(2,'0')} · ${sc} / ${n}</div></div></div>
-      <div class="xlist">${X.qs.map((q,k)=>`<div class="it"><span class="ic" style="background:${col(X.res[k])}">${ic(X.res[k])}</span><div style="flex:1;min-width:0"><b>${T(q.name||KIND[q.kind])}</b> <span class="muted" style="font-size:12.5px">· ${T(KIND[q.kind])}</span><div style="margin-top:4px"><code style="font:600 13px var(--mono)">${q.sol||''}</code></div></div><button class="ghost" data-lplay="${esc(q.setup||'')}" data-lsol="${esc(q.sol||'')}" data-ltitle="${esc(T(q.name||''))}" style="padding:4px 10px;min-height:0">▶</button></div>`).join('')}</div>
+      <div class="xlist">${X.qs.map((q,k)=>`<div class="it"><span class="ic" style="background:${col(X.res[k])}">${ic(X.res[k])}</span><div style="flex:1;min-width:0"><b>${T(q.name||KIND[q.kind])}</b> <span class="muted" style="font-size:12.5px">· ${T(KIND[q.kind])}</span><div style="margin-top:4px"><code style="font:600 13px var(--mono)">${q.sol||''}</code></div></div><button class="ghost" data-lplay="${esc(q.setup||'')}" data-lsol="${esc(q.sol||'')}" data-ltitle="${esc(T(q.name||''))}" data-lview="${q.view||''}" style="padding:4px 10px;min-height:0">▶</button></div>`).join('')}</div>
       <div class="xbar"><button data-xback>← ${L('Imtihonlar','Exams')}</button><span class="sp"></span><button class="pri" data-xagain>↻ ${L('Qayta topshirish','Retake')}</button></div></div>`;
     X.host.querySelector('[data-xback]').onclick=()=>X.cfg.onExit();
     X.host.querySelector('[data-xagain]').onclick=()=>X.cfg.onRetake();
@@ -155,7 +155,7 @@ var LEARN=(function(){
   // ---------- global events ----------
   document.addEventListener('click',e=>{
     if(!A) return;
-    const p=e.target.closest('[data-lplay]'); if(p){ openPlayer(p.dataset.lplay,p.dataset.lsol,p.dataset.ltitle); return; }
+    const p=e.target.closest('[data-lplay]'); if(p){ openPlayer(p.dataset.lplay,p.dataset.lsol,p.dataset.ltitle,p.dataset.lview); return; }
     const s=e.target.closest('[data-lsim]'); if(s){ A.simLoad(s.dataset.lsim,s.dataset.lsol); return; }
     const m=e.target.closest('[data-lmini]'); if(m){ const [l,st]=m.dataset.lmini.split('|'); A.startExam(l,st); return; }
     const g=e.target.closest('[data-lgo]'); if(g){ const el=document.getElementById(g.dataset.lgo); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); return; }

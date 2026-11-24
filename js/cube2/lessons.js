@@ -24,7 +24,7 @@ const C2A={orient:['Ushlash: <i style="background:#FFD500"></i> sariq tepada, <i
   invert:a=>a&&a.trim()?invert(a):'', tokens:a=>a&&a.trim()?tokens(a):[],
   pic:(st,view,size)=>{ if(view==='pbl'||view==='both') return `<span style="display:inline-flex;gap:4px">${c2face(st,'pll',size*0.78,'U')}${c2face(st,'pll',size*0.78,'D')}</span>`;
     if(view==='D') return c2face(st,'pll',size,'D'); if(view==='full') return c2iso(st,size); return c2face(st,view,size,'U'); },
-  make3D:(host,st,o)=>new Cube3D(host,{two:true,state:cloneSt(st),height:o.height,size:Math.round(o.height/3.6),dur:o.dur,onChange:o.onChange}),
+  make3D:(host,st,o)=>new Cube3D(host,{view:o.view,two:true,state:cloneSt(st),height:o.height,size:Math.round(o.height/3.6),dur:o.dur,onChange:o.onChange}),
   moves:['R',"R'",'R2','U',"U'",'U2','F',"F'",'F2','L',"L'",'D',"D'",'B',"B'",'x','y'],
   valid:t=>{try{parseTok(t);return true;}catch(e){return false;}},
   goal:g2, goalText:t=>G2TEXT[t]||G2TEXT.solved,

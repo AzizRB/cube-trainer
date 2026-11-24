@@ -21,7 +21,7 @@ const C3A={orient:['Ushlash: <i style="background:#FFD500"></i> sariq tepada, <i
   apply:(st,alg)=>alg&&alg.trim()?apply(cloneSt(st),alg):cloneSt(st),
   invert:a=>a&&a.trim()?invert(a):'', tokens:a=>a&&a.trim()?tokens(a):[],
   pic:(st,view,size)=>{ if(view==='f2l'||view==='cross'||view==='full') return isoSVG(st,view==='full'?'pll':view,size*1.1); return topSVG(st,view,size); },
-  make3D:(host,st,o)=>new Cube3D(host,{state:cloneSt(st),height:o.height,size:Math.round(o.height/5.6),dur:o.dur,onChange:o.onChange}),
+  make3D:(host,st,o)=>new Cube3D(host,{view:o.view,state:cloneSt(st),height:o.height,size:Math.round(o.height/5.6),dur:o.dur,onChange:o.onChange}),
   moves:['R',"R'",'R2','U',"U'",'U2','F',"F'",'F2','L',"L'",'L2','D',"D'",'D2','B',"B'",'B2','M',"M'"],
   valid:t=>{try{parseTok(t);return true;}catch(e){return false;}},
   goal:g3, goalText:t=>G3TEXT[t]||G3TEXT.solved,

@@ -26,7 +26,7 @@ function cloneSt(st){return st.map(t=>({p:t.p.slice(),n:t.n.slice(),c:t.c,h:t.h}
 const FACE_DIRS=[[[1,0,0],'rotateY(90deg)'],[[-1,0,0],'rotateY(-90deg)'],[[0,1,0],'rotateX(90deg)'],[[0,-1,0],'rotateX(-90deg)'],[[0,0,1],''],[[0,0,-1],'rotateY(180deg)']];
 class Cube3D{
   constructor(host,o){
-    o=o||{}; this.two=!!o.two; this.cs=o.size||46; this.st=o.state||solvedCube(o.scheme); this.hist=o.hist||[];
+    o=o||{}; this.vw=o.view||null; this.two=!!o.two; this.cs=o.size||46; this.st=o.state||solvedCube(o.scheme); this.hist=o.hist||[];
     this.rx=-28; this.ry=-36; this.queue=[]; this.busy=false; this.gen=0;
     this.durFn=o.dur||(()=>200); this.onChange=o.onChange||(()=>{});
     host.innerHTML=`<div class="scene" style="height:${o.height||240}px;--cs:${this.cs}px"><div class="cube3d"></div><button class="ghost vbtn" title="${L('Ko\'rinishni tiklash','Reset view')}">↺</button></div>`;
@@ -46,7 +46,7 @@ class Cube3D{
       if(!x&&!y&&!z) continue; if(this.two&&(!x||!y||!z)) continue; const list=by[x+','+y+','+z]||[];
       h+=`<div class="cubie" data-p="${x},${y},${z}" style="transform:${this.base([x,y,z])}">`;
       for(const[n,r] of FACE_DIRS){const t=list.find(q=>q.n[0]===n[0]&&q.n[1]===n[1]&&q.n[2]===n[2]);
-        h+=`<div class="face${t?' st':''}" style="transform:${r} translateZ(${this.cs/2}px);${t?'--c:'+HEX[t.c]:''}"></div>`;}
+        h+=`<div class="face${t?' st':''}" style="transform:${r} translateZ(${this.cs/2}px);${t?'--c:'+(this.vw?stickerColor(t,this.vw):HEX[t.c]):''}"></div>`;}
       h+='</div>';
     }
     this.root.innerHTML=h; this.view(); this.onChange(this);
