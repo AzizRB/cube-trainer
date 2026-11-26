@@ -224,3 +224,8 @@ header .top{padding-top:14px;padding-bottom:10px}
 @media (max-width:760px){main.wrap{padding-bottom:calc(110px + env(safe-area-inset-bottom))}}
 
 @media (max-width:760px){.lvpick.n2{grid-template-columns:1fr 1fr}}
+/* desktop: centre the sidebar + content block like 2x2 / Pyraminx */
+@media (min-width:761px){
+  main.wrap{max-width:1180px;margin:0 auto;padding-left:258px;padding-right:18px;box-sizing:border-box}
+  body.sim-open main.wrap{max-width:none;margin:0 400px 0 0;padding-left:258px}
+}
