@@ -102,7 +102,7 @@ function lessonText(k){
  <li>${L("<b>Tepadan ko'rinish</b> (OLL, PLL): o'rtadagi 3×3 — tepa tomon, chetidagi ingichka chiziqlar — yon tomonlarning yuqori qatori. Pastki chiziq — sizga qaragan (old) tomon.","<b>Top view</b> (OLL, PLL): the 3×3 is the top face; the thin strips are the top rows of the side faces. The bottom strip is the side facing you (front).")}</li>
  <li>${L("<b>3D ko'rinish</b> (F2L): tepa, old (chapda) va o'ng tomon. Kulrang — ahamiyatsiz stikerlar.","<b>3D view</b> (F2L): top, front (left) and right faces. Gray stickers don't matter.")}</li>
  <li>${L("<b>OLL</b> rasmlarida faqat sariq muhim, qolgani kulrang.","In <b>OLL</b> pictures only yellow matters; everything else is gray.")}</li>
- <li>${L("Barcha holatlarda: sariq tepada, yashil oldda, to'q sariq o'ngda.","In every case: yellow on top, green in front, orange on the right.")}</li></ul></div></div>`;
+ <li>${L("Barcha holatlarda: sariq tepada, ko'k oldda, qizil o'ngda.","In every case: yellow on top, blue in front, red on the right.")}</li></ul></div></div>`;
  if(k==='cross') return `<h2 id="l-cross">${L("Krest (X) — oq krest pastda","Cross — the white cross (on the bottom)")}</h2>
  <div class="grid g2"><div class="panel"><ul class="clean">
  <li>${L("LBL'da krestni tepada yig'ib, keyin ag'darasiz. CFOP'da Krest (X) <b>darhol pastda</b> yig'iladi — shunda F2L juftlarini tepada ko'rib turasiz.","In LBL you build the cross on top and flip the cube. In CFOP the cross goes <b>straight to the bottom</b>, so you can see the F2L pairs on top.")}</li>
@@ -113,7 +113,7 @@ function lessonText(k){
  if(k==='f2l') return `<h2 id="l-f2l">${L("F2L — birinchi ikki qatlam birga","F2L — the first two layers together")}</h2>
  <div class="grid g2"><div class="panel"><h3>${L("G'oya","The idea")}</h3><ul class="clean">
  <li>${L("LBL'da avval burchakni, keyin o'rta qirrani alohida qo'yasiz. F2L'da <b>burchak va unga mos qirrani tepada juftlab</b>, bitta harakat bilan slotga kiritasiz.","In LBL you place the corner, then the middle edge, separately. In F2L you <b>pair the corner with its edge on top</b> and insert them into the slot together.")}</li>
- <li>${L("Har bir juft — oq burchak (masalan, oq-yashil-to'q sariq) va shu ranglardagi qirra (yashil-to'q sariq).","Each pair is a white corner (e.g. white-green-orange) and the matching edge (green-orange).")}</li>
+ <li>${L("Har bir juft — oq burchak (masalan, oq-ko'k-qizil) va shu ranglardagi qirra (ko'k-qizil).","Each pair is a white corner (e.g. white-blue-red) and the matching edge (blue-red).")}</li>
  <li>${L("Hamma holatlar 3 ta g'oyaga tushadi: <b>juftlash</b>, <b>ajratish</b> (noto'g'ri joylashgan bo'lsa), <b>kiritish</b> (<code>R U R'</code> yoki <code>F' U' F</code>).","Every case comes down to 3 ideas: <b>pairing</b>, <b>separating</b> (when badly placed) and <b>inserting</b> (<code>R U R'</code> or <code>F' U' F</code>).")}</li></ul></div>
  <div class="panel"><h3>${L("Tanib olish kaliti","How to recognize")}</h3><ul class="clean">
  <li>${L("1) Burchakning <b>oq stikeri qayerga</b> qaragan: o'ngga, oldga yoki tepaga?","1) Where does the corner's <b>white sticker</b> face: right, front or up?")}</li>
@@ -182,16 +182,16 @@ function fingerLesson(){
     <div class="who">${L(...who)}</div><div class="hint">${L(...how)}</div></div>`).join('');
   return `<h2 id="l-fingers">${L("Qo'l texnikasi: qaysi barmoq qaysi qatlamni buradi","Finger technique: which finger turns which layer")}</h2>
   <div class="grid g2" style="margin-bottom:14px">
-   <div class="panel"><h3>${L("Asosiy ushlash (home grip)","Home grip")}</h3><ul class="clean">
+   <div class="panel"><h3>${GLOSS.termify(L("Asosiy ushlash ({{homegrip|home grip}})","{{homegrip|Home grip}}"))}</h3><ul class="clean">
     <li>${L("Bosh barmoqlar <b>old tomonda</b>, pastki-o'rta qatlam atrofida.","Thumbs on the <b>front</b>, around the bottom and middle layers.")}</li>
     <li>${L("Ko'rsatkichlar <b>tepa qatlamning orqa burchaklarida</b> turadi — U va U' uchun tayyor.","Index fingers rest on the <b>back corners of the top layer</b>, ready for U and U'.")}</li>
     <li>${L("Qolgan barmoqlar orqada. Kubni kaft bilan emas, <b>barmoq uchlari</b> bilan yengil ushlang.","The other fingers sit on the back. Hold the cube <b>lightly with your fingertips</b>, not your palms.")}</li>
     <li>${L("Oddiy qoida: <b>R/L — bilak</b>, <b>U/U' — ko'rsatkich</b>, <b>D — halqa barmoq</b>, <b>F — ko'rsatkich yoki bosh barmoq</b>.","Rule of thumb: <b>R/L — wrist</b>, <b>U/U' — index finger</b>, <b>D — ring finger</b>, <b>F — index or thumb</b>.")}</li></ul></div>
    <div class="panel"><h3>${L("Best practice","Best practice")}</h3><ul class="clean">
     <li>${L("Har bir formula uchun <b>bitta barmoq tartibini</b> tanlang va doim shunday bajaring — mushak xotirasi shunda shakllanadi.","Pick <b>one fingering</b> per algorithm and always use it — that's how muscle memory forms.")}</li>
-    <li>${L("<b>Regrip</b> va kub aylantirishni (<code>x</code>, <code>y</code>) kamaytiring: har biri ~0,3 s.","Cut <b>regrips</b> and cube rotations (<code>x</code>, <code>y</code>): each costs ~0.3 s.")}</li>
+    <li>${GLOSS.termify(L("<b>{{regrip|Regrip}}</b> va {{rotation|kub aylantirish}}ni (<code>x</code>, <code>y</code>) kamaytiring: har biri ~0,3 s.","Cut <b>{{regrip|regrips}}</b> and {{rotation|cube rotations}} (<code>x</code>, <code>y</code>): each costs ~0.3 s."))}</li>
     <li>${L("Avval sekin va to'g'ri, keyin tez. Metronom bilan ritmni ushlang (Qo'l texnikasi bo'limi).","Slow and correct first, then fast. Keep the rhythm with the metronome (Finger tricks section).")}</li>
-    <li>${L("Misollar: <b>Gold trigger</b> <code>R U R' U'</code> = bilak · o'ng ko'rsatkich · bilak · chap ko'rsatkich. <b>Sledgehammer</b> <code>R' F R F'</code> = bilak · o'ng ko'rsatkich · bilak · o'ng bosh barmoq.","Examples: <b>Gold trigger</b> <code>R U R' U'</code> = wrist · right index · wrist · left index. <b>Sledgehammer</b> <code>R' F R F'</code> = wrist · right index · wrist · right thumb.")}</li></ul></div>
+    <li>${GLOSS.termify(L("Misollar: <b>{{trigger|Gold trigger}}</b> <code>R U R' U'</code> = bilak · o'ng ko'rsatkich · bilak · chap ko'rsatkich. <b>Sledgehammer</b> <code>R' F R F'</code> = bilak · o'ng ko'rsatkich · bilak · o'ng bosh barmoq.","Examples: <b>{{trigger|Gold trigger}}</b> <code>R U R' U'</code> = wrist · right index · wrist · left index. <b>Sledgehammer</b> <code>R' F R F'</code> = wrist · right index · wrist · right thumb."))}</li></ul></div>
   </div>
   <p class="muted" style="margin-top:0">${L("Strelka — qatlam qaysi tomonga harakatlanishi. <b>▶ Ko'rish</b> harakatni 3D kubda ko'rsatadi.","The arrow shows which way the layer moves. <b>▶ Show</b> plays the move on a 3D cube.")}</p>
   <div class="grid g3">${cards}</div>`;
@@ -363,10 +363,10 @@ function renderHandsView(){
       <div class="row" style="margin-top:12px"><button class="sm" data-goto="l-fingers">✋ ${L("Rasmli va animatsiyali dars","Lesson with pictures & animation")} →</button></div>
       <h3 style="margin-top:16px">${L("Silliqlik uchun","For smoothness")}</h3>
       <ul class="clean">
-        <li>${L("<b>Regrip</b>ni kamaytiring: formula davomida kubni qayta ushlamang.","Minimize <b>regrips</b>: don't re-grip the cube in the middle of an algorithm.")}</li>
-        <li>${L("<b>Kubni aylantirish</b>ni (<code>y</code>, <code>x</code>) kamaytiring — har biri ~0,3 s yo'qotadi.","Minimize <b>cube rotations</b> (<code>y</code>, <code>x</code>) — each costs ~0.3 s.")}</li>
+        <li>${GLOSS.termify(L("<b>{{regrip|Regrip}}</b>ni kamaytiring: formula davomida kubni qayta ushlamang.","Minimize <b>{{regrip|regrips}}</b>: don't re-grip the cube in the middle of an algorithm."))}</li>
+        <li>${GLOSS.termify(L("<b>{{rotation|Kubni aylantirish}}</b>ni (<code>y</code>, <code>x</code>) kamaytiring — har biri ~0,3 s yo'qotadi.","Minimize <b>{{rotation|cube rotations}}</b> (<code>y</code>, <code>x</code>) — each costs ~0.3 s."))}</li>
         <li>${L("Kubni <b>yengil</b> ushlang. Siqib ushlash harakatni sekinlashtiradi.","Hold the cube <b>lightly</b>. Gripping hard slows you down.")}</li>
-        <li>${L("Magnitli speedcube va silikon moy (lube) katta farq qiladi.","A magnetic speedcube and silicone lube make a big difference.")}</li>
+        <li>${GLOSS.termify(L("Magnitli speedcube va silikon {{lube|moy (lube)}} katta farq qiladi.","A magnetic speedcube and silicone {{lube|lube}} make a big difference."))}</li>
       </ul>
     </div>
   </div>`;
@@ -514,17 +514,17 @@ const FNM={U:['Tepa','Up'],F:['Old','Front'],R:["O'ng",'Right'],B:['Orqa','Back'
 const CNM={Y:['sariq','yellow'],W:['oq','white'],G:['yashil','green'],B:["ko'k",'blue'],R:['qizil','red'],O:["to'q sariq",'orange']};
 const FN={U:[0,1,0],D:[0,-1,0],R:[1,0,0],L:[-1,0,0],F:[0,0,1],B:[0,0,-1]};
 const HOLD={
- U:["Yashil markaz sizga qarab tursin, kubni biroz egib <b>tepasiga</b> qarang. Rasmning pastki qatori — yashil tomonga tegib turgan qator.","Keep green facing you and tilt the cube to look at the <b>top</b>. The bottom row here is the row next to green."],
- F:["Sariq tepada, <b>yashil</b> markaz sizga qaragan holda ushlang.","Yellow on top, <b>green</b> center facing you."],
- R:["Sariq tepada qolsin. Kubni chapga burib, <b>to'q sariq</b> markazni o'zingizga qarating (yashil chapda bo'ladi).","Keep yellow on top. Turn the cube left so <b>orange</b> faces you (green ends up on the left)."],
- B:["Sariq tepada. Kubni yana chapga burib, <b>ko'k</b> markazni o'zingizga qarating (to'q sariq chapda).","Yellow on top. Turn left again so <b>blue</b> faces you (orange on the left)."],
- L:["Sariq tepada, <b>qizil</b> markaz sizga qaragan (yashil o'ng tomonda).","Yellow on top, <b>red</b> center facing you (green on the right)."],
- D:["Yashil sizga qaragan holda kubni oldinga ag'daring: <b>oq</b> tomon sizga qaraydi, yashil tepaga chiqadi. Rasmning yuqori qatori — yashil tomonga tegib turgan qator.","With green facing you, tip the cube forward: <b>white</b> faces you and green goes to the top. The top row here is the row next to green."]};
+ U:["Ko'k markaz sizga qarab tursin, kubni biroz egib <b>tepasiga</b> qarang. Rasmning pastki qatori — ko'k tomonga tegib turgan qator.","Keep blue facing you and tilt the cube to look at the <b>top</b>. The bottom row here is the row next to blue."],
+ F:["Sariq tepada, <b>ko'k</b> markaz sizga qaragan holda ushlang.","Yellow on top, <b>blue</b> center facing you."],
+ R:["Sariq tepada qolsin. Kubni chapga burib, <b>qizil</b> markazni o'zingizga qarating (ko'k chapda bo'ladi).","Keep yellow on top. Turn the cube left so <b>red</b> faces you (blue ends up on the left)."],
+ B:["Sariq tepada. Kubni yana chapga burib, <b>yashil</b> markazni o'zingizga qarating (qizil chapda).","Yellow on top. Turn left again so <b>green</b> faces you (red on the left)."],
+ L:["Sariq tepada, <b>to'q sariq</b> markaz sizga qaragan (ko'k o'ng tomonda).","Yellow on top, <b>orange</b> center facing you (blue on the right)."],
+ D:["Ko'k sizga qaragan holda kubni oldinga ag'daring: <b>oq</b> tomon sizga qaraydi, ko'k tepaga chiqadi. Rasmning yuqori qatori — ko'k tomonga tegib turgan qator.","With blue facing you, tip the cube forward: <b>white</b> faces you and blue goes to the top. The top row here is the row next to blue."]};
 function facePos(f,r,c){switch(f){case 'U':return[c-1,1,r-1];case 'F':return[c-1,1-r,1];case 'R':return[1,1-r,1-c];case 'B':return[1-c,1-r,-1];case 'L':return[-1,1-r,c-1];default:return[c-1,-1,1-r];}}
 function blankInput(){const o={};SFACES.forEach(f=>{o[f]=Array(9).fill(null);o[f][4]=SCHEME_LL[f];});return o;}
 function inpToStickers(inp){const st=[];SFACES.forEach(f=>{for(let r=0;r<3;r++)for(let c=0;c<3;c++){const p=facePos(f,r,c);st.push({p,n:FN[f].slice(),c:inp[f][r*3+c],h:p.slice()});}});return st;}
 function stickersToInp(st){const o=blankInput();SFACES.forEach(f=>{for(let r=0;r<3;r++)for(let c=0;c<3;c++){const t=stk(st,facePos(f,r,c),FN[f]);o[f][r*3+c]=t?t.c:null;}});return o;}
-let SV={face:'U',color:'Y',inp:(DB.solverInp&&DB.solverInp.U)?DB.solverInp:blankInput(),mode:DB.solverMode||'cfop',res:null,cube:null,start:null,toks:[],segs:[],i:0,play:null,busy:false};
+let SV={face:'U',color:'Y',inp:(DB.solverInp&&DB.solverInp.U&&DB.solverInp.F[4]===SCHEME_LL.F)?DB.solverInp:blankInput(),mode:DB.solverMode||'cfop',res:null,cube:null,start:null,toks:[],segs:[],i:0,play:null,busy:false};
 function saveInp(){DB.solverInp=SV.inp; save(); if(SV.res){SV.res=null; svStop(); svOut('');}}
 // --- worker ---
 let SWK=null, swId=0; const swCb={};
@@ -558,7 +558,7 @@ function solveLL(st){
   const k=solvedAUF(cur); if(k>0) steps.push({type:'auf',moves:[AUFS[k]]});
   return steps;
 }
-const PAIRNM=[["yashil–to'q sariq","green–orange"],["yashil–qizil","green–red"],["ko'k–qizil","blue–red"],["ko'k–to'q sariq","blue–orange"]];
+const PAIRNM=[["ko'k–qizil","blue–red"],["ko'k–to'q sariq","blue–orange"],["yashil–to'q sariq","green–orange"],["yashil–qizil","green–red"]];
 const SLOTNM=[["old-o'ng","front-right"],["old-chap","front-left"],["orqa-chap","back-left"],["orqa-o'ng","back-right"]];
 function posNm(code){return code.split('').map(f=>L(...FNM[f]).toLowerCase()).join('–');}
 function solverErr(r){
@@ -601,7 +601,7 @@ function renderSolverView(){
   document.querySelectorAll('input[name=svmode]').forEach(r=>r.onchange=()=>{SV.mode=r.value; DB.solverMode=r.value; save(); if(SV.res) showSolution();});
   $('svSolve').onclick=runSolve;
   $('svFromSim').onclick=()=>{const st=SIM.cube.st; const ok=SFACES.every(f=>centerC(st,FN[f])===SCHEME_LL[f]);
-    if(!ok){svOut(`<div class="err">${L("Simulyatordagi kub butunicha aylantirilgan (x/y/z). Sariq tepada, yashil oldda bo'lishi kerak.","The simulator cube has been rotated (x/y/z). Yellow must be on top and green in front.")}</div>`); return;}
+    if(!ok){svOut(`<div class="err">${L("Simulyatordagi kub butunicha aylantirilgan (x/y/z). Sariq tepada, ko'k oldda bo'lishi kerak.","The simulator cube has been rotated (x/y/z). Yellow must be on top and blue in front.")}</div>`); return;}
     SV.inp=stickersToInp(st); saveInp(); drawEditor(); svOut('');};
   $('svRandom').onclick=()=>{SV.inp=stickersToInp(apply(solvedCube(),genScramble())); saveInp(); drawEditor(); svOut('');};
   $('svClear').onclick=()=>{SV.inp=blankInput(); saveInp(); drawEditor(); svOut('');};

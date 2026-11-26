@@ -2,7 +2,7 @@
 // Works in a Web Worker or Node. Derives all cubie move tables from a sticker model.
 var SOLVER = (function(){
   // ---- sticker model (same convention as the page) ----
-  var SCH = {U:'Y',D:'W',F:'G',B:'B',R:'O',L:'R'};
+  var SCH = {U:'Y',D:'W',F:'B',B:'G',R:'R',L:'O'};
   var NRM = {U:[0,1,0],D:[0,-1,0],R:[1,0,0],L:[-1,0,0],F:[0,0,1],B:[0,0,-1]};
   function faceOf(n){return n[1]===1?'U':n[1]===-1?'D':n[2]===1?'F':n[2]===-1?'B':n[0]===1?'R':'L';}
   function solvedSt(){var st=[],N=[[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,1],[0,0,-1]];

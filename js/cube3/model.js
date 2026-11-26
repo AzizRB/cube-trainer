@@ -1,5 +1,5 @@
 // ===================== CUBE MODEL =====================
-const SCHEME_LL  = {U:'Y',D:'W',F:'G',B:'B',R:'O',L:'R'};
+const SCHEME_LL  = {U:'Y',D:'W',F:'B',B:'G',R:'R',L:'O'};
 const SCHEME_WCA = {U:'W',D:'Y',F:'G',B:'B',R:'R',L:'O'};
 const HEX = {Y:'#FFD500',W:'#FFFFFF',G:'#009E60',B:'#0051BA',R:'#C41E3A',O:'#FF5800'};
 function faceOf(n){return n[1]===1?'U':n[1]===-1?'D':n[2]===1?'F':n[2]===-1?'B':n[0]===1?'R':'L';}
@@ -27,11 +27,11 @@ const FACE_DIRS=[[[1,0,0],'rotateY(90deg)'],[[-1,0,0],'rotateY(-90deg)'],[[0,1,0
 class Cube3D{
   constructor(host,o){
     o=o||{}; this.vw=o.view||null; this.two=!!o.two; this.cs=o.size||46; this.st=o.state||solvedCube(o.scheme); this.hist=o.hist||[];
-    this.rx=-28; this.ry=-36; this.queue=[]; this.busy=false; this.gen=0;
+    this.ry0=-36-90*viewYaw(o.view); this.rx=-28; this.ry=this.ry0; this.queue=[]; this.busy=false; this.gen=0;
     this.durFn=o.dur||(()=>200); this.onChange=o.onChange||(()=>{});
     host.innerHTML=`<div class="scene" style="height:${o.height||240}px;--cs:${this.cs}px"><div class="cube3d"></div><button class="ghost vbtn" title="${L('Ko\'rinishni tiklash','Reset view')}">↺</button></div>`;
     this.scene=host.querySelector('.scene'); this.root=host.querySelector('.cube3d');
-    this.scene.querySelector('.vbtn').onclick=e=>{e.stopPropagation(); this.rx=-28; this.ry=-36; this.view();};
+    this.scene.querySelector('.vbtn').onclick=e=>{e.stopPropagation(); this.rx=-28; this.ry=this.ry0; this.view();};
     let drag=null;
     this.scene.addEventListener('pointerdown',e=>{ if(e.target.closest('.vbtn')) return; drag={x:e.clientX,y:e.clientY,rx:this.rx,ry:this.ry}; try{this.scene.setPointerCapture(e.pointerId);}catch(_){} });
     this.scene.addEventListener('pointermove',e=>{ if(!drag) return; this.ry=drag.ry+(e.clientX-drag.x)*0.5; this.rx=Math.max(-89,Math.min(89,drag.rx-(e.clientY-drag.y)*0.5)); this.view(); });
@@ -73,8 +73,12 @@ class Cube3D{
 }
 
 // ===================== 2D RENDER =====================
+const viewBase=v=>(v||'').split('@')[0], viewYaw=v=>+((v||'').split('@')[1]||0);
+const SLOT_XZ={FR:[1,1],FL:[-1,1],BR:[1,-1],BL:[-1,-1]};
 function stickerColor(t,view){
-  const gray='var(--gray)';
+  const gray='var(--gray)'; view=viewBase(view);
+  if(view.startsWith('slot')){ const h=t.h, z=h.filter(v=>v===0).length, s=SLOT_XZ[view.slice(5)]||[1,1];
+    const keep=z===2||(h[1]===-1&&z===1)||(h[0]===s[0]&&h[2]===s[1]&&h[1]!==1); return keep?HEX[t.c]:gray; }
   if(view==='oll') return t.c==='Y'?HEX.Y:gray;
   if(view==='oll-edge'){const isCorner=t.p.every(v=>v!==0); if(isCorner&&t.p[1]===1) return gray; return t.c==='Y'?HEX.Y:gray;}
   if(view==='f2l') return t.h[1]===1?gray:HEX[t.c];
@@ -96,14 +100,15 @@ function topSVG(st,view,size){
   return s+'</svg>';
 }
 function isoSVG(st,view,size,overlay){
-  size=size||170; const c=Math.cos(Math.PI/6), sc=size/6.3;
+  size=size||170; const c=Math.cos(Math.PI/6), sc=size/6.3, yaw=viewYaw(view);
+  const yr=v=>{let q=v; for(let k=0;k<yaw;k++) q=[-q[2],q[1],q[0]]; return q;};
   const P=(X,Y,Z)=>[((X-Z)*c)*sc+size/2, (-Y+(X+Z)*0.5)*sc+size/2];
   let s=`<svg viewBox="0 0 ${size} ${size}" width="${size}" height="${size}" role="img">`;
   const body=[P(-1.5,1.5,1.5),P(-1.5,1.5,-1.5),P(1.5,1.5,-1.5),P(1.5,-1.5,-1.5),P(1.5,-1.5,1.5),P(-1.5,-1.5,1.5)];
   s+=`<polygon points="${body.map(q=>q.map(v=>v.toFixed(1)).join(',')).join(' ')}" fill="#111" stroke="#111" stroke-width="3" stroke-linejoin="round"/>`;
-  for(const t of st){
-    const n=t.n; if(!((n[1]===1&&t.p[1]===1)||(n[2]===1&&t.p[2]===1)||(n[0]===1&&t.p[0]===1))) continue;
-    const ax=n.findIndex(v=>v!==0), tan=[0,1,2].filter(i=>i!==ax), k=0.43, ctr=t.p.map((v,i)=>v+n[i]*0.5);
+  for(const t0 of st){
+    const n=yr(t0.n), tp=yr(t0.p), t=t0; if(!((n[1]===1&&tp[1]===1)||(n[2]===1&&tp[2]===1)||(n[0]===1&&tp[0]===1))) continue;
+    const ax=n.findIndex(v=>v!==0), tan=[0,1,2].filter(i=>i!==ax), k=0.43, ctr=tp.map((v,i)=>v+n[i]*0.5);
     const pts=[[-k,-k],[k,-k],[k,k],[-k,k]].map(([a,b])=>{const q=ctr.slice(); q[tan[0]]+=a; q[tan[1]]+=b; return P(q[0],q[1],q[2]);});
     s+=`<polygon points="${pts.map(q=>q.map(v=>v.toFixed(1)).join(',')).join(' ')}" fill="${stickerColor(t,view)}" stroke="rgba(0,0,0,.3)" stroke-width="0.6" stroke-linejoin="round"/>`;
   }

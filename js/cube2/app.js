@@ -186,7 +186,7 @@ function renderSolver(){
   $('v-solver').innerHTML=`<h1>${L('Yechuvchi','Solver')}</h1><p class="lead">${L("Kubingiz ranglarini kiriting — eng qisqa yechim yoki Boshlang'ich metod bo'yicha qadamma-qadam.","Enter your cube's colours — get the shortest solution or a step-by-step beginner one.")}</p>
    <div class="grid g2" style="align-items:start"><div class="card" style="display:flex;flex-direction:column;gap:12px">
     <div class="seg" style="margin:0;display:grid;grid-template-columns:repeat(6,1fr)">${SF.map(f=>`<button class="${CS.face===f?'on':''}" data-cf="${f}" style="justify-content:center;padding:7px 4px;font-size:12.5px">${L(...FNM2[f])}${CDB.inp[f].every(v=>v)?' ✓':''}</button>`).join('')}</div>
-    <div class="note" style="margin:0;font-size:13.5px">✋ ${L("Kubni bir xil ushlab turing: oq-ko'k-qizil burchak orqa-chap-pastda bo'lsa qulay, lekin istalgan ushlash ishlaydi. Tepa/Past tomonlarni ko'rishda old tomon sizga qaragan bo'lsin.","Keep the cube in one orientation the whole time (any orientation works). When looking at Up/Down, keep the front facing you.")}</div>
+    <div class="note" style="margin:0;font-size:13.5px">✋ ${L("Kubni bir xil ushlab turing: oq-yashil-to'q sariq burchak orqa-chap-pastda bo'lsa qulay, lekin istalgan ushlash ishlaydi. Tepa/Past tomonlarni ko'rishda old tomon sizga qaragan bo'lsin.","Keep the cube in one orientation the whole time (any orientation works). When looking at Up/Down, keep the front facing you.")}</div>
     <div id="cgrid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;width:min(100%,220px);margin:0 auto;background:#111;padding:8px;border-radius:16px"></div>
     <div class="palette" id="cpal" style="flex-wrap:wrap"></div><div class="row" style="justify-content:center;font-size:12.5px" id="ccnt"></div>
     <div class="row" style="justify-content:center;gap:6px"><button class="sm" id="cfs">🧊 ${L('Simulyatordan','From simulator')}</button><button class="sm" id="crnd">🎲 ${L('Tasodifiy','Random')}</button><button class="sm ghost" id="cclr">${L('Tozalash','Clear')}</button></div></div>
@@ -231,7 +231,7 @@ function solveNow(){
   if(miss){out.innerHTML=`<div class="err">${L(`Hali ${miss} ta stiker bo'yalmagan.`,`${miss} stickers are still empty.`)}</div>`; return;}
   if(Object.values(cnt).some(v=>v!==4)){out.innerHTML=`<div class="err">${L("Har bir rangdan 4 tadan bo'lishi kerak.","Each colour must appear 4 times.")}</div>`; return;}
   const st=inpSt(); const nz=C2.normalize(st);
-  if(!nz){out.innerHTML=`<div class="err">${L("Oq-ko'k-qizil burchak topilmadi — ranglarni tekshiring.","The white-blue-red corner wasn't found — check the colours.")}</div>`; return;}
+  if(!nz){out.innerHTML=`<div class="err">${L("Oq-yashil-to'q sariq burchak topilmadi — ranglarni tekshiring.","The white-green-orange corner wasn't found — check the colours.")}</div>`; return;}
   const c=C2.readCubie(nz.st);
   if(c.error){out.innerHTML=`<div class="err">${c.error==='twist'?L("Bitta burchak buralgan — bunday holat yig'ilmaydi. Stikerlarni tekshiring.","One corner is twisted — impossible state. Check the stickers."):L("Bunday ranglar birikmasidagi burchak yo'q — stikerlarni tekshiring.","A corner has an impossible colour combination — check the stickers.")}</div>`; return;}
   const segs=[]; if(nz.rot) segs.push({t:L("Kubni burish (ushlash)","Rotate the cube"),moves:tokens(nz.rot)});

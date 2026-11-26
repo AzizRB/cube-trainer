@@ -3,7 +3,7 @@
 // make3D(host,st,opts), moves[], valid(tok), goal(type,st), goalText(type)->[uz,en], simLoad(setup,sol), startExam(level,step)
 var LEARN=(function(){
   const esc=s=>String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
-  const T=a=>Array.isArray(a)?L(a[0],a[1]):a;
+  const T=a=>{ const s=Array.isArray(a)?L(a[0],a[1]):a; return typeof GLOSS!=='undefined'?GLOSS.termify(s):s; };
   const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
   let A=null; // current adapter
 
@@ -12,9 +12,10 @@ var LEARN=(function(){
     const setup=c.setup!=null?c.setup:A.invert(c.sol);
     const before=A.apply(A.solved(),setup), after=A.apply(before,c.sol), sz=c.size||104;
     return `<div class="lcase">
-      ${c.name?`<div class="nm">${T(c.name)}</div>`:''}${c.hint?`<div class="hint">${T(c.hint)}</div>`:''}
+      ${c.name?`<div class="nm">${c.star?'<span class="lstar" title="'+L("Avval shuni o'rganing","Learn this first")+'">★</span> ':''}${T(c.name)}</div>`:''}${c.hint?`<div class="hint">${T(c.hint)}</div>`:''}${A.viewNote&&A.viewNote(c.view)?`<div class="lvnote">${A.viewNote(c.view)}</div>`:''}
       <div class="ba"><figure>${A.pic(before,c.view,sz)}<figcaption>${L('Holat','Case')}</figcaption></figure><span class="arr">→</span><figure>${A.pic(after,c.afterView||c.view,sz)}<figcaption>${L('Natija','Result')}</figcaption></figure></div>
-      <div class="lrow"><span class="k">${L('Yechim','Solution')}</span><span><code>${c.sol||'—'}</code></span>${c.sol?`<button class="cp ghost" data-copy="${esc(c.sol)}" title="${L('Nusxa','Copy')}">⧉</button>`:'<span></span>'}</div>
+      ${c.chunks?`<div class="lrow"><span class="k">${L('Yechim','Solution')}</span><span class="lchunks">${c.chunks.map(x=>`<span class="${/^U/.test(x)&&x.length<=2?'auf':'alg'}">${x}</span>`).join('<i>→</i>')}</span><span></span></div>`:''}
+      <div class="lrow${c.chunks?' lfull':''}"><span class="k">${c.chunks?L("To'liq harakatlar",'All moves'):L('Yechim','Solution')}</span><span><code>${c.sol||'—'}</code></span>${c.sol?`<button class="cp ghost" data-copy="${esc(c.sol)}" title="${L('Nusxa','Copy')}">⧉</button>`:'<span></span>'}</div>
       <div class="lrow"><span class="k">${L('Hosil qilish','Set up')}</span><span><code>${setup||'—'}</code></span>${setup?`<button class="cp ghost" data-copy="${esc(setup)}" title="${L('Nusxa','Copy')}">⧉</button>`:'<span></span>'}</div>
       <div class="lbtns"><button data-lplay="${esc(setup)}" data-lsol="${esc(c.sol)}" data-ltitle="${esc(T(c.name||''))}" data-lview="${c.view||''}">▶ ${L("Ko'rish",'Watch')}</button></div>
     </div>`;
@@ -22,16 +23,39 @@ var LEARN=(function(){
   function stepCard(s,i,level){
     const g=s.goal?`<div class="lgoal">${A.pic(A.apply(A.solved(),s.goal.setup||''),s.goal.view,s.goal.size||92)}${L('Maqsad','Goal')}</div>`:'<span></span>';
     const sec=(title,list)=>list&&list.length?`<div class="lsub">${T(title)}</div><div class="lcases">${list.map(caseBlock).join('')}</div>`:'';
-    return `<article class="lstep" id="ls-${s.id}">
-      <div class="lhead"><span class="lnum">${i}</span><div><h3>${T(s.title)}</h3><p>${T(s.text)}</p>${s.extra?`<div style="margin-top:10px">${T(s.extra)}</div>`:''}</div>${g}</div>
+    const open=openStep(level)===s.id;
+    return `<article class="lstep${open?'':' closed'}" id="ls-${s.id}" data-lv="${level}">
+      <div class="lhead" data-ltoggle="${s.id}"><span class="lnum">${i}</span><div><h3>${T(s.title)}<span class="lchev" aria-hidden="true"></span></h3><p>${T(s.text)}</p>${s.extra?`<div class="lextra" style="margin-top:10px">${T(s.extra)}</div>`:''}</div>${g}</div>
+      <div class="lbody">
       ${sec(s.exTitle||[`Misollar`,`Examples`],s.examples)}
+      ${(s.groups||[]).map(g=>(g.text?`<div class="lsub">${T(g.title)}</div><p class="lgtext">${T(g.text)}</p><div class="lcases">${g.list.map(caseBlock).join('')}</div>`:sec(g.title,g.list))).join('')}
       ${sec(s.caseTitle||[`Holatlar va formulalar`,`Cases and algorithms`],s.cases)}
       ${s.exam!==false?`<div class="lfoot"><span class="muted">${L("Tushundingizmi? O'zingizni sinab ko'ring.","Got it? Test yourself.")}</span><button class="pri" data-lmini="${level}|${s.id}">📝 ${L('Mini-test','Mini test')}</button></div>`:''}
+      </div>
     </article>`;
   }
-  function lessonHTML(level){
+  const OPEN_KEY='learn.open';
+  function openStep(level){ try{ return (JSON.parse(localStorage.getItem(OPEN_KEY))||{})[A.id+'|'+level]; }catch(e){ return null; } }
+  function setOpen(level,id){ try{ const o=JSON.parse(localStorage.getItem(OPEN_KEY))||{}; o[A.id+'|'+level]=id; localStorage.setItem(OPEN_KEY,JSON.stringify(o)); }catch(e){} }
+  // sticky nav helpers
+  function stickTop(){ const h=document.querySelector('header,.topbar'); return h?Math.round(h.getBoundingClientRect().height):0; }
+  function navH(){ const n=document.querySelector('.lsticky')||document.querySelector('.lnav'); return n?n.getBoundingClientRect().height:0; }
+  function syncStick(){ document.documentElement.style.setProperty('--lstick',stickTop()+'px'); }
+  function goStep(id,smooth){ const el=document.getElementById('ls-'+id); if(!el) return; const lv=el.dataset.lv;
+    document.querySelectorAll('.lstep').forEach(a=>a.classList.toggle('closed',a!==el)); el.classList.remove('closed'); setOpen(lv,id);
+    requestAnimationFrame(()=>{ const y=el.getBoundingClientRect().top+window.scrollY-stickTop()-navH()-8; window.scrollTo({top:Math.max(0,y),behavior:smooth?'smooth':'auto'}); markActive(id); }); }
+  let lastActive=null;
+  function markActive(id){ const nav=document.querySelector('.lnav'); if(!nav) return; if(!id){ const lim=stickTop()+navH()+24; const steps=[...document.querySelectorAll('.lstep')]; let cur=steps[0];
+      for(const s of steps){ if(s.getBoundingClientRect().top<=lim) cur=s; else break; } id=cur&&cur.id.slice(3); }
+    if(id===lastActive&&nav.querySelector('a.on')) return; lastActive=id;
+    nav.querySelectorAll('a').forEach(a=>{ const on=a.dataset.lgo==='ls-'+id; a.classList.toggle('on',on); if(on){ const r=a.getBoundingClientRect(), nr=nav.getBoundingClientRect(); if(r.left<nr.left||r.right>nr.right) nav.scrollBy({left:r.left-nr.left-nr.width/2+r.width/2,behavior:'smooth'}); } }); }
+  let raf=0; window.addEventListener('scroll',()=>{ if(raf) return; raf=requestAnimationFrame(()=>{ raf=0; markActive(); }); },{passive:true});
+  window.addEventListener('resize',syncStick); document.addEventListener('DOMContentLoaded',syncStick); setTimeout(syncStick,300);
+  function lessonHTML(level,opts){ opts=opts||{};
+    if(level.steps.length&&!level.steps.some(s=>s.id===openStep(level.id))) setOpen(level.id,level.steps[0].id);
+    setTimeout(()=>{ syncStick(); lastActive=null; markActive(); },0);
     const nav=level.steps.length>2?`<div class="lnav">${level.steps.map((s,i)=>`<a href="javascript:void 0" data-lgo="ls-${s.id}">${i+1}. ${T(s.short||s.title)}</a>`).join('')}</div>`:'';
-    return `${level.intro?`<div class="lintro">${T(level.intro)}</div>`:''}${nav}<div class="lsteps">${level.steps.map((s,i)=>stepCard(s,i+1,level.id)).join('')}</div>`;
+    return `${opts.top&&opts.topFirst!==false?'':''}${A.holdHTML&&level.hold!==false?`<div class="lhold">${A.holdHTML()}</div>`:''}${level.intro?`<div class="lintro">${T(level.intro)}</div>`:''}${(nav||opts.top)?`<div class="lsticky">${opts.top||''}${nav}</div>`:''}<div class="lsteps">${level.steps.map((s,i)=>stepCard(s,i+1,level.id)).join('')}</div>`;
   }
 
   // ---------- player ----------
@@ -158,8 +182,10 @@ var LEARN=(function(){
     const p=e.target.closest('[data-lplay]'); if(p){ openPlayer(p.dataset.lplay,p.dataset.lsol,p.dataset.ltitle,p.dataset.lview); return; }
     const s=e.target.closest('[data-lsim]'); if(s){ A.simLoad(s.dataset.lsim,s.dataset.lsol); return; }
     const m=e.target.closest('[data-lmini]'); if(m){ const [l,st]=m.dataset.lmini.split('|'); A.startExam(l,st); return; }
-    const g=e.target.closest('[data-lgo]'); if(g){ const el=document.getElementById(g.dataset.lgo); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); return; }
+    const g=e.target.closest('[data-lgo]'); if(g){ goStep(g.dataset.lgo.slice(3),true); return; }
+    const tg=e.target.closest('[data-ltoggle]'); if(tg&&!e.target.closest('button,a,.lterm,svg[data-x]')){ const art=tg.closest('.lstep'); if(art.classList.contains('closed')) goStep(tg.dataset.ltoggle,true); else { art.classList.add('closed'); } return; }
   });
   document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeModal(); });
-  return {use:a=>{A=a;}, lessonHTML, stepCard, openPlayer, closeModal, examHome, startExam, optionsFrom, shuffle, best, T};
+  const canPlay=sol=>!!A&&A.tokens(sol).every(t=>A.valid(t));
+  return {use:a=>{A=a;}, canPlay, lessonHTML, stepCard, openPlayer, closeModal, examHome, startExam, optionsFrom, shuffle, best, T};
 })();

@@ -222,3 +222,5 @@ header .top{padding-top:14px;padding-bottom:10px}
 }
 
 @media (max-width:760px){main.wrap{padding-bottom:calc(110px + env(safe-area-inset-bottom))}}
+
+@media (max-width:760px){.lvpick.n2{grid-template-columns:1fr 1fr}}
