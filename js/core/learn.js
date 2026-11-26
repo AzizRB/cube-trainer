@@ -68,22 +68,27 @@ var LEARN=(function(){
     pause:'<svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1" fill="currentColor"/><rect x="14" y="5" width="4" height="14" rx="1" fill="currentColor"/></svg>',
     again:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v5h5"/></svg>'};
   let PL=null;
+  const pLoop=()=>{ try{ return localStorage.getItem('learn.loop')==='1'; }catch(e){ return false; } };
+  const pSpeed=()=>{ let v=1; try{ v=+localStorage.getItem('learn.speed')||1; }catch(e){} return Math.min(2.5,Math.max(0.25,v)); };
   function openPlayer(setup,sol,title,view){
     if(PL&&PL.t) clearInterval(PL.t);
     const m=modal(), box=m.firstChild, toks=A.tokens(sol||''); const start=()=>A.apply(A.solved(),setup||'');
     box.innerHTML=`<div class="row" style="display:flex;justify-content:space-between;align-items:center"><h3 style="margin:0">${title||''}</h3><button class="ghost lpb" data-lclose aria-label="close">✕</button></div>
       ${A.orient?`<div class="lorient">${T(A.orient)}</div>`:''}<div class="lpc" style="margin:8px 0"></div><div class="ltok"></div>
-      <div class="lpbar"><button class="lpb" data-p="0" title="${L('Boshidan','Restart')}">${ICO.first}</button><button class="lpb" data-p="-1" title="${L('Orqaga','Back')}">${ICO.prev}</button><button class="lpb pri big" data-p="play"></button><button class="lpb" data-p="1" title="${L('Bitta harakat','One move')}">${ICO.next}</button></div>`;
-    const cube=A.make3D(box.querySelector('.lpc'),start(),{height:240,dur:()=>420,view:view||null});
+      <div class="lpbar"><button class="lpb" data-p="0" title="${L('Boshidan','Restart')}">${ICO.first}</button><button class="lpb" data-p="-1" title="${L('Orqaga','Back')}">${ICO.prev}</button><button class="lpb pri big" data-p="play"></button><button class="lpb" data-p="1" title="${L('Bitta harakat','One move')}">${ICO.next}</button><button type="button" class="lpb lauto${pLoop()?' on':''}" title="${L("To'xtamasdan takrorlash","Repeat without stopping")}" aria-pressed="${pLoop()}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v5h5"/></svg><span>Auto</span></button></div>
+      <div class="lspeed"><span class="lsp-i" title="${L('Sekinroq','Slower')}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l7 6-7 6z" fill="currentColor"/></svg></span><input type="range" min="0.25" max="2.5" step="0.25" value="${pSpeed()}" aria-label="${L('Tezlik','Speed')}"><span class="lsp-i" title="${L('Tezroq','Faster')}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6l7 6-7 6zM13 6l7 6-7 6z" fill="currentColor"/></svg></span><b>${pSpeed()}×</b></div>`;
+    const cube=A.make3D(box.querySelector('.lpc'),start(),{height:240,dur:()=>420/pSpeed(),view:view||null});
     const P=PL={i:0,playing:false,t:null,wait:0};
     const draw=()=>{box.querySelector('.ltok').innerHTML=toks.length?toks.map((t,k)=>`<span class="${k<P.i?'done':k===P.i&&P.i<toks.length?'cur':''}">${t}</span>`).join(''):`<span>${L("Bu holat allaqachon yig'ilgan","Already solved")}</span>`;
-      const pb=box.querySelector('[data-p="play"]'); pb.innerHTML=P.playing?ICO.pause:P.i>=toks.length&&toks.length?ICO.again:ICO.play; pb.title=P.playing?L('Pauza','Pause'):L("O'ynatish",'Play');};
+      const pb=box.querySelector('[data-p="play"]'); pb.innerHTML=P.playing?ICO.pause:ICO.play; pb.title=P.playing?L('Pauza','Pause'):L("O'ynatish",'Play');};
     const reset=()=>{P.i=0; cube.setState(start());};
-    const play=()=>{ if(!toks.length) return; if(P.i>=toks.length) reset(); P.playing=true; P.wait=Date.now()+(P.i===0?450:0); draw(); };
+    const play=()=>{ if(!toks.length) return; if(P.i>=toks.length) reset(); P.playing=true; P.wait=Date.now()+(P.i===0?450/pSpeed():0); draw(); };
     P.t=setInterval(()=>{ if(!document.body.contains(box)||!m.classList.contains('on')){clearInterval(P.t);return;}
       if(!P.playing||cube.busy||Date.now()<P.wait) return;
-      if(P.i>=toks.length){P.playing=false; draw(); return;}
-      cube.enqueue([toks[P.i]],false); P.i++; P.wait=Date.now()+460; draw(); },60);
+      if(P.i>=toks.length){ if(pLoop()){ if(!P.loopAt){ P.loopAt=Date.now()+900/pSpeed(); return; } if(Date.now()<P.loopAt) return; P.loopAt=0; reset(); P.wait=Date.now()+300/pSpeed(); draw(); return; } P.playing=false; draw(); return;}
+      cube.enqueue([toks[P.i]],false); P.i++; P.wait=Date.now()+460/pSpeed(); draw(); },60);
+    const lp=box.querySelector('.lauto'); lp.onclick=()=>{ const on=!pLoop(); try{localStorage.setItem('learn.loop',on?'1':'0');}catch(e){} lp.classList.toggle('on',on); lp.setAttribute('aria-pressed',on); if(on&&!P.playing){ play(); draw(); } };
+    const sp=box.querySelector('.lspeed input'); sp.oninput=()=>{ try{localStorage.setItem('learn.speed',sp.value);}catch(e){} box.querySelector('.lspeed b').textContent=(+sp.value)+'×'; };
     box.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{const p=b.dataset.p;
       if(p==='play'){ P.playing?(P.playing=false):play(); }
       else { P.playing=false;
