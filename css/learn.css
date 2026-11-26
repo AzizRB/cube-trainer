@@ -142,3 +142,16 @@
 .lchunks .auf{background:var(--soft,var(--code));color:var(--ink);font-family:ui-monospace,monospace}
 .lchunks i{font-style:normal;color:var(--muted)}
 .lrow.lfull .k,.lrow.lfull code{font-size:12px;opacity:.85}
+.lspeed{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:12px;font-size:15px}
+.lspeed input{width:min(240px,55vw);accent-color:var(--accent)}
+.lspeed b{min-width:44px;font-size:13px;color:var(--muted);text-align:right}
+.lsp-i{display:inline-flex;color:var(--muted)}.lsp-i svg{width:16px;height:16px}
+.lspeed b{font-variant-numeric:tabular-nums}
+
+.lloop input{accent-color:var(--accent);width:16px;height:16px}
+
+.lpb.lauto{width:auto;padding:0 14px;gap:6px;font-size:14px;font-weight:600;color:var(--muted)}
+.lpb.lauto svg{width:16px;height:16px}
+.lpb.lauto.on{background:color-mix(in srgb,var(--accent) 16%,transparent);border-color:var(--accent);color:var(--accent)}
+.lpb.lauto.on svg{animation:lspin 2.4s linear infinite}
+@media (max-width:420px){.lpb.lauto{padding:0;width:46px}.lpb.lauto span{display:none}}
